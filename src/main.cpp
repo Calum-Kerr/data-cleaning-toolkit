@@ -20,4 +20,23 @@ int main(){
         result["message"]="CSV parsed successfully";
         return crow::response(result);
     });
+
+    CROW_ROUTE(app,"/api/detect-missing").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        auto data=req.body;
+        auto parsed=cleaner.parseCSV(data);
+        auto missing=cleaner.detectMissingValues(parsed);
+        int missingCount=0;
+        for(const auto& row:missing){
+            for(bool is missing:row){
+                if(isMissing){
+                    ++missingCount;
+                }
+            }
+        }
+        crow::json::wvalue result;
+        result["missing"]=missingCount;
+        result["message"]="Missing values detected successfully";
+        return crow::response(result);
+    });
 }
