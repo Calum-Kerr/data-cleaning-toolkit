@@ -59,5 +59,16 @@ std::vector<bool> DataCleaner::detectDuplicates(const std::vector<std::vector<st
 }
 
 std::vector<std::vector<std::string>> DataCleaner::cleanData(const std::vector<std::vector<std::string>>& data){
-
+    /**
+     * here i will clean the data by removing missing values and duplicates
+     */
+    auto cleaned=data;
+    auto duplicates=detectDuplicates(cleaned);
+    std::vector<std::vector<std::string>> result;
+    for(size_t i=0;i<cleaned.size();++i){
+        if(!duplicates[i]){
+            result.push_back(cleaned[i]);
+        }
+    }
+    return result;
 }
