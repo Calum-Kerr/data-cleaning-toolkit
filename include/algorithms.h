@@ -5,7 +5,10 @@
 
 class DataCleaner{
     public:
-    // something here to parse the data
+    std::vector<std::vector<std::string>> parseCSV(const std::string& data);
+    std::vector<std::vector<bool>> detectMissingValues(const std::vector<std::vector<std::string>>& data);
+    std::vector<bool> detectDuplicates(const std::vector<std::vector<std::string>>& data);
+    std::vector<std::vector<std::string>> cleanData(const std::vector<std::vector<std::string>>& data);
 };
 
 #endif
