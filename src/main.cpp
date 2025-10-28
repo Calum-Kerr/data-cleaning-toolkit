@@ -28,7 +28,7 @@ int main(){
         auto missing=cleaner.detectMissingValues(parsed);
         int missingCount=0;
         for(const auto& row:missing){
-            for(bool is missing:row){
+            for(bool isMissing:row){
                 if(isMissing){
                     ++missingCount;
                 }
