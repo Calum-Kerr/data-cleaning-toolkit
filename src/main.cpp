@@ -10,4 +10,14 @@ int main(){
     ([](){
         return "Data Cleaning Toolkit API is running :)";
     });
+
+    CROW_ROUTE(app,"/api/parse").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        auto data=req.body;
+        auto parsed=cleaner.parseCSV(data);
+        crow::json::wvalue result;
+        result["rows"]=parsed.size();
+        result["message"]="CSV parsed successfully";
+        return crow::response(result);
+    });
 }
