@@ -7,8 +7,6 @@ set(CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
 add_definitions(-DASIO_STANDALONE)
 
-find_package(Boost REQUIRED)
-
 # i need to include these else it breaks
 include_directories(include)
 
@@ -18,7 +16,7 @@ set(SOURCES src/main.cpp src/algorithms.cpp)
 # this will be the executable
 add_executable(Toolkit ${SOURCES})
 
-target_link_libraries(Toolkit ${Boost_LIBRARIES})
+target_link_libraries(Toolkit ${SOURCES})
 
 # Windows socket library
 if(WIN32)
