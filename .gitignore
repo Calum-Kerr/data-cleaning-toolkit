@@ -5,3 +5,4 @@ build/
 *.so
 .DS_Store
 node_modules/
+.vscode/
