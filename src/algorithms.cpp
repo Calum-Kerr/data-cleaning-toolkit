@@ -5,7 +5,7 @@
 
 std::vector<std::vector<std::string>> DataCleaner::parseCSV(const std::string& data){
     /**
-     * in this functio i will take the data and parse it into a 2d vector of strings by
+     * in this function i will take the data and parse it into a 2d vector of strings by
      * splitting the data on the newline character and then splitting each line on the comma character because
      * the data is in the scv format when a user uploads a file it is read as a string.
      */
