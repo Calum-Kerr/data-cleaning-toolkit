@@ -69,4 +69,9 @@ int main(){
         result["message"]="Data cleaned successfully";
         return crow::response(result);
     });
+    
+
+    std::cout<<"Starting the server on port 8080"<<std::endl;
+    app.port(8080).multithreaded().run();
+    return 0;
 }
