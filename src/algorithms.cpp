@@ -9,7 +9,7 @@ std::vector<std::vector<std::string>> DataCleaner::parseCSV(const std::string& d
      * splitting the data on the newline character and then splitting each line on the comma character because
      * the data is in the scv format when a user uploads a file it is read as a string.
      */
-    std::vector<std::vector<std::string> result;
+    std::vector<std::vector<std::string>> result;
     std::stringstream ss(data);
     std::string line;
     while(std::getline(ss,line)){
