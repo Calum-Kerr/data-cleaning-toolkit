@@ -27,7 +27,19 @@ std::vector<std::vector<std::string>> DataCleaner::parseCSV(const std::string& d
 }
 
 std::vector<std::vector<bool>> DataCleaner::detectMissingValues(const std::vector<std::vector<std::string>>& data){
-
+    /**
+     * now for this function i will check for missing values in the data and return a 2d vector of booleans
+     * where true tells us that the value is missing and false tells us that the value is not missing
+     */
+    std::vector<std::vector<bool>> missing;
+    for(const auto& row:data){
+        std::vector<bool> rowMissing;
+        for(const auto& cell:row){
+            rowMissing.push_back(cell.empty());
+        }
+        missing.push_back(rowMissing);
+    }
+    return missing;
 }
 
 std::vector<bool> DataCleaner::detectDuplicates(const std::vector<std::vector<std::string>>& data){
