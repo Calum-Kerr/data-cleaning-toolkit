@@ -56,4 +56,17 @@ int main(){
         result["message"]="Duplicate rows detected successfully";
         return crow::response(result);
     });
+
+    CROW_ROUTE(app,"/api/clean").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        auto data=req.body;
+        auto parsed=cleaner.parseCSV(data);
+        auto cleaned=cleaner.cleanData(parsed);
+        crow::json::wvalue result;
+        result["originalRows"]=parsed.size();
+        result["cleanedRows"]=cleaned.size();
+        result["removedRows"]=parsed.size()-cleaned.size();
+        result["message"]="Data cleaned successfully";
+        return crow::response(result);
+    });
 }
