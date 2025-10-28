@@ -43,7 +43,19 @@ std::vector<std::vector<bool>> DataCleaner::detectMissingValues(const std::vecto
 }
 
 std::vector<bool> DataCleaner::detectDuplicates(const std::vector<std::vector<std::string>>& data){
-
+    /**
+     * here i will check for dupes in the data and returns a vector of booleans where true tells us that the row is a duplicate
+     */
+    std::vector<bool> isDuplicate(data.size(),false);
+    std::set<std::vector<std::string>> seen;
+    for(size_t i=0;i<data.size();++i){
+        if(seen.count(data[i])){
+            isDuplicate[i]=true;
+        }else{
+            seen.insert(data[i]);
+        }
+    }
+    return isDuplicate;
 }
 
 std::vector<std::vector<std::string>> DataCleaner::cleanData(const std::vector<std::vector<std::string>>& data){
