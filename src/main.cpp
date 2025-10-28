@@ -39,4 +39,21 @@ int main(){
         result["message"]="Missing values detected successfully";
         return crow::response(result);
     });
+
+    CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        auto data=req.body;
+        auto parsed=cleaner.parseCSV(data);
+        auto duplicates=cleaner.detectDuplicates(parsed);
+        int duplicateCount=0;
+        for(bool isDup:duplicates){
+            if(isDup){
+                ++duplicateCount;
+            }
+        }
+        crow::json::wvalue result;
+        result["duplicates"]=duplicateCount;
+        result["message"]="Duplicate rows detected successfully";
+        return crow::response(result);
+    });
 }
