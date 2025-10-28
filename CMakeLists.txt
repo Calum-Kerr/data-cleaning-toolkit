@@ -11,7 +11,6 @@ find_package(Boost REQUIRED)
 
 # i need to include these else it breaks
 include_directories(include)
-include_directories(${Boost_INCLUDE_DIRS})
 
 # these will be the source files
 set(SOURCES src/main.cpp src/algorithms.cpp)
@@ -23,5 +22,5 @@ target_link_libraries(Toolkit ${Boost_LIBRARIES})
 
 # Windows socket library
 if(WIN32)
-    target_link_libraries(Toolkit ws2_32)
+    target_link_libraries(Toolkit ws2_32 wsock32)
 endif()
