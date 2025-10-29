@@ -21,10 +21,10 @@
     <script>
         const API_URL=window.location.origin;
         function showResult(data){document.getElementById('results').innerHTML='<pre>'+JSON.stringify(data,null,2)+'</pre>'}
-        async function parseCSV(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/parse',{method:'POST',body:csv});const data=await res.json();showResult(await res.json())}
-        async function detectMissing(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/detect-missing',{method:'POST',body:csv});const data=await res.json();showResult(await res.json())}
-        async function detectDuplicates(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/detect-duplicates',{method:'POST',body:csv});const data=await res.json();showResult(await res.json())}
-        async function cleanData(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/clean',{method:'POST',body:csv});const data=await res.json();showResult(await res.json())}
+        async function parseCSV(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/parse',{method:'POST',body:csv});const data=await res.json();showResult(data)}
+        async function detectMissing(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/detect-missing',{method:'POST',body:csv});const data=await res.json();showResult(data)}
+        async function detectDuplicates(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/detect-duplicates',{method:'POST',body:csv});const data=await res.json();showResult(data)}
+        async function cleanData(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/clean',{method:'POST',body:csv});const data=await res.json();showResult(data)}
     </script>
 </body>
 </html>
