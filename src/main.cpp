@@ -6,6 +6,9 @@ int main(){
     crow::SimpleApp app;
     DataCleaner cleaner;
 
+    const char* port_env=std::getenv("PORT");
+    int port=port_env?std::stoi(port_env):8080;
+
     CROW_ROUTE(app,"/")
     ([](){
         return "Data Cleaning Toolkit API is running :)";
