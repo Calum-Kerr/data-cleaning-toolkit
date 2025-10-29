@@ -11,8 +11,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY . .
-RUN git submodule update --init --recursive && \
-    cd vcpkg && \
+RUN if [ ! -d "vcpkg/.git" ]; then \
+        rm -rf vcpkg && \
+        git clone https://github.com/microsoft/vcpkg.git vcpkg; \
+    fi
+RUN cd vcpkg && \
     ./bootstrap-vcpkg.sh && \
     cd .. && \
     ./vcpkg/vcpkg install asio:x64-linux boost-algorithm:x64-linux boost-functional:x64-linux boost-optional:x64-linux boost-lexical-cast:x64-linux boost-array:x64-linux
