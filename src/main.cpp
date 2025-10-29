@@ -1,6 +1,7 @@
 #include "crow_all.h"
 #include "algorithms.h"
 #include <iostream>
+#include <cstdlib>
 
 int main(){
     crow::SimpleApp app;
@@ -74,7 +75,7 @@ int main(){
     });
     
 
-    std::cout<<"Starting the server on port 8080"<<std::endl;
-    app.port(8080).multithreaded().run();
-    return 0;
+    const char* port_env=std::getenv("PORT");
+    int port=port_env?std::stoi(port_env):8080;
+    app.port(port).multithreaded().run();
 }
