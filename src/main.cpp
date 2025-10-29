@@ -75,7 +75,5 @@ int main(){
     });
     
 
-    const char* port_env=std::getenv("PORT");
-    int port=port_env?std::stoi(port_env):8080;
     app.port(port).multithreaded().run();
 }
