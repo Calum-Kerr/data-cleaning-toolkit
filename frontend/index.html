@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Cleaning Toolkit</title>
+</head>
+<body>
+    <h1>Data Cleaning Toolkit</h1>
+    <p>Welcome to the Data Cleaning Toolkit!</p>
+    <textarea id ="csvInput" row="10" cols="50" placeholder="name,age,city
+    Calum,21,EDI
+    Derek,22,NYK
+    Calum,21,EDI"></textarea><br><br>
+    <button onclick="parseCSV()">Parse CSV</button>
+    <button onclick="detectMissing()">Detect Missing</button>
+    <button onclick="detectDuplicates()">Detect Duplicates</button>
+    <button onclick="cleanData()">Clean Data</button>
+    <div id="results"></div>
+    <script>
+        function showResult(data){document.getElementById('results').innerHTML='<pre>'+JSON.stringify(data,null,2)+'</pre>'}
+        function parseCSV(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/parse',{method:'POST',body:csv});const data=await res.json();showResult(await res.json())}
+        function detectMissing(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/detect-missing',{method:'POST',body:csv});const data=await res.json();showResult(await res.json())}
+        function detectDuplicates(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/detect-duplicates',{method:'POST',body:csv});const data=await res.json();showResult(await res.json())}
+        function cleanData(){const csv=document.getElementById('csvInput').value;const res=await fetch(API_URL+'/api/clean',{method:'POST',body:csv});const data=await res.json();showResult(await res.json())}
+    </script>
+</body>
+</html>
