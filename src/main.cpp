@@ -2,6 +2,8 @@
 #include "algorithms.h"
 #include <iostream>
 #include <cstdlib>
+#include <fstream>
+#include <sstream>
 
 int main(){
     crow::SimpleApp app;
@@ -10,9 +12,12 @@ int main(){
     const char* port_env=std::getenv("PORT");
     int port=port_env?std::stoi(port_env):8080;
 
-    CROW_ROUTE(app,"/")
+    CROW_ROUTE(app,"/app")
     ([](){
-        return "Data Cleaning Toolkit API is running :)";
+        std::ifstream file("frontend/index.html");
+        std::stringstream buffer;
+        buffer<<file.rdbuf();
+        return crow::response(buffer.str());
     });
 
     CROW_ROUTE(app,"/api/parse").methods("POST"_method)
