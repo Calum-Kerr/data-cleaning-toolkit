@@ -12,6 +12,11 @@ int main(){
     const char* port_env=std::getenv("PORT");
     int port=port_env?std::stoi(port_env):8080;
 
+    CROW_ROUTE(app,"/")
+    ([](){
+        return "Data Cleaning Toolkit API is running! If this works, the web app is available at /app in the address bar up top :)";
+    });
+
     CROW_ROUTE(app,"/app")
     ([](){
         std::ifstream file("frontend/index.html");
