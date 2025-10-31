@@ -29,5 +29,18 @@ extern "C"{
         auto parsed=parseCSVInternal(data);
         return parsed.size();
     }
-    
+    EMSCRIPTEN_KEEPALIVE
+    int detectMissing(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        int count=0;
+        for(const auto& row:parsed){
+            for(const auto& cell:row){
+                if(cell.empty()){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }
