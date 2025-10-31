@@ -7,63 +7,18 @@
 </head>
 <body>
     <h1>Data Cleaning Toolkit</h1>
-    <table border="1" width="100%">
-        <tr>
-            <td width="50%" valign="top">
-                <h2>Tool</h2>
-                <p>Welcome to the Data Cleaning Toolkit!</p>
-                <p>name,age,city</p>
-                <p>Calum,21,EDI</p>
-                <p>Derek,22,NYK</p>
-                <p>Calum,21,EDI</p>
-                <textarea id="csvInput" rows="10" cols="50" placeholder="copy the text above into here to test!"></textarea><br><br>
-                <button onclick="parseCSV()">Parse CSV</button>
-                <button onclick="detectMissing()">Detect Missing</button>
-                <button onclick="detectDuplicates()">Detect Duplicates</button>
-                <button onclick="cleanData()">Clean Data</button>
-                <div id="results"></div>
-            </td>
-            <td width="50%" valign="top">
-                <h2>How It Works</h2>
-                <h3>Big Picture:</h3>
-                <p>Frontend = HTML page with buttons (what users see)</p>
-                <p>Backend = C++ program that does the actual data cleaning</p>
-                <p>Heroku = Cloud server that hosts everything</p>
-                
-                <h3>The Backend (C++ Program):</h3>
-                <p><b>What it does:</b></p>
-                <p>- Reads CSV data (comma separated values)</p>
-                <p>- Finds missing values (empty cells)</p>
-                <p>- Finds duplicate rows (exact same data repeated)</p>
-                <p>- Cleans data (removes duplicates)</p>
-                
-                <p><b>The algorithms (written from scratch):</b></p>
-                <p>- parseCSV: splits text by commas and newlines into a grid</p>
-                <p>- detectMissingValues: checks each cell, if empty = missing</p>
-                <p>- detectDuplicates: uses a set to track seen rows</p>
-                <p>- cleanData: only keeps rows we have not seen before</p>
-                
-                <h3>The Frontend (HTML Page):</h3>
-                <p>- Shows a text box where you paste CSV data</p>
-                <p>- Has buttons to trigger different cleaning operations</p>
-                <p>- Displays results in JSON format</p>
-                
-                <h3>How They Talk:</h3>
-                <p>1. You click a button</p>
-                <p>2. JavaScript grabs the CSV text</p>
-                <p>3. Sends it to the backend (like /api/parse)</p>
-                <p>4. Backend processes it and sends back results</p>
-                <p>5. JavaScript displays the results</p>
-                
-                <h3>Key Technologies:</h3>
-                <p>- C++17 = programming language (fast, low level)</p>
-                <p>- Crow = web framework for C++</p>
-                <p>- Asio = networking library</p>
-                <p>- Docker = containerization</p>
-                <p>- Heroku = cloud platform</p>
-            </td>
-        </tr>
-    </table>
+    <h2>Tool</h2>
+    <p>Welcome to the Data Cleaning Toolkit!</p>
+    <p>name,age,city</p>
+    <p>Calum,21,EDI</p>
+    <p>Derek,22,NYK</p>
+    <p>Calum,21,EDI</p>
+    <textarea id="csvInput" rows="10" cols="50" placeholder="copy the text above into here to test!"></textarea><br><br>
+    <button onclick="parseCSV()">Parse CSV</button>
+    <button onclick="detectMissing()">Detect Missing</button>
+    <button onclick="detectDuplicates()">Detect Duplicates</button>
+    <button onclick="cleanData()">Clean Data</button>
+    <div id="results"></div>
     <script>
         const API_URL=window.location.origin;
         function showResult(data){document.getElementById('results').innerHTML='<pre>'+JSON.stringify(data,null,2)+'</pre>'}
