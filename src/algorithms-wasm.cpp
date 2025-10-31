@@ -64,4 +64,24 @@ extern "C"{
         }
         return count;
     }
+    EMSCRIPTEN_KEEPALIVE
+    int cleanData(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::set<std::string> seen;
+        int cleanedCount=0;
+        for(const auto& row:parsed){
+            std::stringstream ss;
+            for(size_t i=0;i<row.size();++i){
+                if(i>0)ss<<",";
+                ss<<row[i];
+            }
+            std::string rowStr=ss.str();
+            if(!seen.count(rowSrt)){
+                seen.insert(rowStr);
+                cleanedCount++;
+            }
+        }
+        return cleanedCount;
+    }
 }
