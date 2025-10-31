@@ -36,6 +36,9 @@
         async function cleanData(){const csv=document.getElementById('csvInput').value;if(wasmReady){const cleanedRows=wasmModule.ccall('cleanData','number',['string'],[csv]);const originalRows=wasmModule.ccall('parseCSV','number',['string'],[csv]);showResult({originalRows:originalRows,cleanedRows:cleanedRows,removedRows:originalRows-cleanedRows,message:'Data cleaned successfully (offline)',mode:'wasm'})}else{const res=await fetch(API_URL+'/api/clean',{method:'POST',body:csv});const data=await res.json();data.mode='api';showResult(data)}}
     </script>
     <script>
+        let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').style.display='inline-block'});document.getElementById('installBtn').addEventListener('click',async()=>{if(deferredPrompt){deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBtn').style.display='none'}});
+    </script>
+    <script>
         if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js').then(registration=>{console.log('Service Worker registered with scope:',registration.scope);}).catch(error=>{console.log('Service Worker registration failed:',error);});}
     </script>
 </body>
