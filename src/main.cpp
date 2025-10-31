@@ -35,6 +35,16 @@ int main(){
         return response;
     });
 
+    CROW_ROUTE(app, "/algorithms.wasm")
+    ([](){
+        std::ifstream file("frontend/algorithms.wasm",std::ios::binary);
+        std::stringstream buffer;
+        buffer<<file.rdbuf();
+        auto response=crow::response(buffer.str());
+        response.add_header("Content-Type","application/wasm");
+        return response;
+    });
+
     CROW_ROUTE(app,"/api/parse").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         auto data=req.body;
