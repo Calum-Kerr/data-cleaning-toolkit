@@ -1,4 +1,2 @@
-const cacheName='data-cleaner-cache-v1';
-const urlsToCache=['/app','/algorithms.js','/algorithms.wasm','manifest.json'];
-self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(urlsToCache)))});
-self.addEventListener('fetch',event=>{event.respondWith(caches.match(event.request).then(response=>response||fetch(event.request)))});
+const CACHE_NAME='data-cleaning-toolkit-v1';
+self.addEventListener('fetch',event=>{event.respondWith(caches.open(CACHE_NAME).then(cache=>cache.match(event.request).then(response=>response||fetch(event.request).then(fetchResponse=>{cache.put(event.request,fetchResponse.clone());return fetchResponse}))))});
