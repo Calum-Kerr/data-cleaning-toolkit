@@ -51,7 +51,7 @@ extern "C"{
         int count=0;
         for(const auto& row:parsed){
             std::stringstream ss;
-            for(size_t=0;i<row,size();++i){
+            for(size_t=0;i<row.size();++i){
                 if(i>0)ss<<",";
                 ss<<row[i];
             }
@@ -77,7 +77,7 @@ extern "C"{
                 ss<<row[i];
             }
             std::string rowStr=ss.str();
-            if(!seen.count(rowSrt)){
+            if(!seen.count(rowStr)){
                 seen.insert(rowStr);
                 cleanedCount++;
             }
