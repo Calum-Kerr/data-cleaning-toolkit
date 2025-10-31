@@ -43,4 +43,25 @@ extern "C"{
         }
         return count;
     }
+    EMSCRIPTEN_KEEPALIVE
+    int detectDuplicates(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::set<std::string> seen;
+        int count=0;
+        for(const auto& row:parsed){
+            std::stringstream ss;
+            for(size_t=0;i<row,size();++i){
+                if(i>0)ss<<",";
+                ss<<row[i];
+            }
+            std::string rowStr=ss.str();
+            if(seen.count(rowStr)){
+                count++;
+            }else{
+                seen.insert(rowStr);
+            }
+        }
+        return count;
+    }
 }
