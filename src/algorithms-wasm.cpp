@@ -51,7 +51,7 @@ extern "C"{
         int count=0;
         for(const auto& row:parsed){
             std::stringstream ss;
-            for(size_t=0;i<row.size();++i){
+            for(size_t i=0;i<row.size();++i){
                 if(i>0)ss<<",";
                 ss<<row[i];
             }
