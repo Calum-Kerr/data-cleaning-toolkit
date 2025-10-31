@@ -45,6 +45,16 @@ int main(){
         return response;
     });
 
+    CROW_ROUTE(app,"/manifest.json")
+    ([](){
+        std::ifstream file("frontend/manifest.json");
+        std::stringstream buffer;
+        buffer<<file.rdbuf();
+        auto response=crow::response(buffer.str());
+        response.add_header("Content-Type","application/json");
+        return response;
+    });
+
     CROW_ROUTE(app,"/api/parse").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         auto data=req.body;
