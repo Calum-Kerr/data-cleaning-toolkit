@@ -1,6 +1,6 @@
 #!/bin/bash
 EMCC="emsdk/upstream/emscripten/emcc"
-$EMCC src/algorithms.cpp\
+$EMCC src/algorithms-wasm.cpp\
     -o frontend/algorithms.js\
     -s WASM=1 \
     -s EXPORTED_FUNCTIONS='["_parseCSV","_detectMissing","_detectDuplicates","_cleanData"]' \
