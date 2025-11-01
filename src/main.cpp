@@ -144,5 +144,15 @@ int main(){
         return response;
     });
 
+    CROW_ROUTE(app,"/android-chrome-512x512.png")
+    ([](){
+        std::ifstream file("android-chrome-512x512.png",std::ios::binary);
+        std::stringstream buffer;
+        buffer<<file.rdbuf();
+        auto response=crow::response(buffer.str());
+        response.add_header("Content-Type","image/png");
+        return response;
+    });
+
     app.port(port).multithreaded().run();
 }
