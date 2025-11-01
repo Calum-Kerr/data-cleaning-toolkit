@@ -64,7 +64,7 @@ int main(){
         response.add_header("Content-Type","application/javascript");
         return response;
     });
-    
+
     CROW_ROUTE(app,"/api/parse").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         auto data=req.body;
@@ -124,6 +124,15 @@ int main(){
         return crow::response(result);
     });
     
+    CROW_ROUTE(app,"/favicon.ico")
+    ([](){
+        std::ifstream file("favicon.ico",std::ios::binary);
+        std::stringstream buffer;
+        buffer<<file.rdbuf();
+        auto response=crow::response(buffer.str());
+        response.add_header("Content-Type","image/x-icon");
+        return response;
+    });
 
     app.port(port).multithreaded().run();
 }
