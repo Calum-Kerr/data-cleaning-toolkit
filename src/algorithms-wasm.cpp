@@ -84,4 +84,8 @@ extern "C"{
         }
         return cleanedCount;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* cleanDataString(const char* csvData){
+        
+    }
 }
