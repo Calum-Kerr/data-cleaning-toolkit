@@ -48,7 +48,24 @@
         let uploadCSV='';
         let cleanedCSV='';
         document.getElementById('fileInput').addEventListener('change',async(e)=>{const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=async(e)=>{uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;document.getElementById('autoDetectionBtn').style.display='inline-block'};reader.readAsText(file);}});
-        
+        async function autoDetect(){
+            if(!uploadedCSV){alert('upload a csv file first!');return;}
+            const results={};
+            if(wasmReady){results.rows=wasmModule.ccall('parseCSV','number',['string'],[uploadCSV]);results.missing=wasmModule.ccall('detectMissing','number',['string'],[uploadCSV]);results.duplicates=wasmModule.ccall('detectDuplicates','number',['string'],[uploadCSV]);results.message='Auto-detection completed successfully (offline)';results.mode='wasm'}
+            else{
+                const parseRes=await fetch(API_URL+'/api/parse',{method:'POST',body:uploadCSV});
+                const parseData=await parseRes.json();
+                results.rows=parseData.rows;
+                const missingRes=await fetch(API_URL+'/api/detect-missing',{method:'POST',body:uploadCSV});
+                const missingData=await missingRes.json();
+                results.missing=missingData.missing;
+                const dupRes=await fetch(API_URL+'/api/detect-duplicates',{method:'POST',body:uploadCSV});
+                const dupData=await dupRes.json();
+                results.duplicates=dupData.duplicates;                
+            }
+            document.getElementById('autoDetectionResults').innerHTML='<h4>detection results:</h4><p>total rows: '+results.rows+'</p><p>missing values: '+results.missing+'</p><p>duplicate rows: '+results.duplicates+'</p>';
+            if(results.duplicates>0||results.missing>0){document.getElementById('autoCleanBtn').style.display='inline-block'}
+        }
     </script>
 </body>
 </html>
