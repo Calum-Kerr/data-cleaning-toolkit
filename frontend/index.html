@@ -66,6 +66,17 @@
             document.getElementById('autoDetectionResults').innerHTML='<h4>detection results:</h4><p>total rows: '+results.rows+'</p><p>missing values: '+results.missing+'</p><p>duplicate rows: '+results.duplicates+'</p>';
             if(results.duplicates>0||results.missing>0){document.getElementById('autoCleanBtn').style.display='inline-block'}
         }
+        async function autoClean(){
+            if(!uploadedCSV){alert('upload a csv file first!');return;}
+            if(wasmReady){cleanedRows=wasmModule.ccall('cleanData','number',['string'],[uploadCSV]);cleanedCSV=uploadedCSV;showResult({message:'data cleaned automatically',cleanedRows:cleanedRows,mode:'wasm'});}
+            else{
+                const res=await fetch(API_URL+'/api/clean',{method:'POST',body:uploadCSV});
+                const data=await res.json();
+                cleanedCSV=data.cleanedData;
+                showResult(data);
+            }
+            document.getElementById('downloadBtn').style.display='inline-block';
+        }
     </script>
 </body>
 </html>
