@@ -86,6 +86,25 @@ extern "C"{
     }
     EMSCRIPTEN_KEEPALIVE
     const char* cleanDataString(const char* csvData){
-        
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::set<std::string> seen;
+        std::stringstream result;
+        for(const auto& row:parsed){
+            std::stringstream ss;
+            for(size_t i=0;i<row.size();++i){
+                if(i>0)ss<<",";
+                ss<<row[i];
+            }
+            std::string rowStr=ss.str();
+            if(!seen.count(rowStr)){
+                seen.insert(rowStr);
+                result<<rowStr<<"\n";
+            }
+        }
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
     }
 }
