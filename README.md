@@ -27,3 +27,7 @@ cmake --build .
 ##run if build already exists
 
 .\build\Debug\Toolkit.exe
+
+or in git bash
+
+./build/Debug/Toolkit.exe
