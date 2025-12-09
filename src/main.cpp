@@ -126,7 +126,7 @@ int main(){
     
     CROW_ROUTE(app,"/favicon.ico")
     ([](){
-        std::ifstream file("favicon.ico",std::ios::binary);
+        std::ifstream file("frontend/favicon.ico",std::ios::binary);
         std::stringstream buffer;
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
@@ -136,7 +136,7 @@ int main(){
 
     CROW_ROUTE(app,"/android-chrome-192x192.png")
     ([](){
-        std::ifstream file("android-chrome-192x192.png",std::ios::binary);
+        std::ifstream file("frontend/android-chrome-192x192.png",std::ios::binary);
         std::stringstream buffer;
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
@@ -146,7 +146,7 @@ int main(){
 
     CROW_ROUTE(app,"/android-chrome-512x512.png")
     ([](){
-        std::ifstream file("android-chrome-512x512.png",std::ios::binary);
+        std::ifstream file("frontend/android-chrome-512x512.png",std::ios::binary);
         std::stringstream buffer;
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
