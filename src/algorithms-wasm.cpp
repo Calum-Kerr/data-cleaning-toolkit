@@ -107,4 +107,18 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    int detectWhitespace(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        int count=0;
+        for(const auto& row:parsed){
+            for(const auto& cell:row){
+                if(!cell.empty()&&(cell.front()==' '||cell.back()==' '||cell.front()=='\t'||cell.back()=='\t')){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }
