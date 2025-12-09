@@ -1760,6 +1760,8 @@ var _detectMissing = Module['_detectMissing'] = makeInvalidEarlyAccess('_detectM
 var _detectDuplicates = Module['_detectDuplicates'] = makeInvalidEarlyAccess('_detectDuplicates');
 var _cleanData = Module['_cleanData'] = makeInvalidEarlyAccess('_cleanData');
 var _cleanDataString = Module['_cleanDataString'] = makeInvalidEarlyAccess('_cleanDataString');
+var _detectWhitespace = Module['_detectWhitespace'] = makeInvalidEarlyAccess('_detectWhitespace');
+var _trimWhitespaceString = Module['_trimWhitespaceString'] = makeInvalidEarlyAccess('_trimWhitespaceString');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_init = makeInvalidEarlyAccess('_emscripten_stack_init');
@@ -1784,6 +1786,10 @@ function assignWasmExports(wasmExports) {
   _cleanData = Module['_cleanData'] = createExportWrapper('cleanData', 1);
   assert(typeof wasmExports['cleanDataString'] != 'undefined', 'missing Wasm export: cleanDataString');
   _cleanDataString = Module['_cleanDataString'] = createExportWrapper('cleanDataString', 1);
+  assert(typeof wasmExports['detectWhitespace'] != 'undefined', 'missing Wasm export: detectWhitespace');
+  _detectWhitespace = Module['_detectWhitespace'] = createExportWrapper('detectWhitespace', 1);
+  assert(typeof wasmExports['trimWhitespaceString'] != 'undefined', 'missing Wasm export: trimWhitespaceString');
+  _trimWhitespaceString = Module['_trimWhitespaceString'] = createExportWrapper('trimWhitespaceString', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
