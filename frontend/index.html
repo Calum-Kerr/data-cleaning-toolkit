@@ -83,6 +83,15 @@
             }
             document.getElementById('downloadBtn').style.display='inline-block';
         }
+        async function detectWhitespace(){
+            if(!uploadCSV){alert('upload a csv file first!');return;}
+            if(wasmReady){let count=wasmModule.ccall('detectWhitespace','number',['string'],[uploadCSV]);showResult({message:'whitespace detected',cellsWithWhitespace:count,mode:'wasm'});
+            }else{
+                let res=await fetch('/api/detect-whitespace',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                let data=await res.json();
+                showResult(data);
+            }
+        }
         function downloadCSV(){const blob=new Blob([cleanedCSV],{type:'text/csv'});const url=window.URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cleaned.csv';a.click();window.URL.revokeObjectURL(url);}
     </script>
 </body>
