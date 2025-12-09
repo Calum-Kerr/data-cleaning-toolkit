@@ -123,6 +123,25 @@ int main(){
         result["message"]="Data cleaned successfully";
         return crow::response(result);
     });
+
+    CROW_ROUTE(app,"/api/detect-whitespace").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        int count=0;
+        for(const auto& row:parsed){
+            for(const auto& cell:row){
+                if(!cell.empty()&&(cell.front()==' '||cell.back()==' '||cell.front()=='\t'||cell.back()=='\t')){
+                    count++;
+                }
+            }
+        }
+        crow::json::wvalue result;
+        result["message"]="whitespace detected";
+        result["cellsWithWhitespace"]=count;
+        result["mode"]="api";
+        return result;
+    });
     
     CROW_ROUTE(app,"/favicon.ico")
     ([](){
