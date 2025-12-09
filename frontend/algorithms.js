@@ -1759,6 +1759,7 @@ var _parseCSV = Module['_parseCSV'] = makeInvalidEarlyAccess('_parseCSV');
 var _detectMissing = Module['_detectMissing'] = makeInvalidEarlyAccess('_detectMissing');
 var _detectDuplicates = Module['_detectDuplicates'] = makeInvalidEarlyAccess('_detectDuplicates');
 var _cleanData = Module['_cleanData'] = makeInvalidEarlyAccess('_cleanData');
+var _cleanDataString = Module['_cleanDataString'] = makeInvalidEarlyAccess('_cleanDataString');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_init = makeInvalidEarlyAccess('_emscripten_stack_init');
@@ -1781,6 +1782,8 @@ function assignWasmExports(wasmExports) {
   _detectDuplicates = Module['_detectDuplicates'] = createExportWrapper('detectDuplicates', 1);
   assert(typeof wasmExports['cleanData'] != 'undefined', 'missing Wasm export: cleanData');
   _cleanData = Module['_cleanData'] = createExportWrapper('cleanData', 1);
+  assert(typeof wasmExports['cleanDataString'] != 'undefined', 'missing Wasm export: cleanDataString');
+  _cleanDataString = Module['_cleanDataString'] = createExportWrapper('cleanDataString', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');

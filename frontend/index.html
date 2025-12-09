@@ -72,11 +72,11 @@
         }
         async function autoClean(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
-            if(wasmReady){cleanedRows=wasmModule.ccall('cleanData','number',['string'],[uploadCSV]);cleanedCSV=uploadCSV;showResult({message:'data cleaned automatically',cleanedRows:cleanedRows,mode:'wasm'});}
+            if(wasmReady){cleanedRows=wasmModule.ccall('cleanData','number',['string'],[uploadCSV]);cleanedCSV=wasmModule.ccall('cleanDataString','string',['string'],[uploadCSV]);showResult({message:'data cleaned automatically',cleanedRows:cleanedRows,mode:'wasm'});}
             else{
                 const res=await fetch(API_URL+'/api/clean',{method:'POST',body:uploadCSV});
                 const data=await res.json();
-                cleanedCSV=data.cleanedData;
+                cleanedCSV=uploadCSV;
                 showResult(data);
             }
             document.getElementById('downloadBtn').style.display='inline-block';

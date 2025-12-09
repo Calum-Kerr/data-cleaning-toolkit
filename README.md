@@ -23,3 +23,7 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE="../vcpkg/scripts/buildsystems/vcpkg.cmake"
 cmake --build .
 
 .\Debug\Toolkit.exe
+
+##run if build already exists
+
+.\build\Debug\Toolkit.exe
