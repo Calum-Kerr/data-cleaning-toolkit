@@ -142,6 +142,36 @@ int main(){
         result["mode"]="api";
         return result;
     });
+
+    CROW_ROUTE(app,"/api/trim-whitespace").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        int count=0;
+        std::stringstream cleaned;
+        for(const auto& row:parsed){
+            for(size_t i=0;i<row.size();++i){
+                std::string cell=row[i];
+                size_t start=cell.find_first_not_of(" \t");
+                size_t end=cell.find_last_not_of(" \t");
+                if(start!=std::string::npos){
+                    cell=cell.substr(start,end-start+1);
+                    count++;
+                }else{
+                    cell="";
+                }
+                if(i>0)cleaned<<",";
+                cleaned<<cell;
+            }
+            cleaned<<"\n";
+        }
+        crow::json::wvalue result;
+        result["message"]="whitespace trimmed";
+        result["cellsTrimmed"]=count;
+        result["cleaned"]=cleaned.str();
+        result["mode"]="api";
+        return result;
+    });
     
     CROW_ROUTE(app,"/favicon.ico")
     ([](){
