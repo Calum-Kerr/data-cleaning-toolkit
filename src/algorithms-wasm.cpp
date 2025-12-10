@@ -169,6 +169,23 @@ extern "C"{
     }
     EMSCRIPTEN_KEEPALIVE
     const char* toLowerCaseString(const char* csvData){
-        
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::stringstream result;
+        for(const auto& row:parsed){
+            for(size_t i=0;i<row.size();++i){
+                std::string cell=row[i];
+                for(char& c:cell){
+                    if(c>='A'&&c<='Z')c=c+32;
+                }
+                if(i>0)result<<",";
+                result<<cell;
+            }
+            result<<"\n";
+        }
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
     }
 }
