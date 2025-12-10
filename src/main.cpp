@@ -198,7 +198,25 @@ int main(){
 
     CROW_ROUTE(app,"/api/to-lowercase").methods("POST"_method)
     ([&cleaner](const crow::request& req){
-        
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        std::stringstream cleaned;
+        for(const auto& row:parsed){
+            for(size_t i=0;i<row.size();++i){
+                std::string cell=row[i];
+                for(char& c:cell){
+                    if(c>='A'&&c<='Z')c=c+32;
+                }
+                if(i>0)cleaned<<",";
+                cleaned<<cell;
+            }
+            cleaned<<"\n";
+        }
+        crow::json::wvalue result;
+        result["message"]="converted to lowercase";
+        result["cleaned"]=cleaned.str();
+        result["mode"]="api";
+        return result;
     });
     
     CROW_ROUTE(app,"/favicon.ico")
