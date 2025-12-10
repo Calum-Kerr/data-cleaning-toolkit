@@ -195,6 +195,11 @@ int main(){
         result["mode"]="api";
         return result;
     });
+
+    CROW_ROUTE(app,"/api/to-lowercase").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        
+    });
     
     CROW_ROUTE(app,"/favicon.ico")
     ([](){
