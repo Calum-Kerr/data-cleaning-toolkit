@@ -106,15 +106,15 @@
             document.getElementById('downloadBtn').style.display='inline-block';
         }
         async function toUpperCase(){
-        if(!uploadCSV){alert('upload a csv file first!');return;}
-        if(wasmReady){cleanedCSV=wasmModule.ccall('toUpperCaseString','string',['string'],[uploadCSV]);showResult({message:'converted to uppercase',mode:'wasm'});
-        }else{
-            let res=await fetch('/api/to-uppercase',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
-            let data=await res.json();
-            cleanedCSV=data.cleaned;
-            showResult(data);
-        }
-        document.getElementById('downloadBtn').style.display='inline-block';
+            if(!uploadCSV){alert('upload a csv file first!');return;}
+            if(wasmReady){cleanedCSV=wasmModule.ccall('toUpperCaseString','string',['string'],[uploadCSV]);showResult({message:'converted to uppercase',mode:'wasm'});
+            }else{
+                let res=await fetch('/api/to-uppercase',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                let data=await res.json();
+                cleanedCSV=data.cleaned;
+                showResult(data);
+            }
+            document.getElementById('downloadBtn').style.display='inline-block';
         }
         function downloadCSV(){const blob=new Blob([cleanedCSV],{type:'text/csv'});const url=window.URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cleaned.csv';a.click();window.URL.revokeObjectURL(url);}
     </script>
