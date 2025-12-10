@@ -167,4 +167,8 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* toLowerCaseString(const char* csvData){
+        
+    }
 }
