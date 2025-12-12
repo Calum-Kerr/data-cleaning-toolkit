@@ -81,7 +81,7 @@
         async function parseCSV(){const csv=document.getElementById('csvInput').value;if(wasmReady){const rows=wasmModule.ccall('parseCSV','number',['string'],[csv]);showResult({rows:rows,message:'CSV parsed successfully (offline)',mode:'wasm'})}else{const res=await fetch(API_URL+'/api/parse',{method:'POST',body:csv});const data=await res.json();data.mode='api';showResult(data)}}
         async function detectMissing(){const csv=document.getElementById('csvInput').value;if(wasmReady){const missing=wasmModule.ccall('detectMissing','number',['string'],[csv]);showResult({missing:missing,message:'Missing values detected successfully (offline)',mode:'wasm'})}else{const res=await fetch(API_URL+'/api/detect-missing',{method:'POST',body:csv});const data=await res.json();data.mode='api';showResult(data)}}
         async function detectDuplicates(){const csv=document.getElementById('csvInput').value;if(wasmReady){const duplicates=wasmModule.ccall('detectDuplicates','number',['string'],[csv]);showResult({duplicates:duplicates,message:'Duplicate rows detected successfully (offline)',mode:'wasm'})}else{const res=await fetch(API_URL+'/api/detect-duplicates',{method:'POST',body:csv});const data=await res.json();data.mode='api';showResult(data)}}
-        async function cleanData(){const csv=document.getElementById('csvInput').value;if(wasmReady){const cleanedRows=wasmModule.ccall('cleanData','number',['string'],[csv]);const originalRows=wasmModule.ccall('parseCSV','number',['string'],[csv]);showResult({originalRows:originalRows,cleanedRows:cleanedRows,removedRows:originalRows-cleanedRows,message:'Data cleaned successfully (offline)',mode:'wasm'})}else{const res=await fetch(API_URL+'/api/clean',{method:'POST',body:csv});const data=await res.json();data.mode='api';showResult(data)}}
+        async function cleanData(){const csv=document.getElementById('csvInput').value;if(wasmReady){const cleanedRows=wasmModule.ccall('cleanData','number',['string'],[csv]);const originalRows=wasmModule.ccall('parseCSV','number',['string'],[csv]);cleanedCSV=wasmModule.ccall('cleanDataString','string',['string'],[csv]);showResult({originalRows:originalRows,cleanedRows:cleanedRows,removedRows:originalRows-cleanedRows,message:'Data cleaned successfully (offline)',mode:'wasm'})}else{const res=await fetch(API_URL+'/api/clean',{method:'POST',body:csv});const data=await res.json();cleanedCSV=data.cleaned;data.mode='api';showResult(data)};document.getElementById('downloadBtn').style.display='inline-block';document.getElementById('auditLogBtn').style.display='inline-block';document.getElementById('comparisonBtn').style.display='inline-block';document.getElementById('tableBtn').style.display='inline-block'}
     </script>
     <script>
         let deferredPrompt;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;document.getElementById('installBtn').style.display='inline-block'});document.getElementById('installBtn').addEventListener('click',async()=>{if(deferredPrompt){deferredPrompt.prompt();const{outcome}=await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById('installBtn').style.display='none'}});
@@ -123,6 +123,7 @@
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
             document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
         }
         async function detectWhitespace(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
@@ -145,6 +146,7 @@
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
             document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
         }
         async function toUpperCase(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
@@ -158,6 +160,7 @@
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
             document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
         }
         async function toLowerCase(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
@@ -171,6 +174,7 @@
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
             document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
         }
         async function detectNullValues(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
@@ -194,6 +198,7 @@
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
             document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
         }
         async function displayAuditLog(){
             if(wasmReady){showResult({message:'Audit log not available in WASM mode (offline)',mode:'wasm'});return;}
