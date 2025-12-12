@@ -200,4 +200,8 @@ extern "C"{
         }
         return count;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* standardiseNullValueString(const char* csvData){
+
+    }
 }
