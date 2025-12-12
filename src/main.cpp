@@ -266,7 +266,7 @@ int main(){
         return result;
     });
 
-    CROW_ROUTE(app,"/api/standardize-null-values").methods("POST"_method)
+    CROW_ROUTE(app,"/api/standardise-null-values").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         std::string csvData=req.body;
         auto parsed=cleaner.parseCSV(csvData);
@@ -282,8 +282,8 @@ int main(){
             cleaned<<"\n";
         }
         crow::json::wvalue result;
-        result["message"]="null values standardized";
-        result["cellsStandardized"]=count;
+        result["message"]="null values standardised";
+        result["cellsStandardised"]=count;
         result["cleaned"]=cleaned.str();
         result["mode"]="api";
         return result;
