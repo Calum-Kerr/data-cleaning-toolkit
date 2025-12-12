@@ -77,7 +77,7 @@ int main(){
     });
 
     CROW_ROUTE(app,"/api/detect-missing").methods("POST"_method)
-    ([&cleaner](const crow::request& req){
+    ([&cleaner, &auditLog](const crow::request& req){
         auto data=req.body;
         auto parsed=cleaner.parseCSV(data);
         auto missing=cleaner.detectMissingValues(parsed);
@@ -89,6 +89,7 @@ int main(){
                 }
             }
         }
+        auditLog.addEntry("Detect Missing", missingCount, parsed.size(), parsed.size());
         crow::json::wvalue result;
         result["missing"]=missingCount;
         result["message"]="Missing values detected successfully";
