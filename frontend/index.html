@@ -129,6 +129,27 @@
             }
             document.getElementById('downloadBtn').style.display='inline-block';
         }
+        async function detectNullValues(){
+            if(!uploadCSV){alert('upload a csv file first!');return;}
+            if(wasmReady){let count=wasmModule.ccall('detectNullValues','number',['string'],[uploadCSV]);showResult({message:'null values detected',cellsWithNullValues:count,mode:'wasm'});
+            }else{
+                let res=await fetch('/api/detect-null-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                let data=await res.json();
+                showResult(data);
+            }
+        }
+
+        async function standardizeNullValues(){
+            if(!uploadCSV){alert('upload a csv file first!');return;}
+            if(wasmReady){let count=wasmModule.ccall('detectNullValues','number',['string'],[uploadCSV]);cleanedCSV=wasmModule.ccall('standardizeNullValuesString','string',['string'],[uploadCSV]);showResult({message:'null values standardized',cellsStandardized:count,mode:'wasm'});
+            }else{
+                let res=await fetch('/api/standardize-null-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                let data=await res.json();
+                cleanedCSV=data.cleaned;
+                showResult(data);
+            }
+            document.getElementById('downloadBtn').style.display='inline-block';
+        }
         function downloadCSV(){const blob=new Blob([cleanedCSV],{type:'text/csv'});const url=window.URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cleaned.csv';a.click();window.URL.revokeObjectURL(url);}
     </script>
 </body>
