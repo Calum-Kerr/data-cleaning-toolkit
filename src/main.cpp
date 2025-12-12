@@ -149,7 +149,7 @@ int main(){
     });
 
     CROW_ROUTE(app,"/api/trim-whitespace").methods("POST"_method)
-    ([&cleaner](const crow::request& req){
+    ([&cleaner, &auditLog](const crow::request& req){
         std::string csvData=req.body;
         auto parsed=cleaner.parseCSV(csvData);
         int count=0;
@@ -170,6 +170,7 @@ int main(){
             }
             cleaned<<"\n";
         }
+        auditLog.addEntry("Trim Whitespace", count, parsed.size(), parsed.size());
         crow::json::wvalue result;
         result["message"]="whitespace trimmed";
         result["cellsTrimmed"]=count;
