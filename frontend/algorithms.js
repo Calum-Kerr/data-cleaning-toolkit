@@ -1764,6 +1764,8 @@ var _detectWhitespace = Module['_detectWhitespace'] = makeInvalidEarlyAccess('_d
 var _trimWhitespaceString = Module['_trimWhitespaceString'] = makeInvalidEarlyAccess('_trimWhitespaceString');
 var _toUpperCaseString = Module['_toUpperCaseString'] = makeInvalidEarlyAccess('_toUpperCaseString');
 var _toLowerCaseString = Module['_toLowerCaseString'] = makeInvalidEarlyAccess('_toLowerCaseString');
+var _detectNullValues = Module['_detectNullValues'] = makeInvalidEarlyAccess('_detectNullValues');
+var _standardiseNullValueString = Module['_standardiseNullValueString'] = makeInvalidEarlyAccess('_standardiseNullValueString');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_init = makeInvalidEarlyAccess('_emscripten_stack_init');
@@ -1796,6 +1798,10 @@ function assignWasmExports(wasmExports) {
   _toUpperCaseString = Module['_toUpperCaseString'] = createExportWrapper('toUpperCaseString', 1);
   assert(typeof wasmExports['toLowerCaseString'] != 'undefined', 'missing Wasm export: toLowerCaseString');
   _toLowerCaseString = Module['_toLowerCaseString'] = createExportWrapper('toLowerCaseString', 1);
+  assert(typeof wasmExports['detectNullValues'] != 'undefined', 'missing Wasm export: detectNullValues');
+  _detectNullValues = Module['_detectNullValues'] = createExportWrapper('detectNullValues', 1);
+  assert(typeof wasmExports['standardiseNullValueString'] != 'undefined', 'missing Wasm export: standardiseNullValueString');
+  _standardiseNullValueString = Module['_standardiseNullValueString'] = createExportWrapper('standardiseNullValueString', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
