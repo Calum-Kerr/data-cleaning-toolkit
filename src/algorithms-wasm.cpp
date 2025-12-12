@@ -188,4 +188,8 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    int detectNullValues(const char* csvData){
+        
+    }
 }
