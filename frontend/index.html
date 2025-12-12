@@ -51,6 +51,23 @@
         </div>
         <div id="comparisonStats"style="margin-top:20px;padding:10px;background:#f0f0f0;border-radius:5px"></div>
     </div>
+    <div id="tableView" style="display:none">
+        <h3>Data Table View</h3>
+        <div style="margin-bottom:10px">
+            <label>Rows per page: <select id="rowsPerPage" onchange="updateTableView()"><option>50</option><option>100</option><option>200</option></select></label>
+            <span id="tablePageInfo" style="margin-left:20px"></span>
+        </div>
+        <div style="overflow-x:auto;max-height:500px;overflow-y:auto;border:1px solid #ccc">
+            <table id="dataTable" border="1" cellpadding="5" style="width:100%;border-collapse:collapse">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div style="margin-top:10px">
+            <button onclick="previousPage()">Previous</button>
+            <button onclick="nextPage()">Next</button>
+        </div>
+    </div>
     <script src="algorithms.js"></script>
     <script>
         let wasmModule=null;
