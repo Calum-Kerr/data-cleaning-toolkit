@@ -304,14 +304,14 @@ int main(){
     ([&auditLog](){
         crow::json::wvalue result;
         result["operations"]=crow::json::wvalue::list();
+        int idx=0;
         for(const auto& entry:auditLog.entries){
-            crow::json::wvalue op;
-            op["operationName"]=entry.operationName;
-            op["cellsAffected"]=entry.cellsAffected;
-            op["rowsBefore"]=entry.rowsBefore;
-            op["rowsAfter"]=entry.rowsAfter;
-            op["timestamp"]=entry.timestamp;
-            result["operations"].push_back(op);
+            result["operations"][idx]["operationName"]=entry.operationName;
+            result["operations"][idx]["cellsAffected"]=entry.cellsAffected;
+            result["operations"][idx]["rowsBefore"]=entry.rowsBefore;
+            result["operations"][idx]["rowsAfter"]=entry.rowsAfter;
+            result["operations"][idx]["timestamp"]=entry.timestamp;
+            idx++;
         }
         return result;
     });

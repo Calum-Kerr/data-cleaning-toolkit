@@ -29,5 +29,5 @@ cmake --build .
 .\build\Debug\Toolkit.exe
 
 or in git bash
-
+cd build && cmake --build . && cd ..
 ./build/Debug/Toolkit.exe
