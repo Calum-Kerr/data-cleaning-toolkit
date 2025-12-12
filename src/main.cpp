@@ -97,7 +97,7 @@ int main(){
     });
 
     CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
-    ([&cleaner](const crow::request& req){
+    ([&cleaner, &auditLog](const crow::request& req){
         auto data=req.body;
         auto parsed=cleaner.parseCSV(data);
         auto duplicates=cleaner.detectDuplicates(parsed);
@@ -107,6 +107,7 @@ int main(){
                 ++duplicateCount;
             }
         }
+        auditLog.addEntry("Detect Duplicates", duplicateCount, parsed.size(), parsed.size());
         crow::json::wvalue result;
         result["duplicates"]=duplicateCount;
         result["message"]="Duplicate rows detected successfully";
