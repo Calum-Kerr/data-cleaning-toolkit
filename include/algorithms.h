@@ -11,4 +11,12 @@ class DataCleaner{
     std::vector<std::vector<std::string>> cleanData(const std::vector<std::vector<std::string>>& data);
 };
 
+struct AuditLogEntry{
+    std::string operationName;
+    int cellsAffected;
+    int rowsBefore;
+    int rowsAfter;
+    std::string timestamp;
+}
+
 #endif
