@@ -251,7 +251,42 @@ int main(){
 
     CROW_ROUTE(app,"/api/detect-null-values").methods("POST"_method)
     ([&cleaner](const crow::request& req){
-        
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        int count=0;
+        for(const auto& row:parsed){
+            for(const auto& cell:row){
+                if(cell.empty()||cell=="N/A"||cell=="n/a"||cell=="NA"||cell=="null"||cell=="NULL"||cell=="None"||cell=="NONE"||cell=="-"||cell=="?"){count++;}
+            }
+        }
+        crow::json::wvalue result;
+        result["message"]="null values detected";
+        result["cellsWithNullValues"]=count;
+        result["mode"]="api";
+        return result;
+    });
+
+    CROW_ROUTE(app,"/api/standardize-null-values").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        int count=0;
+        std::stringstream cleaned;
+        for(const auto& row:parsed){
+            for(size_t i=0;i<row.size();++i){
+                std::string cell=row[i];
+                if(cell.empty()||cell=="N/A"||cell=="n/a"||cell=="NA"||cell=="null"||cell=="NULL"||cell=="None"||cell=="NONE"||cell=="-"||cell=="?"){cell="";count++;}
+                if(i>0)cleaned<<",";
+                cleaned<<cell;
+            }
+            cleaned<<"\n";
+        }
+        crow::json::wvalue result;
+        result["message"]="null values standardized";
+        result["cellsStandardized"]=count;
+        result["cleaned"]=cleaned.str();
+        result["mode"]="api";
+        return result;
     });
 
     app.port(port).multithreaded().run();
