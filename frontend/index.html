@@ -245,7 +245,12 @@
         }
 
         function displayTableView(){
-
+            if(!cleanedCSV){alert('perform a cleaning operation first!');return;}
+            tableData=parseCSVToArray(cleanedCSV);
+            currentPage=0;
+            rowsPerPageValue=parseInt(document.getElementById('rowsPerPage').value);
+            updateTableView();
+            document.getElementById('tableView').style.display='block';
         }
 
         function updateTableView(){
