@@ -254,7 +254,30 @@
         }
 
         function updateTableView(){
-
+            if(tableData.length===0)return;
+            rowsPerPageValue=parseInt(document.getElementById('rowsPerPage').value);
+            const headers=tableData[0];
+            const startRow=currentPage*rowsPerPageValue+1;
+            const endRow=Math.min((currentPage+1)*rowsPerPageValue,tableData.length-1);
+            const totalPages=Math.ceil((tableData.length-1)/rowsPerPageValue);
+            let headerHtml='<tr>';
+            for(let i=0;i<headers.length;i++){headerHtml+='<th style="background:#f0f0f0;cursor:pointer" onclick="sortByColumn('+i+')">'+headers[i]+'</th>';}
+            headerHtml+='</tr>';
+            document.getElementById('tableHead').innerHTML=headerHtml;
+            let bodyHtml='';
+            for(let i=startRow;i<=endRow;i++){
+                bodyHtml+='<tr>';
+                for(let j=0;j<tableData[i].length;j++){
+                    const cell=tableData[i][j];
+                    let cellStyle='';
+                    if(cell==='' || cell==='null' || cell==='NULL'){cellStyle='background:#ffcccc';}
+                    else if(cell.match(/^\s+|\s+$/)){cellStyle='background:#ffffcc';}
+                    bodyHtml+='<td style="'+cellStyle+'">'+cell+'</td>';
+                }
+                bodyHtml+='</tr>';
+            }
+            document.getElementById('tableBody').innerHTML=bodyHtml;
+            document.getElementById('tablePageInfo').innerHTML='Page '+(currentPage+1)+' of '+totalPages+' (rows '+startRow+'-'+endRow+' of '+(tableData.length-1)+')';
         }
 
         function nextPage(){
