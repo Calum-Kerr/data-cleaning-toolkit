@@ -147,7 +147,7 @@
 
         async function standardiseNullValues(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
-            if(wasmReady){let count=wasmModule.ccall('detectNullValues','number',['string'],[uploadCSV]);cleanedCSV=wasmModule.ccall('standardiseNullValuesString','string',['string'],[uploadCSV]);showResult({message:'null values standardised',cellsstandardised:count,mode:'wasm'});
+            if(wasmReady){let count=wasmModule.ccall('detectNullValues','number',['string'],[uploadCSV]);cleanedCSV=wasmModule.ccall('standardiseNullValueString','string',['string'],[uploadCSV]);showResult({message:'null values standardised',cellsstandardised:count,mode:'wasm'});
             }else{
                 let res=await fetch('/api/standardise-null-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
                 let data=await res.json();
