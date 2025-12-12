@@ -180,6 +180,21 @@
             html+='</table>';
             document.getElementById('auditLog').innerHTML=html;
         }
+        function displayComparison(){
+            if(!uploadCSV || !cleanedCSV){alert('perform a cleaning operation first!');return;}
+            const originalRows=uploadCSV.split('\n').filter(r=>r.trim()).length;
+            const cleanedRows=cleanedCSV.split('\n').filter(r=>r.trim()).length;
+            const removedRows=originalRows-cleanedRows;
+            let originalHtml='<pre style="font-size:12px;white-space:pre-wrap;word-wrap:break-word">'+uploadCSV.substring(0,500)+'...</pre>';
+            let cleanedHtml='<pre style="font-size:12px;white-space:pre-wrap;word-wrap:break-word">'+cleanedCSV.substring(0,500)+'...</pre>';
+            let statsHtml='<h4>Statistics</h4><table border="1" cellpadding="5"><tr><th>Metric</th><th>Before</th><th>After</th><th>Change</th></tr>';
+            statsHtml+='<tr><td>Rows</td><td>'+originalRows+'</td><td>'+cleanedRows+'</td><td>-'+removedRows+'</td></tr>';
+            statsHtml+='</table>';
+            document.getElementById('originalDataTable').innerHTML=originalHtml;
+            document.getElementById('cleanedDataTable').innerHTML=cleanedHtml;
+            document.getElementById('comparisonStats').innerHTML=statsHtml;
+            document.getElementById('comparisonView').style.display='block';
+        }
         function downloadCSV(){const blob=new Blob([cleanedCSV],{type:'text/csv'});const url=window.URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cleaned.csv';a.click();window.URL.revokeObjectURL(url);}
     </script>
 </body>
