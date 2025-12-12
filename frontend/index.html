@@ -104,6 +104,7 @@
             }
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
         }
         async function detectWhitespace(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
@@ -125,6 +126,7 @@
             }
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
         }
         async function toUpperCase(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
@@ -137,6 +139,7 @@
             }
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
         }
         async function toLowerCase(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
@@ -149,6 +152,7 @@
             }
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
         }
         async function detectNullValues(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
@@ -171,6 +175,7 @@
             }
             document.getElementById('downloadBtn').style.display='inline-block';
             document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
         }
         async function displayAuditLog(){
             if(wasmReady){showResult({message:'Audit log not available in WASM mode (offline)',mode:'wasm'});return;}
