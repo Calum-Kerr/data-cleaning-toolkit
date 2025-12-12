@@ -190,6 +190,14 @@ extern "C"{
     }
     EMSCRIPTEN_KEEPALIVE
     int detectNullValues(const char* csvData){
-        
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        int count=0;
+        for(const auto& row:parsed){
+            for(const auto& cell:row){
+                if(cell.empty()||cell=="N/A"||cell=="n/a"||cell=="NA"||cell=="null"||cell=="NULL"||cell=="None"||cell=="NONE"||cell=="-"||cell=="?"){count++;}
+            }
+        }
+        return count;
     }
 }
