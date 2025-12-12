@@ -300,5 +300,21 @@ int main(){
         return result;
     });
 
+    CROW_ROUTE(app,"/api/get-audit-log").methods("GET"_method)
+    ([&auditLog](){
+        crow::json::wvalue result;
+        result["operations"]=crow::json::wvalue::list();
+        for(const auto& entry:auditLog.entries){
+            crow::json::wvalue op;
+            op["operationName"]=entry.operationName;
+            op["cellsAffected"]=entry.cellsAffected;
+            op["rowsBefore"]=entry.rowsBefore;
+            op["rowsAfter"]=entry.rowsAfter;
+            op["timestamp"]=entry.timestamp;
+            result["operations"].push_back(op);
+        }
+        return result;
+    });
+
     app.port(port).multithreaded().run();
 }
