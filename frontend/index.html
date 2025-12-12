@@ -286,7 +286,7 @@
         }
 
         function previousPage(){
-
+            if(currentPage>0){currentPage--;updateTableView();}
         }
 
         function sortByColumn(colIndex){
