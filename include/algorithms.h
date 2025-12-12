@@ -2,6 +2,31 @@
 #define ALGORITHMS_H
 #include <vector>
 #include <string>
+#include <chrono>
+#include <sstream>
+
+struct AuditLogEntry{
+    std::string operationName;
+    int cellsAffected;
+    int rowsBefore;
+    int rowsAfter;
+    std::string timestamp;
+};
+
+class AuditLog{
+    public:
+    std::vector<AuditLogEntry> entries;
+    void addEntry(const std::string& opName,int cellsAffected,int rowsBefore,int rowsAfter){
+        auto now=std::chrono::system_clock::now();
+        auto time=std::chrono::system_clock::to_time_t(now);
+        std::stringstream ss;
+        ss<<std::ctime(&time);
+        std::string timestamp=ss.str();
+        timestamp.pop_back(); // remove newline
+        entries.push_back({opName, cellsAffected, rowsBefore, rowsAfter, timestamp});
+    }
+    void clear(){entries.clear();}
+};
 
 class DataCleaner{
     public:
@@ -10,13 +35,5 @@ class DataCleaner{
     std::vector<bool> detectDuplicates(const std::vector<std::vector<std::string>>& data);
     std::vector<std::vector<std::string>> cleanData(const std::vector<std::vector<std::string>>& data);
 };
-
-struct AuditLogEntry{
-    std::string operationName;
-    int cellsAffected;
-    int rowsBefore;
-    int rowsAfter;
-    std::string timestamp;
-}
 
 #endif
