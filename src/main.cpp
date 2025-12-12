@@ -115,14 +115,16 @@ int main(){
     });
 
     CROW_ROUTE(app,"/api/clean").methods("POST"_method)
-    ([&cleaner](const crow::request& req){
+    ([&cleaner, &auditLog](const crow::request& req){
         auto data=req.body;
         auto parsed=cleaner.parseCSV(data);
         auto cleaned=cleaner.cleanData(parsed);
+        int removedRows=parsed.size()-cleaned.size();
+        auditLog.addEntry("Remove Duplicates", removedRows, parsed.size(), cleaned.size());
         crow::json::wvalue result;
         result["originalRows"]=parsed.size();
         result["cleanedRows"]=cleaned.size();
-        result["removedRows"]=parsed.size()-cleaned.size();
+        result["removedRows"]=removedRows;
         result["message"]="Data cleaned successfully";
         return crow::response(result);
     });
