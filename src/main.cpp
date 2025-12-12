@@ -249,5 +249,10 @@ int main(){
         return response;
     });
 
+    CROW_ROUTE(app,"/api/detect-null-values").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        
+    });
+
     app.port(port).multithreaded().run();
 }
