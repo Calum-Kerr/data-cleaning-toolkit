@@ -281,7 +281,8 @@
         }
 
         function nextPage(){
-
+            const totalPages=Math.ceil((tableData.length-1)/rowsPerPageValue);
+            if(currentPage<totalPages-1){currentPage++;updateTableView();}
         }
 
         function previousPage(){
