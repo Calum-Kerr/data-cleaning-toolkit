@@ -205,21 +205,23 @@ int main(){
     });
 
     CROW_ROUTE(app,"/api/to-lowercase").methods("POST"_method)
-    ([&cleaner](const crow::request& req){
+    ([&cleaner, &auditLog](const crow::request& req){
         std::string csvData=req.body;
         auto parsed=cleaner.parseCSV(csvData);
+        int count=0;
         std::stringstream cleaned;
         for(const auto& row:parsed){
             for(size_t i=0;i<row.size();++i){
                 std::string cell=row[i];
                 for(char& c:cell){
-                    if(c>='A'&&c<='Z')c=c+32;
+                    if(c>='A'&&c<='Z'){c=c+32;count++;}
                 }
                 if(i>0)cleaned<<",";
                 cleaned<<cell;
             }
             cleaned<<"\n";
         }
+        auditLog.addEntry("To Lowercase", count, parsed.size(), parsed.size());
         crow::json::wvalue result;
         result["message"]="converted to lowercase";
         result["cleaned"]=cleaned.str();
