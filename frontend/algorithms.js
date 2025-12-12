@@ -1722,7 +1722,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'FS_createLink',
   'FS_joinPath',
   'FS_mmapAlloc',
-  'FS_standardisePath',
+  'FS_standardizePath',
   'MEMFS',
   'TTY',
   'PIPEFS',
