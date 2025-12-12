@@ -152,6 +152,15 @@
             }
             document.getElementById('downloadBtn').style.display='inline-block';
         }
+        async function displayAuditLog(){
+            if(wasmReady){showResult({message:'Audit log not available in WASM mode (offline)',mode:'wasm'});return;}
+            const res=await fetch(API_URL+'/api/get-audit-log',{method:'GET'});
+            const data=await res.json();
+            let html='<h3>Audit Log</h3><table border="1" cellpadding="5"><tr><th>Operation</th><th>Cells Affected</th><th>Rows Before</th><th>Rows After</th><th>Timestamp</th></tr>';
+            for(const op of data.operations){html+='<tr><td>'+op.operationName+'</td><td>'+op.cellsAffected+'</td><td>'+op.rowsBefore+'</td><td>'+op.rowsAfter+'</td><td>'+op.timestamp+'</td></tr>';}
+            html+='</table>';
+            document.getElementById('auditLog').innerHTML=html;
+        }
         function downloadCSV(){const blob=new Blob([cleanedCSV],{type:'text/csv'});const url=window.URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cleaned.csv';a.click();window.URL.revokeObjectURL(url);}
     </script>
 </body>
