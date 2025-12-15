@@ -82,21 +82,22 @@
     <div id="auditLog"></div>
     <div id="detectionResults"></div>
     <div id="results"></div>
-    <div id="tableView" style="display:none">
-        <h3>Data Table View</h3>
-        <div style="margin-bottom:10px">
-            <label>Rows per page: <select id="rowsPerPage" onchange="updateTableView()"><option>50</option><option>100</option><option>200</option></select></label>
-            <span id="tablePageInfo" style="margin-left:20px"></span>
+    <div id="tableView" style="display:none" class="section">
+        <h2>Data Table View</h2>
+        <p>Browse your data in a structured table format:</p>
+        <div style="margin-bottom:15px">
+            <label>Rows per page: <select id="rowsPerPage" onchange="updateTableView()" style="padding:8px;border:1px solid #ddd;border-radius:4px"><option>50</option><option>100</option><option>200</option></select></label>
+            <span id="tablePageInfo" style="margin-left:20px;font-size:14px;color:#666"></span>
         </div>
-        <div style="overflow-x:auto;max-height:500px;overflow-y:auto;border:1px solid #ccc">
-            <table id="dataTable" border="1" cellpadding="5" style="width:100%;border-collapse:collapse">
+        <div style="overflow-x:auto;max-height:500px;overflow-y:auto;border:1px solid #ddd;border-radius:4px">
+            <table id="dataTable">
                 <thead id="tableHead"></thead>
                 <tbody id="tableBody"></tbody>
             </table>
         </div>
-        <div style="margin-top:10px">
-            <button onclick="previousPage()">Previous</button>
-            <button onclick="nextPage()">Next</button>
+        <div class="button-group" style="margin-top:15px">
+            <button onclick="previousPage()">Previous Page</button>
+            <button onclick="nextPage()">Next Page</button>
         </div>
     </div>
     <script src="algorithms.js"></script>
