@@ -44,6 +44,16 @@
             <button onclick="toLowerCase()">Convert to Lowercase</button>
         </div>
     </div>
+    <div class="section">
+        <h2>4. View Results</h2>
+        <p>Examine your cleaned data and operation details:</p>
+        <div class="button-group">
+            <button id="comparisonBtn" style="display:none" onclick="displayComparison()">View Before/After</button>
+            <button id="tableBtn" style="display:none" onclick="displayTableView()">View Data Table</button>
+            <button id="auditLogBtn" style="display:none" onclick="displayAuditLog()">View Audit Log</button>
+        </div>
+        <div id="results"></div>
+    </div>
     <br><br>
     <button onclick="parseCSV()">Parse CSV</button>
     <button id="installBtn"style="display:none">Install App</button>
