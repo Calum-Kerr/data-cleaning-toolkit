@@ -9,8 +9,17 @@
 <body>
     <h1>Data Cleaning Toolkit</h1>
     <p style="color:#666;margin-bottom:20px">Automated, transparent, privacy-first data cleaning. Upload a CSV file and clean your data in seconds.</p>
-    <h3>or upload csv file</h3>
-    <input type="file" id="fileInput" accept=".csv">
+    <div class="section">
+        <h2>1. Upload Data</h2>
+        <p>Paste CSV data below or upload a file:</p>
+        <textarea id="csvInput" rows="8" placeholder="Paste CSV data here, or upload a file below"></textarea>
+        <div style="margin-top:10px">
+            <label>Or upload CSV file: <input type="file" id="fileInput" accept=".csv"></label>
+        </div>
+        <div class="button-group">
+            <button id="installBtn" style="display:none">Install App</button>
+        </div>
+    </div>
     <br><br>
     <button onclick="parseCSV()">Parse CSV</button>
     <button onclick="detectMissing()">Detect Missing</button>
