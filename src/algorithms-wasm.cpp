@@ -201,4 +201,8 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    int detectOutliers(const char* csvData){
+
+    }
 }
