@@ -348,6 +348,12 @@ int main(){
                 }
             }
         }
+        crow::json::wvalue result;
+        result["outliers"]=outlierCount;
+        result["message"]="outlier detection completed";
+        result["details"]=outlierDetails;
+        result["mode"]="api";
+        return crow::response(result);
     });
 
     app.port(port).multithreaded().run();
