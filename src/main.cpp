@@ -316,5 +316,11 @@ int main(){
         return result;
     });
 
+    CROW_ROUTE(app,"/api/detect-outliers").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        
+    });
+
     app.port(port).multithreaded().run();
 }
