@@ -203,6 +203,24 @@ extern "C"{
     }
     EMSCRIPTEN_KEEPALIVE
     int detectOutliers(const char* csvData){
-
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        if(parsed.size()<2)return 0;
+        int outlierCount=0;
+        size_t numCols=parsed[0].size();
+        for(size_t col=0;col<numCols;col++){
+            std::vector<double> values;
+            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()){try{double val=std::stod(parsed[row][col]);}catch(...){}}}
+            if(values.size()<4)continue;
+            std::sort(values.begin(),values.end());
+            size_t n=values.size();
+            double q1=values[n/4];
+            double q3=values[3*n/4];
+            double iqr=q3-q1;
+            double lower=q1-1.5*iqr;
+            double upper=q3+1.5*iqr;
+            for(double val:values){if(val<lower||val>upper)outlierCount++;}
+        }
+        return outlierCount;
     }
 }
