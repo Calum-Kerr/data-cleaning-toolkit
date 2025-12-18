@@ -319,7 +319,12 @@ int main(){
     CROW_ROUTE(app,"/api/detect-outliers").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         std::string csvData=req.body;
-        
+        auto parsed=cleaner.parseCSV(csvData);
+        if(parsed.size()<2){crow::json::wvalue result; result["outliers"]=0;result["message"]="insufficient data for outlier detection";return crow::response(result);}
+        int outlierCount=0;
+        size_t numCols=parsed[0].size();
+        crow::json::wvalue outlierDetails=crow::json::wvalue::list();
+        int detailIdx=0;
     });
 
     app.port(port).multithreaded().run();
