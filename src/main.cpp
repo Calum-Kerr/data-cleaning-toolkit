@@ -336,6 +336,17 @@ int main(){
             double iqr=q3-q1;
             double lower=q1-1.5*iqr;
             double upper=q3+1.5*iqr;
+            for(size_t i=0;i<values.size();i++){
+                if(values[i]<lower||values[i]>upper){
+                    outlierCount++;
+                    outlierDetails[detailIdx]["row"]=rowIndices[i];
+                    outlierDetails[detailIdx]["column"]=col;
+                    outlierDetails[detailIdx]["value"]=values[i];
+                    outlierDetails[detailIdx]["lower"]=lower;
+                    outlierDetails[detailIdx]["upper"]=upper;
+                    detailIdx++;
+                }
+            }
         }
     });
 
