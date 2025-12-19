@@ -417,5 +417,27 @@ int main(){
         return crow::response(result);
     });
 
+    CROW_ROUTE(app,"/api/detect-inconsistent-values").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        if(parsed.size()<2){crow::json::wvalue result; result["inconsistentCount"]=0;result["message"]="insufficient data for inconsistency detection";return crow::response(result);}
+        auto levenshteinDist=[](const std::string& s1,const std::string& s2)->int{
+            size_t m=s1.length();
+            size_t n=s2.length();
+            std::vector<std::vector<int>> dp(m+1,std::vector<int>(n+1,0));
+            for(size_t i=0;i<=m;i++)dp[i][0]=i;
+            for(size_t j=0;j<=n;j++)dp[0][j]=j;
+            for(size_t i=1;i<=m;i++){for(size_t j=1;j<=n;j++){if(s1[i-1]==s2[j-1]){dp[i][j]=dp[i-1][j-1];}else{dp[i][j]=1+std::min({dp[i-1][j],dp[i][j-1],dp[i-1][j-1]});}}}
+            return dp[m][n];
+        };
+
+    });
+
+    CROW_ROUTE(app,"/api/standardise-values").methods("POST"_method)
+    ([&cleaner, &auditLog](const crow::request& req){
+        
+    });
+
     app.port(port).multithreaded().run();
 }
