@@ -365,5 +365,21 @@ int main(){
         return crow::response(result);
     });
 
+    CROW_ROUTE(app,"/api/remove-outliers").methods("POST"_method)
+    ([&cleaner, &auditLog](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        if(parsed.size()<2){crow::json::wvalue result; result["originalRows"]=parsed.size();result["cleanedRows"]=parsed.size();result["removedRows"]=0;result["message"]="insufficient data for outlier removal";return crow::response(result);}
+        auto isNumericStr=[](const std::string& str)->bool{
+            if(str.empty())return false;
+            size_t start=0;
+            if(str[0]=='-'||str[0]=='+')start=1;
+            if(start>=str.length())return false;
+            bool hasDecimal=false;
+            for(size_t i=start;i<str.length();i++){if(str[i]=='.'){if(hasDecimal)return false;hasDecimal=true;}else if(str[i]<'0'||str[i]>'9')return false;}
+            return true;
+        };
+    });
+
     app.port(port).multithreaded().run();
 }
