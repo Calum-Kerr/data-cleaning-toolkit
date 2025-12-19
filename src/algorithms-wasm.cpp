@@ -224,30 +224,22 @@ extern "C"{
         std::string data(csvData);
         auto parsed=parseCSVInternal(data);
         if(parsed.size()<2)return 0;
-        int outlierCount=0;
+        std::set<int> outlierRows;
         size_t numCols=parsed[0].size();
         for(size_t col=0;col<numCols;col++){
-            std::vector<double> values;
-            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&isNumeric(parsed[row][col])){double val=std::stod(parsed[row][col]);values.push_back(val);}}
-            if(values.size()<4)continue;
-            std::sort(values.begin(),values.end());
-            size_t n=values.size();
-            double q1_idx=(n+1)/4.0-1;
-            double q3_idx=3*(n+1)/4.0-1;
-            size_t q1_lower=(size_t)q1_idx;
-            size_t q1_upper=q1_lower+1;
-            double q1_frac=q1_idx-q1_lower;
-            double q1=(q1_upper<n)?values[q1_lower]*(1-q1_frac)+values[q1_upper]*q1_frac:values[q1_lower];
-            size_t q3_lower=(size_t)q3_idx;
-            size_t q3_upper=q3_lower+1;
-            double q3_frac=q3_idx-q3_lower;
-            double q3=(q3_upper<n)?values[q3_lower]*(1-q3_frac)+values[q3_upper]*q3_frac:values[q3_lower];
+            std::vector<std::pair<double,int>> valueRowPairs;
+            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&isNumeric(parsed[row][col])){double val=std::stod(parsed[row][col]);valueRowPairs.push_back({val,row});}}
+            if(valueRowPairs.size()<4)continue;
+            std::sort(valueRowPairs.begin(),valueRowPairs.end());
+            size_t n=valueRowPairs.size();
+            double q1=valueRowPairs[n/4].first;
+            double q3=valueRowPairs[3*n/4].first;
             double iqr=q3-q1;
             double lower=q1-1.5*iqr;
             double upper=q3+1.5*iqr;
-            for(double val:values){if(val<lower||val>upper)outlierCount++;}
+            for(size_t i=0;i<valueRowPairs.size();i++){if(valueRowPairs[i].first<lower||valueRowPairs[i].first>upper){outlierRows.insert(valueRowPairs[i].second);}}
         }
-        return outlierCount;
+        return outlierRows.size();
     }
     EMSCRIPTEN_KEEPALIVE
     const char* removeOutliersString(const char* csvData){
