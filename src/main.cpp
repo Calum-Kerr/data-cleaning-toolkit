@@ -465,7 +465,17 @@ int main(){
 
     CROW_ROUTE(app,"/api/standardise-values").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
-        
+        auto body=crow::json::load(req.body);
+        if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+        std::string csvData=body["csvData"].s();
+        std::string mappingsJson=body["mappings"].s();
+        auto parsed=cleaner.parseCSV(csvData);
+        if(parsed.size()<2){crow::json::wvalue result; result["originalRows"]=parsed.size();result["cleanedRows"]=parsed.size();result["valuesStandardised"]=0;result["message"]="insufficient data for standardisation";return crow::response(result);}
+        std::map<std::string,std::map<std::string,std::string>> columnMappings;
+        size_t pos=0;
+        std::string currentCol;
+        while(pos<mappingsJson.length()){
+            
     });
 
     app.port(port).multithreaded().run();
