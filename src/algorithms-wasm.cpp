@@ -232,8 +232,21 @@ extern "C"{
             if(values.size()<4)continue;
             std::sort(values.begin(),values.end());
             size_t n=values.size();
-            double q1=values[n/4];
-            double q3=values[3*n/4];
+
+            // calculate quartiles using proper method with linear interpolation
+            double q1_idx=(n+1)/4.0-1;
+            double q3_idx=3*(n+1)/4.0-1;
+
+            size_t q1_lower=(size_t)q1_idx;
+            size_t q1_upper=q1_lower+1;
+            double q1_frac=q1_idx-q1_lower;
+            double q1=(q1_upper<n)?values[q1_lower]*(1-q1_frac)+values[q1_upper]*q1_frac:values[q1_lower];
+
+            size_t q3_lower=(size_t)q3_idx;
+            size_t q3_upper=q3_lower+1;
+            double q3_frac=q3_idx-q3_lower;
+            double q3=(q3_upper<n)?values[q3_lower]*(1-q3_frac)+values[q3_upper]*q3_frac:values[q3_lower];
+
             double iqr=q3-q1;
             double lower=q1-1.5*iqr;
             double upper=q3+1.5*iqr;
