@@ -22,6 +22,24 @@ bool isNumeric(const std::string& str){
     return true;
 }
 
+int levenshteinDistance(const std::string& s1,const std::string& s2){
+    size_t m=s1.length();
+    size_t n=s2.length();
+    std::vector<std::vector<int>> dp(m+1,std::vector<int>(n+1,0));
+    for(size_t i=0;i<=m;i++)dp[i][0]=i;
+    for(size_t j=0;j<=n;j++)dp[0][j]=j;
+    for(size_t i=1;i<=m;i++){
+        for(size_t j=1;j<=n;j++){
+            if(s1[i-1]==s2[j-1]){
+                dp[i][j]=dp[i-1][j-1];
+            }else{
+                dp[i][j]=1+std::min({dp[i-1][j],dp[i][j-1],dp[i-1][j-1]});
+            }
+        }
+    }
+    return dp[m][n];
+}
+
 std::vector<std::vector<std::string>> parseCSVInternal(const std::string& data){
     std::vector<std::vector<std::string>> result;
     std::stringstream ss(data);
@@ -275,5 +293,31 @@ extern "C"{
         char* cstr=new char[resultStr.length()+1];
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
+    }
+    EMSCRIPTEN_KEEPALIVE
+    int detectInconsistentValues(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        if(parsed.size()<2)return 0;
+        int inconsistentCount=0;
+        size_t numCols=parsed[0].size();
+        for(size_t col=0;col<numCols;col++){
+            std::vector<std::string> colValues;
+            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&!parsed[row][col].empty()){colValues.push_back(parsed[row][col]);}}
+            if(colValues.size()<2)continue;
+            std::set<std::string> processedValues;
+            for(size_t i=0;i<colValues.size();i++){
+                if(processedValues.count(colValues[i]))continue;
+                processedValues.insert(colValues[i]);
+                bool foundSimilar=false;
+                for(size_t j=i+1;j<colValues.size();j++){
+                    if(processedValues.count(colValues[j]))continue;
+                    int distance=levenshteinDistance(colValues[i],colValues[j]);
+                    if(distance<=2){foundSimilar=true;inconsistentCount++;}
+                }
+                if(foundSimilar)inconsistentCount++;
+            }
+        }
+        return inconsistentCount;
     }
 }
