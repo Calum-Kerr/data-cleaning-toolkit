@@ -258,20 +258,21 @@
             }
         }
         async function removeOutliers(){
-            if(!uploadCSV){alert('upload a csv file first!');return;}
+            const csv=document.getElementById('csvInput').value;
+            if(!csv){alert('upload a csv file first!');return;}
             console.log('removeOutliers called, wasmReady='+wasmReady);
             let useAPI=!wasmReady;
             if(wasmReady){
                 try{
                     console.log('Calling WASM removeOutliersString');
-                    let count=wasmModule.ccall('detectOutliers','number',['string'],[uploadCSV]);
-                    cleanedCSV=wasmModule.ccall('removeOutliersString','string',['string'],[uploadCSV]);
+                    let count=wasmModule.ccall('detectOutliers','number',['string'],[csv]);
+                    cleanedCSV=wasmModule.ccall('removeOutliersString','string',['string'],[csv]);
                     showResult({message:'outliers removed',rowsRemoved:count,mode:'wasm'});
                 }catch(e){console.log('WASM function not available, falling back to API: '+e.message);useAPI=true;}
             }
             if(useAPI){
                 console.log('Using API endpoint');
-                let res=await fetch('/api/remove-outliers',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                let res=await fetch('/api/remove-outliers',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
                 let data=await res.json();
                 cleanedCSV=data.cleaned;
                 showResult(data);
