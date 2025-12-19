@@ -1767,6 +1767,7 @@ var _toLowerCaseString = Module['_toLowerCaseString'] = makeInvalidEarlyAccess('
 var _detectNullValues = Module['_detectNullValues'] = makeInvalidEarlyAccess('_detectNullValues');
 var _standardiseNullValueString = Module['_standardiseNullValueString'] = makeInvalidEarlyAccess('_standardiseNullValueString');
 var _detectOutliers = Module['_detectOutliers'] = makeInvalidEarlyAccess('_detectOutliers');
+var _removeOutliersString = Module['_removeOutliersString'] = makeInvalidEarlyAccess('_removeOutliersString');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_init = makeInvalidEarlyAccess('_emscripten_stack_init');
@@ -1805,6 +1806,8 @@ function assignWasmExports(wasmExports) {
   _standardiseNullValueString = Module['_standardiseNullValueString'] = createExportWrapper('standardiseNullValueString', 1);
   assert(typeof wasmExports['detectOutliers'] != 'undefined', 'missing Wasm export: detectOutliers');
   _detectOutliers = Module['_detectOutliers'] = createExportWrapper('detectOutliers', 1);
+  assert(typeof wasmExports['removeOutliersString'] != 'undefined', 'missing Wasm export: removeOutliersString');
+  _removeOutliersString = Module['_removeOutliersString'] = createExportWrapper('removeOutliersString', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
