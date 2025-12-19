@@ -454,6 +454,13 @@ int main(){
                 }
             }
         }
+        crow::json::wvalue result;
+        result["inconsistentCount"]=inconsistentCount;
+        result["message"]="inconsistency detection completed";
+        result["mode"]="api";
+        result["suggestedMappings"]=crow::json::wvalue::object();
+        for(auto& colEntry:suggestedMappings){result["suggestedMappings"][colEntry.first]=crow::json::wvalue::object();for(auto& valEntry:colEntry.second){result["suggestedMappings"][colEntry.first][valEntry.first]=valEntry.second[0];}}
+        return crow::response(result);
     });
 
     CROW_ROUTE(app,"/api/standardise-values").methods("POST"_method)
