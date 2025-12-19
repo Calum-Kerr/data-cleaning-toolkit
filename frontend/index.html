@@ -405,25 +405,11 @@
         async function detectInconsistentValues(){
             const csv=document.getElementById('csvInput').value;
             if(!csv){alert('upload a csv file first!');return;}
-            if(wasmReady){
-                try{
-                    let count=wasmModule.ccall('detectInconsistentValues','number',['string'],[csv]);
-                    showResult({message:'inconsistent values detected',inconsistentCount:count,mode:'wasm'});
-                }catch(e){
-                    console.log('WASM function not available, falling back to API: '+e.message);
-                    let res=await fetch('/api/detect-inconsistent-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
-                    let data=await res.json();
-                    suggestedMappings=data.suggestedMappings||{};
-                    displayMappingsUI();
-                    showResult(data);
-                }
-            }else{
-                let res=await fetch('/api/detect-inconsistent-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
-                let data=await res.json();
-                suggestedMappings=data.suggestedMappings||{};
-                displayMappingsUI();
-                showResult(data);
-            }
+            let res=await fetch('/api/detect-inconsistent-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+            let data=await res.json();
+            suggestedMappings=data.suggestedMappings||{};
+            displayMappingsUI();
+            showResult(data);
         }
         function displayMappingsUI(){
             if(Object.keys(suggestedMappings).length===0){document.getElementById('mappingsDisplay').style.display='none';document.getElementById('applyStandardisationBtn').style.display='none';return;}
