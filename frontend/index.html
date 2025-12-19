@@ -244,10 +244,11 @@
             }
         }
         async function detectOutliers(){
-            if(!uploadCSV){alert('upload a csv file first!');return;}
-            if(wasmReady){let count=wasmModule.ccall('detectOutliers','number',['string'],[uploadCSV]);showResult({message:'outliers detected',outliersFound:count,mode:'wasm'});
+            const csv=document.getElementById('csvInput').value;
+            if(!csv){alert('upload a csv file first!');return;}
+            if(wasmReady){let count=wasmModule.ccall('detectOutliers','number',['string'],[csv]);showResult({message:'outliers detected',rowsWithOutliers:count,mode:'wasm'});
             }else{
-                let res=await fetch('/api/detect-outliers',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                let res=await fetch('/api/detect-outliers',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
                 let data=await res.json();
                 let html='<h4>Outliers Detected: '+data.outliers+'</h4>';
                 if(data.outliers>0){html+='<table border="1" cellpadding="5"><tr><th>Row</th><th>Column</th><th>Value</th><th>Valid Range</th></tr>';
