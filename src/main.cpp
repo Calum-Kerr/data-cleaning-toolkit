@@ -475,7 +475,37 @@ int main(){
         size_t pos=0;
         std::string currentCol;
         while(pos<mappingsJson.length()){
-            
+            if(mappingsJson[pos]=='"'){
+                size_t endQuote=mappingsJson.find('"',pos+1);
+                if(endQuote!=std::string::npos){
+                    std::string key=mappingsJson.substr(pos+1,endQuote-pos-1);
+                    pos=endQuote+1;
+                    while(pos<mappingsJson.length()&&(mappingsJson[pos]==':'||mappingsJson[pos]==' '||mappingsJson[pos]=='\t'||mappingsJson[pos]=='\n')){pos++;}
+                    if(pos<mappingsJson.length()&&mappingsJson[pos]=='{'){
+                        currentCol=key;
+                        pos++;
+                        while(pos<mappingsJson.length()&&mappingsJson[pos]!='}'){
+                            if(mappingsJson[pos]=='"'){
+                                size_t keyEnd=mappingsJson.find('"',pos+1);
+                                if(keyEnd!=std::string::npos){
+                                    std::string fromVal=mappingsJson.substr(pos+1,keyEnd-pos-1);
+                                    pos=keyEnd+1;
+                                    while(pos<mappingsJson.length()&&(mappingsJson[pos]==':'||mappingsJson[pos]==' '||mappingsJson[pos]=='\t'||mappingsJson[pos]=='\n')){pos++;}
+                                    if(pos<mappingsJson.length()&&mappingsJson[pos]=='"'){
+                                        size_t valEnd=mappingsJson.find('"',pos+1);
+                                        if(valEnd!=std::string::npos){
+                                            std::string toVal=mappingsJson.substr(pos+1,valEnd-pos-1);
+                                            columnMappings[currentCol][fromVal]=toVal;
+                                            pos=valEnd+1;
+                                        }else{pos++;}
+                                    }else{pos++;}
+                                }else{pos++;}
+                            }else{pos++;}
+                        }
+                    }else{pos++;}
+                }else{pos++;}
+            }else{pos++;}
+        }
     });
 
     app.port(port).multithreaded().run();
