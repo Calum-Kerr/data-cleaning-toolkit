@@ -74,6 +74,7 @@
             <button onclick="standardiseNullValues()">Standardise Null Values</button>
             <button onclick="toUpperCase()">Convert to Uppercase</button>
             <button onclick="toLowerCase()">Convert to Lowercase</button>
+            <button onclick="removeOutliers()">Remove Outliers</button>
         </div>
     </div>
     <div class="section">
@@ -255,6 +256,20 @@
                 document.getElementById('detectionResults').innerHTML=html;
                 showResult(data);
             }
+        }
+        async function removeOutliers(){
+            if(!uploadCSV){alert('upload a csv file first!');return;}
+            if(wasmReady){let count=wasmModule.ccall('detectOutliers','number',['string'],[uploadCSV]);cleanedCSV=wasmModule.ccall('removeOutliersString','string',['string'],[uploadCSV]);showResult({message:'outliers removed',rowsRemoved:count,mode:'wasm'});
+            }else{
+                let res=await fetch('/api/remove-outliers',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                let data=await res.json();
+                cleanedCSV=data.cleaned;
+                showResult(data);
+            }
+            document.getElementById('downloadBtn').style.display='inline-block';
+            document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
         }
         async function standardiseNullValues(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
