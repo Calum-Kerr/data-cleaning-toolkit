@@ -431,10 +431,15 @@ int main(){
             for(size_t i=1;i<=m;i++){for(size_t j=1;j<=n;j++){if(s1[i-1]==s2[j-1]){dp[i][j]=dp[i-1][j-1];}else{dp[i][j]=1+std::min({dp[i-1][j],dp[i][j-1],dp[i-1][j-1]});}}}
             return dp[m][n];
         };
+        auto toLower=[](const std::string& str)->std::string{std::string result=str;std::transform(result.begin(),result.end(),result.begin(),::tolower);return result;};
+        auto isNameColumn=[&toLower](const std::string& colName)->bool{std::string lower=toLower(colName);const std::vector<std::string> nameKeywords={"player","name","first name","last name","full name","employee","customer","person","author","contact","user","username","email","phone","address","street","city","country","state","zip","postal"};for(const auto& keyword:nameKeywords){if(lower.find(keyword)!=std::string::npos){return true;}}return false;};
         int inconsistentCount=0;
+        std::vector<std::string> skippedNameColumns;
         std::map<std::string,std::map<std::string,std::vector<std::string>>> suggestedMappings;
         size_t numCols=parsed[0].size();
         for(size_t col=0;col<numCols;col++){
+            std::string colName=parsed[0][col];
+            if(isNameColumn(colName)){skippedNameColumns.push_back(colName);continue;}
             std::vector<std::string> colValues;
             for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&!parsed[row][col].empty()){colValues.push_back(parsed[row][col]);}}
             if(colValues.size()<2)continue;
@@ -447,7 +452,6 @@ int main(){
                     int distance=levenshteinDist(colValues[i],colValues[j]);
                     if(distance<=2){
                         inconsistentCount++;
-                        std::string colName=parsed[0][col];
                         if(suggestedMappings[colName].find(colValues[i])==suggestedMappings[colName].end()){suggestedMappings[colName][colValues[i]]=std::vector<std::string>();}
                         suggestedMappings[colName][colValues[i]].push_back(colValues[j]);
                     }
@@ -460,6 +464,7 @@ int main(){
         result["mode"]="api";
         result["suggestedMappings"]=crow::json::wvalue::object();
         for(auto& colEntry:suggestedMappings){result["suggestedMappings"][colEntry.first]=crow::json::wvalue::object();for(auto& valEntry:colEntry.second){result["suggestedMappings"][colEntry.first][valEntry.first]=valEntry.second[0];}}
+        if(!skippedNameColumns.empty()){result["warning"]="name columns excluded from detection to protect data integrity";std::string colsJson="[";for(size_t i=0;i<skippedNameColumns.size();i++){if(i>0)colsJson+=",";colsJson+="\""+skippedNameColumns[i]+"\"";}colsJson+="]";result["skippedColumns"]=crow::json::load(colsJson);}
         return crow::response(result);
     });
 
