@@ -2,6 +2,7 @@
 #include <vector>
 #include <sstream>
 #include <set>
+#include <algorithm>
 #include <emscripten/emscripten.h>
 
 std::vector<std::vector<std::string>> parseCSVInternal(const std::string& data){
@@ -210,7 +211,7 @@ extern "C"{
         size_t numCols=parsed[0].size();
         for(size_t col=0;col<numCols;col++){
             std::vector<double> values;
-            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()){try{double val=std::stod(parsed[row][col]);}catch(...){}}}
+            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()){try{double val=std::stod(parsed[row][col]);values.push_back(val);}catch(...){}}}
             if(values.size()<4)continue;
             std::sort(values.begin(),values.end());
             size_t n=values.size();
