@@ -431,7 +431,29 @@ int main(){
             for(size_t i=1;i<=m;i++){for(size_t j=1;j<=n;j++){if(s1[i-1]==s2[j-1]){dp[i][j]=dp[i-1][j-1];}else{dp[i][j]=1+std::min({dp[i-1][j],dp[i][j-1],dp[i-1][j-1]});}}}
             return dp[m][n];
         };
-
+        int inconsistentCount=0;
+        std::map<std::string,std::map<std::string,std::vector<std::string>>> suggestedMappings;
+        size_t numCols=parsed[0].size();
+        for(size_t col=0;col<numCols;col++){
+            std::vector<std::string> colValues;
+            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&!parsed[row][col].empty()){colValues.push_back(parsed[row][col]);}}
+            if(colValues.size()<2)continue;
+            std::set<std::string> processedValues;
+            for(size_t i=0;i<colValues.size();i++){
+                if(processedValues.count(colValues[i]))continue;
+                processedValues.insert(colValues[i]);
+                for(size_t j=i+1;j<colValues.size();j++){
+                    if(processedValues.count(colValues[j]))continue;
+                    int distance=levenshteinDist(colValues[i],colValues[j]);
+                    if(distance<=2){
+                        inconsistentCount++;
+                        std::string colName=parsed[0][col];
+                        if(suggestedMappings[colName].find(colValues[i])==suggestedMappings[colName].end()){suggestedMappings[colName][colValues[i]]=std::vector<std::string>();}
+                        suggestedMappings[colName][colValues[i]].push_back(colValues[j]);
+                    }
+                }
+            }
+        }
     });
 
     CROW_ROUTE(app,"/api/standardise-values").methods("POST"_method)
