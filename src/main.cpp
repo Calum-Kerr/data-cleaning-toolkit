@@ -506,6 +506,26 @@ int main(){
                 }else{pos++;}
             }else{pos++;}
         }
+        std::stringstream cleanedCSV;
+        int valuesStandardised=0;
+        for(size_t row=0;row<parsed.size();row++){
+            for(size_t col=0;col<parsed[row].size();col++){
+                std::string cell=parsed[row][col];
+                if(row>0&&col<parsed[0].size()){std::string colName=parsed[0][col];if(columnMappings.count(colName)&&columnMappings[colName].count(cell)){cell=columnMappings[colName][cell];valuesStandardised++;}}
+                if(col>0)cleanedCSV<<",";
+                cleanedCSV<<cell;
+            }
+            cleanedCSV<<"\n";
+        }
+        auditLog.addEntry("Standardise Values", valuesStandardised, parsed.size(), parsed.size());
+        crow::json::wvalue result;
+        result["originalRows"]=parsed.size();
+        result["cleanedRows"]=parsed.size();
+        result["valuesStandardised"]=valuesStandardised;
+        result["cleaned"]=cleanedCSV.str();
+        result["message"]="values standardised successfully";
+        result["mode"]="api";
+        return crow::response(result);
     });
 
     app.port(port).multithreaded().run();
