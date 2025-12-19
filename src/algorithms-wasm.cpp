@@ -5,6 +5,23 @@
 #include <algorithm>
 #include <emscripten/emscripten.h>
 
+bool isNumeric(const std::string& str){
+    if(str.empty())return false;
+    size_t start=0;
+    if(str[0]=='-'||str[0]=='+')start=1;
+    if(start>=str.length())return false;
+    bool hasDecimal=false;
+    for(size_t i=start;i<str.length();i++){
+        if(str[i]=='.'){
+            if(hasDecimal)return false;
+            hasDecimal=true;
+        }else if(str[i]<'0'||str[i]>'9'){
+            return false;
+        }
+    }
+    return true;
+}
+
 std::vector<std::vector<std::string>> parseCSVInternal(const std::string& data){
     std::vector<std::vector<std::string>> result;
     std::stringstream ss(data);
@@ -211,7 +228,7 @@ extern "C"{
         size_t numCols=parsed[0].size();
         for(size_t col=0;col<numCols;col++){
             std::vector<double> values;
-            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()){try{double val=std::stod(parsed[row][col]);values.push_back(val);}catch(...){}}}
+            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&isNumeric(parsed[row][col])){double val=std::stod(parsed[row][col]);values.push_back(val);}}
             if(values.size()<4)continue;
             std::sort(values.begin(),values.end());
             size_t n=values.size();

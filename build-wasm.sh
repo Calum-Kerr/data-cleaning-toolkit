@@ -1,6 +1,6 @@
 #!/bin/bash
-EMCC="emsdk/upstream/emscripten/emcc"
-$EMCC src/algorithms-wasm.cpp\
+source emsdk/emsdk_env.sh
+emcc src/algorithms-wasm.cpp\
     -o frontend/algorithms.js\
     -s WASM=1 \
     -s EXPORTED_FUNCTIONS='["_parseCSV","_detectMissing","_detectDuplicates","_cleanData","_cleanDataString","_detectWhitespace","_trimWhitespaceString","_toUpperCaseString","_toLowerCaseString","_detectNullValues","_standardiseNullValueString","_detectOutliers"]' \

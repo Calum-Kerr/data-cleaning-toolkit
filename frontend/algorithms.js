@@ -1722,7 +1722,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'FS_createLink',
   'FS_joinPath',
   'FS_mmapAlloc',
-  'FS_standardisePath',
+  'FS_standardizePath',
   'MEMFS',
   'TTY',
   'PIPEFS',
@@ -1766,6 +1766,7 @@ var _toUpperCaseString = Module['_toUpperCaseString'] = makeInvalidEarlyAccess('
 var _toLowerCaseString = Module['_toLowerCaseString'] = makeInvalidEarlyAccess('_toLowerCaseString');
 var _detectNullValues = Module['_detectNullValues'] = makeInvalidEarlyAccess('_detectNullValues');
 var _standardiseNullValueString = Module['_standardiseNullValueString'] = makeInvalidEarlyAccess('_standardiseNullValueString');
+var _detectOutliers = Module['_detectOutliers'] = makeInvalidEarlyAccess('_detectOutliers');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_init = makeInvalidEarlyAccess('_emscripten_stack_init');
@@ -1802,6 +1803,8 @@ function assignWasmExports(wasmExports) {
   _detectNullValues = Module['_detectNullValues'] = createExportWrapper('detectNullValues', 1);
   assert(typeof wasmExports['standardiseNullValueString'] != 'undefined', 'missing Wasm export: standardiseNullValueString');
   _standardiseNullValueString = Module['_standardiseNullValueString'] = createExportWrapper('standardiseNullValueString', 1);
+  assert(typeof wasmExports['detectOutliers'] != 'undefined', 'missing Wasm export: detectOutliers');
+  _detectOutliers = Module['_detectOutliers'] = createExportWrapper('detectOutliers', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
