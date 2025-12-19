@@ -408,6 +408,13 @@
             let res=await fetch('/api/detect-inconsistent-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
             let data=await res.json();
             suggestedMappings=data.suggestedMappings||{};
+            if(data.warning){
+                let warningHtml='<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:12px;margin-bottom:15px;color:#856404"><strong>⚠ Data Privacy Notice:</strong> '+data.warning;
+                if(data.skippedColumns && data.skippedColumns.length>0){warningHtml+='<br><strong>Excluded columns:</strong> '+data.skippedColumns.join(', ');}
+                warningHtml+='<br><em>Name columns are protected to preserve data integrity and privacy.</em></div>';
+                document.getElementById('mappingsDisplay').innerHTML=warningHtml;
+                document.getElementById('mappingsDisplay').style.display='block';
+            }
             displayMappingsUI();
             showResult(data);
         }

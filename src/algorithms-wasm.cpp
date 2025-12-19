@@ -23,6 +23,23 @@ bool isNumeric(const std::string& str){
     return true;
 }
 
+std::string toLower(const std::string& str){
+    std::string result=str;
+    std::transform(result.begin(),result.end(),result.begin(),::tolower);
+    return result;
+}
+
+bool isNameColumn(const std::string& colName){
+    std::string lower=toLower(colName);
+    const std::vector<std::string> nameKeywords={"player","name","first name","last name","full name","employee","customer","person","author","contact","user","username","email","phone","address","street","city","country","state","zip","postal"};
+    for(const auto& keyword:nameKeywords){
+        if(lower.find(keyword)!=std::string::npos){
+            return true;
+        }
+    }
+    return false;
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
@@ -303,6 +320,8 @@ extern "C"{
         int inconsistentCount=0;
         size_t numCols=parsed[0].size();
         for(size_t col=0;col<numCols;col++){
+            std::string colName=parsed[0][col];
+            if(isNameColumn(colName))continue;
             std::vector<std::string> colValues;
             for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&!parsed[row][col].empty()){colValues.push_back(parsed[row][col]);}}
             if(colValues.size()<2)continue;
