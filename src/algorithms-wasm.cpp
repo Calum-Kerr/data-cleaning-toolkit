@@ -2,6 +2,7 @@
 #include <vector>
 #include <sstream>
 #include <set>
+#include <map>
 #include <algorithm>
 #include <emscripten/emscripten.h>
 
@@ -319,5 +320,58 @@ extern "C"{
             }
         }
         return inconsistentCount;
+    }
+    EMSCRIPTEN_KEEPALIVE
+    const char* standardiseValuesString(const char* csvData,const char* mappingsJson){
+        std::string data(csvData);
+        std::string mappings(mappingsJson);
+        auto parsed=parseCSVInternal(data);
+        if(parsed.size()<2){char* cstr=new char[1];cstr[0]='\0';return cstr;}
+        std::map<std::string,std::map<std::string,std::string>> columnMappings;
+        size_t pos=0;
+        std::string currentCol;
+        while(pos<mappings.length()){
+            if(mappings[pos]=='"'){
+                size_t endQuote=mappings.find('"',pos+1);
+                if(endQuote!=std::string::npos){
+                    std::string key=mappings.substr(pos+1,endQuote-pos-1);
+                    pos=endQuote+1;
+                    while(pos<mappings.length()&&(mappings[pos]==':'||mappings[pos]==' '||mappings[pos]=='\t'||mappings[pos]=='\n')){pos++;}
+                    if(pos<mappings.length()&&mappings[pos]=='{'){
+                        currentCol=key;
+                        pos++;
+                        while(pos<mappings.length()&&mappings[pos]!='}'){
+                            if(mappings[pos]=='"'){
+                                size_t keyEnd=mappings.find('"',pos+1);
+                                if(keyEnd!=std::string::npos){
+                                    std::string fromVal=mappings.substr(pos+1,keyEnd-pos-1);
+                                    pos=keyEnd+1;
+                                    while(pos<mappings.length()&&(mappings[pos]==':'||mappings[pos]==' '||mappings[pos]=='\t'||mappings[pos]=='\n')){pos++;}
+                                    if(pos<mappings.length()&&mappings[pos]=='"'){
+                                        size_t valEnd=mappings.find('"',pos+1);
+                                        if(valEnd!=std::string::npos){std::string toVal=mappings.substr(pos+1,valEnd-pos-1);columnMappings[currentCol][fromVal]=toVal;pos=valEnd+1;
+                                        }else{pos++;}
+                                    }else{pos++;}
+                                }else{pos++;}
+                            }else{pos++;}
+                        }
+                    }else{pos++;}
+                }else{pos++;}
+            }else{pos++;}
+        }
+        std::stringstream result;
+        for(size_t row=0;row<parsed.size();row++){
+            for(size_t col=0;col<parsed[row].size();col++){
+                std::string cell=parsed[row][col];
+                if(row>0&&col<parsed[0].size()){std::string colName=parsed[0][col];if(columnMappings.count(colName)&&columnMappings[colName].count(cell)){cell=columnMappings[colName][cell];}}
+                if(col>0)result<<",";
+                result<<cell;
+            }
+            result<<"\n";
+        }
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
     }
 }
