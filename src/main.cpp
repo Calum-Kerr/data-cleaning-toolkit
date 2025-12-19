@@ -399,13 +399,21 @@ int main(){
         std::stringstream cleanedCSV;
         for(size_t i=0;i<parsed.size();i++){
             if(outlierRows.find(i)==outlierRows.end()){
-                for(size_t j=0;j<parsed[i].size();j++){
-                    if(j>0)cleanedCSV<<",";
-                    cleanedCSV<<parsed[i][j];
-                }
+                for(size_t j=0;j<parsed[i].size();j++){if(j>0)cleanedCSV<<",";cleanedCSV<<parsed[i][j];}
                 cleanedCSV<<"\n";
             }
         }
+        int removedRows=outlierRows.size();
+        int cleanedRows=parsed.size()-removedRows;
+        auditLog.addEntry("Remove Outliers", removedRows, parsed.size(), cleanedRows);
+        crow::json::wvalue result;
+        result["originalRows"]=parsed.size();
+        result["cleanedRows"]=cleanedRows;
+        result["removedRows"]=removedRows;
+        result["cleaned"]=cleanedCSV.str();
+        result["message"]="outliers removed successfully";
+        result["mode"]="api";
+        return crow::response(result);
     });
 
     app.port(port).multithreaded().run();
