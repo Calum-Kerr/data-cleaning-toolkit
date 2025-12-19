@@ -61,6 +61,7 @@
             <button onclick="detectWhitespace()">Detect Whitespace</button>
             <button onclick="detectNullValues()">Detect Null Values</button>
             <button onclick="detectOutliers()">Detect Outliers</button>
+            <button onclick="detectInconsistentValues()">Detect Inconsistent Values</button>
         </div>
         <div id="detectionResults"></div>
     </div>
@@ -75,7 +76,9 @@
             <button onclick="toUpperCase()">Convert to Uppercase</button>
             <button onclick="toLowerCase()">Convert to Lowercase</button>
             <button onclick="removeOutliers()">Remove Outliers</button>
+            <button id="applyStandardisationBtn" style="display:none" onclick="applyStandardisation()">Apply Standardisation</button>
         </div>
+        <div id="mappingsDisplay" style="display:none;margin-top:15px;padding:15px;background:#e8f4f8;border-radius:4px;border-left:4px solid #0066cc"></div>
     </div>
     <div class="section">
         <h2>4. View Results</h2>
@@ -397,6 +400,88 @@
             tableData.sort((a,b)=>{if(a[colIndex]<b[colIndex])return -1;if(a[colIndex]>b[colIndex])return 1;return 0;});
             currentPage=0;
             updateTableView();
+        }
+        let suggestedMappings={};
+        async function detectInconsistentValues(){
+            const csv=document.getElementById('csvInput').value;
+            if(!csv){alert('upload a csv file first!');return;}
+            if(wasmReady){
+                try{
+                    let count=wasmModule.ccall('detectInconsistentValues','number',['string'],[csv]);
+                    showResult({message:'inconsistent values detected',inconsistentCount:count,mode:'wasm'});
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    let res=await fetch('/api/detect-inconsistent-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                    let data=await res.json();
+                    suggestedMappings=data.suggestedMappings||{};
+                    displayMappingsUI();
+                    showResult(data);
+                }
+            }else{
+                let res=await fetch('/api/detect-inconsistent-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                let data=await res.json();
+                suggestedMappings=data.suggestedMappings||{};
+                displayMappingsUI();
+                showResult(data);
+            }
+        }
+        function displayMappingsUI(){
+            if(Object.keys(suggestedMappings).length===0){document.getElementById('mappingsDisplay').style.display='none';document.getElementById('applyStandardisationBtn').style.display='none';return;}
+            let html='<h4>Review and Edit Mappings</h4>';
+            html+='<p>Suggested value mappings grouped by column. Edit the "Map To" values as needed:</p>';
+            for(const colName in suggestedMappings){
+                html+='<div style="margin-bottom:15px;padding:10px;background:#fff;border-radius:4px;border:1px solid #ccc">';
+                html+='<h5 style="margin-top:0">'+colName+'</h5>';
+                html+='<table border="1" cellpadding="8" style="width:100%;border-collapse:collapse">';
+                html+='<tr><th>Original Value</th><th>Map To</th></tr>';
+                for(const fromVal in suggestedMappings[colName]){const toVal=suggestedMappings[colName][fromVal];html+='<tr><td>'+fromVal+'</td><td><input type="text" id="mapping_'+colName+'_'+fromVal+'" value="'+toVal+'" style="width:100%;padding:5px;border:1px solid #ddd;border-radius:4px"></td></tr>';}
+                html+='</table>';
+                html+='</div>';
+            }
+            document.getElementById('mappingsDisplay').innerHTML=html;
+            document.getElementById('mappingsDisplay').style.display='block';
+            document.getElementById('applyStandardisationBtn').style.display='inline-block';
+        }
+        async function applyStandardisation(){
+            const csv=document.getElementById('csvInput').value;
+            if(!csv){alert('upload a csv file first!');return;}
+            if(Object.keys(suggestedMappings).length===0){alert('detect inconsistent values first!');return;}
+            const finalMappings={};
+            for(const colName in suggestedMappings){
+                finalMappings[colName]={};
+                for(const fromVal in suggestedMappings[colName]){
+                    const inputId='mapping_'+colName+'_'+fromVal;
+                    const inputElement=document.getElementById(inputId);
+                    const toVal=inputElement?inputElement.value:suggestedMappings[colName][fromVal];
+                    finalMappings[colName][fromVal]=toVal;
+                }
+            }
+            if(wasmReady){
+                try{
+                    const mappingsJson=JSON.stringify(finalMappings);
+                    cleanedCSV=wasmModule.ccall('standardiseValuesString','string',['string','string'],[csv,mappingsJson]);
+                    showResult({message:'values standardised successfully',mode:'wasm'});
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    const mappingsJson=JSON.stringify(finalMappings);
+                    let res=await fetch('/api/standardise-values',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:csv,mappings:mappingsJson})});
+                    let data=await res.json();
+                    cleanedCSV=data.cleaned;
+                    showResult(data);
+                }
+            }else{
+                const mappingsJson=JSON.stringify(finalMappings);
+                let res=await fetch('/api/standardise-values',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:csv,mappings:mappingsJson})});
+                let data=await res.json();
+                cleanedCSV=data.cleaned;
+                showResult(data);
+            }
+            document.getElementById('downloadBtn').style.display='inline-block';
+            document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
+            document.getElementById('mappingsDisplay').style.display='none';
+            document.getElementById('applyStandardisationBtn').style.display='none';
         }
         function downloadCSV(){const blob=new Blob([cleanedCSV],{type:'text/csv'});const url=window.URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='cleaned.csv';a.click();window.URL.revokeObjectURL(url);}
     </script>
