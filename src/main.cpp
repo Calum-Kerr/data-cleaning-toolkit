@@ -396,6 +396,16 @@ int main(){
             double upper=q3+1.5*iqr;
             for(size_t i=0;i<values.size();i++){if(values[i]<lower||values[i]>upper){outlierRows.insert(rowIndices[i]);}}
         }
+        std::stringstream cleanedCSV;
+        for(size_t i=0;i<parsed.size();i++){
+            if(outlierRows.find(i)==outlierRows.end()){
+                for(size_t j=0;j<parsed[i].size();j++){
+                    if(j>0)cleanedCSV<<",";
+                    cleanedCSV<<parsed[i][j];
+                }
+                cleanedCSV<<"\n";
+            }
+        }
     });
 
     app.port(port).multithreaded().run();
