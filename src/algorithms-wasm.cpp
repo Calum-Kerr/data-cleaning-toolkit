@@ -254,16 +254,8 @@ extern "C"{
             if(valueRowPairs.size()<4)continue;
             std::sort(valueRowPairs.begin(),valueRowPairs.end());
             size_t n=valueRowPairs.size();
-            double q1_idx=(n+1)/4.0-1;
-            double q3_idx=3*(n+1)/4.0-1;
-            size_t q1_lower=(size_t)q1_idx;
-            size_t q1_upper=q1_lower+1;
-            double q1_frac=q1_idx-q1_lower;
-            double q1=(q1_upper<n)?valueRowPairs[q1_lower].first*(1-q1_frac)+valueRowPairs[q1_upper].first*q1_frac:valueRowPairs[q1_lower].first;
-            size_t q3_lower=(size_t)q3_idx;
-            size_t q3_upper=q3_lower+1;
-            double q3_frac=q3_idx-q3_lower;
-            double q3=(q3_upper<n)?valueRowPairs[q3_lower].first*(1-q3_frac)+valueRowPairs[q3_upper].first*q3_frac:valueRowPairs[q3_lower].first;
+            double q1=valueRowPairs[n/4].first;
+            double q3=valueRowPairs[3*n/4].first;
             double iqr=q3-q1;
             double lower=q1-1.5*iqr;
             double upper=q3+1.5*iqr;
