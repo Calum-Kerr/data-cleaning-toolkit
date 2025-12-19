@@ -267,6 +267,8 @@
                     console.log('Calling WASM removeOutliersString');
                     let count=wasmModule.ccall('detectOutliers','number',['string'],[csv]);
                     cleanedCSV=wasmModule.ccall('removeOutliersString','string',['string'],[csv]);
+                    console.log('cleanedCSV length: '+cleanedCSV.length);
+                    console.log('cleanedCSV first 100 chars: '+cleanedCSV.substring(0,100));
                     showResult({message:'outliers removed',rowsRemoved:count,mode:'wasm'});
                 }catch(e){console.log('WASM function not available, falling back to API: '+e.message);useAPI=true;}
             }
