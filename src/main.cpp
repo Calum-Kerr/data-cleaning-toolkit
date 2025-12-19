@@ -321,14 +321,38 @@ int main(){
         std::string csvData=req.body;
         auto parsed=cleaner.parseCSV(csvData);
         if(parsed.size()<2){crow::json::wvalue result; result["outliers"]=0;result["message"]="insufficient data for outlier detection";return crow::response(result);}
+
+        auto isNumericStr=[](const std::string& str)->bool{
+            if(str.empty())return false;
+            size_t start=0;
+            if(str[0]=='-'||str[0]=='+')start=1;
+            if(start>=str.length())return false;
+            bool hasDecimal=false;
+            for(size_t i=start;i<str.length();i++){
+                if(str[i]=='.'){if(hasDecimal)return false;hasDecimal=true;}
+                else if(str[i]<'0'||str[i]>'9')return false;
+            }
+            return true;
+        };
+
         int outlierCount=0;
         size_t numCols=parsed[0].size();
-        crow::json::wvalue outlierDetails=crow::json::wvalue::list();
-        int detailIdx=0;
-        for(size_t col=0;col<numCols;col++){std::vector<double> values;std::vector<int> rowIndices;
-            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()){try{double val=std::stod(parsed[row][col]);values.push_back(val);rowIndices.push_back(row);}catch(...){}}}
+
+        struct OutlierDetail{int row;int col;double val;double lower;double upper;};
+        std::vector<OutlierDetail> outlierDetails;
+
+        for(size_t col=0;col<numCols;col++){
+            std::vector<double> values;
+            std::vector<int> rowIndices;
+            for(size_t row=1;row<parsed.size();row++){
+                if(col<parsed[row].size()&&isNumericStr(parsed[row][col])){
+                    double val=std::stod(parsed[row][col]);
+                    values.push_back(val);
+                    rowIndices.push_back(row);
+                }
+            }
             if(values.size()<4)continue;
-            std::vector<double>sortedValues=values;
+            std::vector<double> sortedValues=values;
             std::sort(sortedValues.begin(),sortedValues.end());
             size_t n=sortedValues.size();
             double q1=sortedValues[n/4];
@@ -336,23 +360,27 @@ int main(){
             double iqr=q3-q1;
             double lower=q1-1.5*iqr;
             double upper=q3+1.5*iqr;
+            std::cout<<"DEBUG col "<<col<<": n="<<n<<" q1="<<q1<<" q3="<<q3<<" iqr="<<iqr<<" lower="<<lower<<" upper="<<upper<<std::endl;
             for(size_t i=0;i<values.size();i++){
                 if(values[i]<lower||values[i]>upper){
                     outlierCount++;
-                    outlierDetails[detailIdx]["row"]=rowIndices[i];
-                    outlierDetails[detailIdx]["column"]=col;
-                    outlierDetails[detailIdx]["value"]=values[i];
-                    outlierDetails[detailIdx]["lower"]=lower;
-                    outlierDetails[detailIdx]["upper"]=upper;
-                    detailIdx++;
+                    outlierDetails.push_back({rowIndices[i],(int)col,values[i],lower,upper});
                 }
             }
         }
+
         crow::json::wvalue result;
         result["outliers"]=outlierCount;
         result["message"]="outlier detection completed";
-        result["details"]=outlierDetails;
         result["mode"]="api";
+        result["details"]=crow::json::wvalue::list();
+        for(size_t i=0;i<outlierDetails.size();i++){
+            result["details"][i]["row"]=outlierDetails[i].row;
+            result["details"][i]["column"]=outlierDetails[i].col;
+            result["details"][i]["value"]=outlierDetails[i].val;
+            result["details"][i]["lower"]=outlierDetails[i].lower;
+            result["details"][i]["upper"]=outlierDetails[i].upper;
+        }
         return crow::response(result);
     });
 
