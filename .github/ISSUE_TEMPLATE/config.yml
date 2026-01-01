@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Email
+    url: mailto:calumxkerr@gmail.com
+    about: Contact me directly for private matters or security issues
+  - name: Live Demo
+    url: https://www.calumkerr.com/app
+    about: Try the toolkit before reporting issues
