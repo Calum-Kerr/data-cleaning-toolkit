@@ -71,6 +71,17 @@
     <div class="section">
         <h2>3. Clean Data</h2>
         <p>Apply cleaning operations to fix issues:</p>
+        <div style="margin-bottom:15px">
+            <button onclick="toggleCleaningConfig()" style="padding:8px 12px;font-size:12px;background:#f0f0f0;border:1px solid #ccc;border-radius:4px;cursor:pointer">⚙ Configure Cleaning Rules</button>
+            <div id="cleaningConfig" style="display:none;margin-top:10px;padding:12px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px">
+                <p style="margin:0 0 10px 0;font-weight:bold">Select operations to apply:</p>
+                <label style="display:block;margin:8px 0"><input type="checkbox" id="cfgRemoveDuplicates" checked> Remove Duplicates</label>
+                <label style="display:block;margin:8px 0"><input type="checkbox" id="cfgTrimWhitespace" checked> Trim Whitespace</label>
+                <label style="display:block;margin:8px 0"><input type="checkbox" id="cfgStandardiseNulls" checked> Standardise Null Values</label>
+                <label style="display:block;margin:8px 0"><input type="checkbox" id="cfgUpperCase"> Convert to Uppercase</label>
+                <label style="display:block;margin:8px 0"><input type="checkbox" id="cfgLowerCase"> Convert to Lowercase</label>
+            </div>
+        </div>
         <div class="button-group">
             <button id="autoCleanBtn" style="display:none" onclick="autoCleanAll()">Auto Clean (Recommended)</button>
             <button onclick="cleanData()">Remove Duplicates</button>
