@@ -100,6 +100,9 @@
         <h2>4. View Results</h2>
         <p>Examine your cleaned data and operation details:</p>
         <div class="button-group">
+            <button id="undoBtn" style="display:none" onclick="undoOperation()">↶ Undo</button>
+            <button id="redoBtn" style="display:none" onclick="redoOperation()">↷ Redo</button>
+            <button id="historyBtn" style="display:none" onclick="displayOperationHistory()">📋 History</button>
             <button id="comparisonBtn" style="display:none" onclick="displayComparison()">View Before/After</button>
             <button id="tableBtn" style="display:none" onclick="displayTableView()">View Data Table</button>
             <button id="auditLogBtn" style="display:none" onclick="displayAuditLog()">View Audit Log</button>
