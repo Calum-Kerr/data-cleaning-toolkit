@@ -561,6 +561,48 @@
                 showResult(data);
             }
         }
+        async function autoDetectAll(){
+            const csv=document.getElementById('csvInput').value;
+            if(!csv){alert('upload a csv file first!');return;}
+            document.getElementById('detectionResults').innerHTML='<p>running all detections...</p>';
+            if(wasmReady){
+                try{
+                    const result=wasmModule.ccall('autoDetectAll','string',['string'],[csv]);
+                    const data=JSON.parse(result);
+                    data.mode='wasm';
+                    displayAutoDetectResults(data);
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    const res=await fetch('/api/auto-detect-all',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                    const data=await res.json();
+                    data.mode='api';
+                    displayAutoDetectResults(data);
+                }
+            }else{
+                const res=await fetch('/api/auto-detect-all',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                const data=await res.json();
+                data.mode='api';
+                displayAutoDetectResults(data);
+            }
+        }
+        function displayAutoDetectResults(data){
+            if(!data.summary){showResult(data);return;}
+            let html='<h3>Comprehensive Data Quality Report</h3>';
+            html+='<table border="1" cellpadding="8" style="width:100%;border-collapse:collapse">';
+            html+='<tr><th>Metric</th><th>Count</th><th>Status</th></tr>';
+            const summary=data.summary;
+            html+='<tr><td>Total Rows</td><td>'+summary.totalRows+'</td><td style="background:#e8f5e9">✓</td></tr>';
+            html+='<tr><td>Total Columns</td><td>'+summary.totalColumns+'</td><td style="background:#e8f5e9">✓</td></tr>';
+            html+='<tr><td>Missing Values</td><td>'+summary.missingValues+'</td><td style="background:'+(summary.missingValues>0?'#ffebee':'#e8f5e9')+'">'+(summary.missingValues>0?'⚠':'✓')+'</td></tr>';
+            html+='<tr><td>Duplicate Rows</td><td>'+summary.duplicateRows+'</td><td style="background:'+(summary.duplicateRows>0?'#ffebee':'#e8f5e9')+'">'+(summary.duplicateRows>0?'⚠':'✓')+'</td></tr>';
+            html+='<tr><td>Whitespace Issues</td><td>'+summary.whitespaceIssues+'</td><td style="background:'+(summary.whitespaceIssues>0?'#ffebee':'#e8f5e9')+'">'+(summary.whitespaceIssues>0?'⚠':'✓')+'</td></tr>';
+            html+='<tr><td>Null Value Issues</td><td>'+summary.nullValueIssues+'</td><td style="background:'+(summary.nullValueIssues>0?'#ffebee':'#e8f5e9')+'">'+(summary.nullValueIssues>0?'⚠':'✓')+'</td></tr>';
+            html+='<tr><td>Outliers</td><td>'+summary.outliers+'</td><td style="background:'+(summary.outliers>0?'#fff3e0':'#e8f5e9')+'">'+(summary.outliers>0?'⚠':'✓')+'</td></tr>';
+            html+='<tr><td>Inconsistent Values</td><td>'+summary.inconsistentValues+'</td><td style="background:'+(summary.inconsistentValues>0?'#ffebee':'#e8f5e9')+'">'+(summary.inconsistentValues>0?'⚠':'✓')+'</td></tr>';
+            html+='</table>';
+            html+='<p style="margin-top:15px;font-size:12px;color:#666">Mode: '+data.mode+'</p>';
+            document.getElementById('detectionResults').innerHTML=html;
+        }
         function displayMappingsUI(){
             if(Object.keys(suggestedMappings).length===0){document.getElementById('mappingsDisplay').style.display='none';document.getElementById('applyStandardisationBtn').style.display='none';return;}
             let html='<h4>Review and Edit Mappings</h4>';
