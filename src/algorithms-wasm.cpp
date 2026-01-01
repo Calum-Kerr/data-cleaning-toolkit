@@ -40,6 +40,11 @@ bool isNameColumn(const std::string& colName){
     return false;
 }
 
+bool isBoolean(const std::string& str){
+    std::string lower=toLower(str);
+    return lower=="true"||lower=="false"||lower=="yes"||lower=="no"||lower=="y"||lower=="n"||lower=="1"||lower=="0";
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
