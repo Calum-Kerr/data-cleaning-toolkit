@@ -314,18 +314,21 @@
                     if(config.uppercase){current=wasmModule.ccall('toUpperCaseString','string',['string'],[current]);operations.push('converted to uppercase');}
                     if(config.lowercase){current=wasmModule.ccall('toLowerCaseString','string',['string'],[current]);operations.push('converted to lowercase');}
                     cleanedCSV=current;
+                    recordOperation('auto clean ('+operations.length+' ops)',{csv:current});
                     showResult({message:'cleaning completed with '+operations.length+' operations',operations:operations,mode:'wasm'});
                 }catch(e){
                     console.log('WASM function not available, falling back to API: '+e.message);
                     const res=await fetch('/api/auto-clean-all',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,config:config})});
                     const data=await res.json();
                     cleanedCSV=data.cleaned;
+                    recordOperation('auto clean (API)',{csv:data.cleaned});
                     showResult(data);
                 }
             }else{
                 const res=await fetch('/api/auto-clean-all',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,config:config})});
                 const data=await res.json();
                 cleanedCSV=data.cleaned;
+                recordOperation('auto clean (API)',{csv:data.cleaned});
                 showResult(data);
             }
             document.getElementById('downloadBtn').style.display='inline-block';
