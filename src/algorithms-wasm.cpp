@@ -57,6 +57,25 @@ bool isDateFormat(const std::string& str){
     return digits>=4&&digits<=8&&separators==2;
 }
 
+std::string detectDateFormat(const std::string& str){
+    if(str.length()<6)return "";
+    char sep='/';
+    if(str.find('-')!=std::string::npos)sep='-';
+    else if(str.find('.')!=std::string::npos)sep='.';
+    std::vector<std::string> parts;
+    std::stringstream ss(str);
+    std::string part;
+    while(std::getline(ss,part,sep))parts.push_back(part);
+    if(parts.size()!=3)return "";
+    if(parts[0].length()==4)return "YYYY"+std::string(1,sep)+"MM"+std::string(1,sep)+"DD";
+    if(parts[2].length()==4){
+        if(std::stoi(parts[0])>12)return "DD"+std::string(1,sep)+"MM"+std::string(1,sep)+"YYYY";
+        if(std::stoi(parts[1])>12)return "MM"+std::string(1,sep)+"DD"+std::string(1,sep)+"YYYY";
+        return "DD"+std::string(1,sep)+"MM"+std::string(1,sep)+"YYYY";
+    }
+    return "";
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
