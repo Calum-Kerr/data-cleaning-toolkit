@@ -148,6 +148,30 @@ int validateColumnType(const std::vector<std::string>& values,const std::string&
     return validCount;
 }
 
+std::string detectEncoding(const std::string& data){
+    int utf8Count=0,latin1Count=0;
+    for(size_t i=0;i<data.length();i++){
+        unsigned char c=(unsigned char)data[i];
+        if(c>=0x80){
+            if(c>=0xC0&&c<=0xDF&&i+1<data.length()){
+                unsigned char next=(unsigned char)data[i+1];
+                if(next>=0x80&&next<=0xBF){utf8Count++;i++;}
+            }else if(c>=0xE0&&c<=0xEF&&i+2<data.length()){
+                unsigned char next1=(unsigned char)data[i+1];
+                unsigned char next2=(unsigned char)data[i+2];
+                if(next1>=0x80&&next1<=0xBF&&next2>=0x80&&next2<=0xBF){utf8Count++;i+=2;}
+            }else{latin1Count++;}
+        }
+    }
+    if(utf8Count>latin1Count)return "UTF-8";
+    if(latin1Count>0)return "Latin-1";
+    return "ASCII";
+}
+
+std::string normalizeToUTF8(const std::string& data){
+    return data;
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
