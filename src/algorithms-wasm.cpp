@@ -45,6 +45,18 @@ bool isBoolean(const std::string& str){
     return lower=="true"||lower=="false"||lower=="yes"||lower=="no"||lower=="y"||lower=="n"||lower=="1"||lower=="0";
 }
 
+bool isDateFormat(const std::string& str){
+    if(str.length()<6||str.length()>10)return false;
+    int digits=0,separators=0;
+    char sep='\0';
+    for(char c:str){
+        if(c>='0'&&c<='9')digits++;
+        else if(c=='/'||c=='-'||c=='.'){separators++;if(sep=='\0')sep=c;}
+        else return false;
+    }
+    return digits>=4&&digits<=8&&separators==2;
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
