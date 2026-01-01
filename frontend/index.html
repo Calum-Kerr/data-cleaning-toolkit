@@ -62,6 +62,7 @@
             <button onclick="detectNullValues()">Detect Null Values</button>
             <button onclick="detectOutliers()">Detect Outliers</button>
             <button onclick="detectInconsistentValues()">Detect Inconsistent Values</button>
+            <button onclick="detectDataTypes()">Detect Data Types</button>
         </div>
         <div id="detectionResults"></div>
     </div>
@@ -417,6 +418,47 @@
             }
             displayMappingsUI();
             showResult(data);
+        }
+        async function detectDataTypes(){
+            const csv=document.getElementById('csvInput').value;
+            if(!csv){alert('upload a csv file first!');return;}
+            if(wasmReady){
+                try{
+                    const result=wasmModule.ccall('detectDataTypes','string',['string'],[csv]);
+                    const data=JSON.parse(result);
+                    data.mode='wasm';
+                    displayDataTypes(data);
+                    showResult(data);
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    const res=await fetch('/api/detect-data-types',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                    const data=await res.json();
+                    data.mode='api';
+                    displayDataTypes(data);
+                    showResult(data);
+                }
+            }else{
+                const res=await fetch('/api/detect-data-types',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                const data=await res.json();
+                data.mode='api';
+                displayDataTypes(data);
+                showResult(data);
+            }
+        }
+        function displayDataTypes(data){
+            if(!data.types){return;}
+            let html='<h4>Detected Data Types:</h4><table border="1" cellpadding="8" style="width:100%;border-collapse:collapse"><tr><th>Column Name</th><th>Detected Type</th></tr>';
+            for(const colName in data.types){
+                const type=data.types[colName];
+                let typeColor='#e8f4f8';
+                if(type==='numeric'){typeColor='#e8f5e9';}
+                else if(type==='date'){typeColor='#fff3e0';}
+                else if(type==='boolean'){typeColor='#f3e5f5';}
+                else if(type==='name'){typeColor='#fce4ec';}
+                html+='<tr><td>'+colName+'</td><td style="background:'+typeColor+'"><strong>'+type+'</strong></td></tr>';
+            }
+            html+='</table>';
+            document.getElementById('detectionResults').innerHTML=html;
         }
         function displayMappingsUI(){
             if(Object.keys(suggestedMappings).length===0){document.getElementById('mappingsDisplay').style.display='none';document.getElementById('applyStandardisationBtn').style.display='none';return;}
