@@ -200,30 +200,40 @@
             document.getElementById('comparisonBtn').style.display='inline-block';
             document.getElementById('tableBtn').style.display='inline-block';
         }
+        function toggleCleaningConfig(){
+            const cfg=document.getElementById('cleaningConfig');
+            cfg.style.display=cfg.style.display==='none'?'block':'none';
+        }
         async function autoCleanAll(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
             document.getElementById('detectionResults').innerHTML='<p>applying all cleaning operations...</p>';
             let current=uploadCSV;
             const operations=[];
+            const config={
+                removeDuplicates:document.getElementById('cfgRemoveDuplicates').checked,
+                trimWhitespace:document.getElementById('cfgTrimWhitespace').checked,
+                standardiseNulls:document.getElementById('cfgStandardiseNulls').checked,
+                uppercase:document.getElementById('cfgUpperCase').checked,
+                lowercase:document.getElementById('cfgLowerCase').checked
+            };
             if(wasmReady){
                 try{
-                    current=wasmModule.ccall('cleanDataString','string',['string'],[current]);
-                    operations.push('removed duplicates');
-                    current=wasmModule.ccall('trimWhitespaceString','string',['string'],[current]);
-                    operations.push('trimmed whitespace');
-                    current=wasmModule.ccall('standardiseNullValueString','string',['string'],[current]);
-                    operations.push('standardised null values');
+                    if(config.removeDuplicates){current=wasmModule.ccall('cleanDataString','string',['string'],[current]);operations.push('removed duplicates');}
+                    if(config.trimWhitespace){current=wasmModule.ccall('trimWhitespaceString','string',['string'],[current]);operations.push('trimmed whitespace');}
+                    if(config.standardiseNulls){current=wasmModule.ccall('standardiseNullValueString','string',['string'],[current]);operations.push('standardised null values');}
+                    if(config.uppercase){current=wasmModule.ccall('toUpperCaseString','string',['string'],[current]);operations.push('converted to uppercase');}
+                    if(config.lowercase){current=wasmModule.ccall('toLowerCaseString','string',['string'],[current]);operations.push('converted to lowercase');}
                     cleanedCSV=current;
-                    showResult({message:'all cleaning operations completed',operations:operations,mode:'wasm'});
+                    showResult({message:'cleaning completed with '+operations.length+' operations',operations:operations,mode:'wasm'});
                 }catch(e){
                     console.log('WASM function not available, falling back to API: '+e.message);
-                    const res=await fetch('/api/auto-clean-all',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                    const res=await fetch('/api/auto-clean-all',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,config:config})});
                     const data=await res.json();
                     cleanedCSV=data.cleaned;
                     showResult(data);
                 }
             }else{
-                const res=await fetch('/api/auto-clean-all',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                const res=await fetch('/api/auto-clean-all',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,config:config})});
                 const data=await res.json();
                 cleanedCSV=data.cleaned;
                 showResult(data);
