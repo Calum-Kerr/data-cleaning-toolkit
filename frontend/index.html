@@ -189,6 +189,39 @@
             document.getElementById('comparisonBtn').style.display='inline-block';
             document.getElementById('tableBtn').style.display='inline-block';
         }
+        async function autoCleanAll(){
+            if(!uploadCSV){alert('upload a csv file first!');return;}
+            document.getElementById('detectionResults').innerHTML='<p>applying all cleaning operations...</p>';
+            let current=uploadCSV;
+            const operations=[];
+            if(wasmReady){
+                try{
+                    current=wasmModule.ccall('cleanDataString','string',['string'],[current]);
+                    operations.push('removed duplicates');
+                    current=wasmModule.ccall('trimWhitespaceString','string',['string'],[current]);
+                    operations.push('trimmed whitespace');
+                    current=wasmModule.ccall('standardiseNullValueString','string',['string'],[current]);
+                    operations.push('standardised null values');
+                    cleanedCSV=current;
+                    showResult({message:'all cleaning operations completed',operations:operations,mode:'wasm'});
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    const res=await fetch('/api/auto-clean-all',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                    const data=await res.json();
+                    cleanedCSV=data.cleaned;
+                    showResult(data);
+                }
+            }else{
+                const res=await fetch('/api/auto-clean-all',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
+                const data=await res.json();
+                cleanedCSV=data.cleaned;
+                showResult(data);
+            }
+            document.getElementById('downloadBtn').style.display='inline-block';
+            document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
+        }
         async function detectWhitespace(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
             if(wasmReady){let count=wasmModule.ccall('detectWhitespace','number',['string'],[uploadCSV]);showResult({message:'whitespace detected',cellsWithWhitespace:count,mode:'wasm'});
