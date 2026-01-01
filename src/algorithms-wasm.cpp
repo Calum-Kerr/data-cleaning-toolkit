@@ -640,4 +640,24 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* autoDetectAll(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::stringstream result;
+        result<<"{\"summary\":{";
+        result<<"\"totalRows\":"<<parsed.size()<<",";
+        result<<"\"totalColumns\":"<<(parsed.size()>0?parsed[0].size():0)<<",";
+        result<<"\"missingValues\":"<<detectMissingInternal(parsed)<<",";
+        result<<"\"duplicateRows\":"<<detectDuplicatesInternal(parsed)<<",";
+        result<<"\"whitespaceIssues\":"<<detectWhitespaceInternal(parsed)<<",";
+        result<<"\"nullValueIssues\":"<<detectNullValuesInternal(parsed)<<",";
+        result<<"\"outliers\":"<<detectOutliersInternal(parsed)<<",";
+        result<<"\"inconsistentValues\":"<<detectInconsistentValuesInternal(parsed);
+        result<<"},\"message\":\"all detections completed\"}";
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
+    }
 }
