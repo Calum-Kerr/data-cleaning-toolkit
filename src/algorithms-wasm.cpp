@@ -115,6 +115,24 @@ std::string standardiseNumber(const std::string& str){
     return result.empty()?str:result;
 }
 
+std::string inferColumnType(const std::string& colName,const std::vector<std::string>& values){
+    if(isNameColumn(colName))return "name";
+    if(values.empty())return "text";
+    int numericCount=0,dateCount=0,boolCount=0,textCount=0;
+    for(const auto& val:values){
+        if(val.empty())continue;
+        if(isBoolean(val))boolCount++;
+        else if(isNumeric(val))numericCount++;
+        else if(isDateFormat(val))dateCount++;
+        else textCount++;}
+    int total=numericCount+dateCount+boolCount+textCount;
+    if(total==0)return "text";
+    if(boolCount*100/total>=80)return "boolean";
+    if(numericCount*100/total>=80)return "numeric";
+    if(dateCount*100/total>=80)return "date";
+    return "text";
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
