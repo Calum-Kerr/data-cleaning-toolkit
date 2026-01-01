@@ -486,4 +486,24 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* detectDataTypes(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        if(parsed.size()<2){char* cstr=new char[1];cstr[0]='\0';return cstr;}
+        std::stringstream result;
+        result<<"{\"types\":{";
+        for(size_t col=0;col<parsed[0].size();col++){
+            std::string colName=parsed[0][col];
+            std::vector<std::string> colValues;
+            for(size_t row=1;row<parsed.size()&&colValues.size()<50;row++){if(col<parsed[row].size()){colValues.push_back(parsed[row][col]);}}
+            std::string type=inferColumnType(colName,colValues);
+            if(col>0)result<<",";
+            result<<"\""+colName+"\":\""+type+"\"";}
+        result<<"},\"message\":\"data types detected\"}";
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
+    }
 }
