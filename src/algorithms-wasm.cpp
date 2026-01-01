@@ -98,6 +98,23 @@ std::string standardiseDateToISO(const std::string& str){
     return year+"-"+month+"-"+day;
 }
 
+std::string standardiseNumber(const std::string& str){
+    std::string result;
+    bool hasDecimal=false;
+    int commaCount=0,periodCount=0;
+    for(size_t i=0;i<str.length();i++){
+        if(str[i]==',')commaCount++;
+        else if(str[i]=='.')periodCount++;}
+    char decimalSep='.';
+    if(commaCount>periodCount)decimalSep=',';
+    for(size_t i=0;i<str.length();i++){
+        char c=str[i];
+        if(c>='0'&&c<='9'){result+=c;}
+        else if((c=='.'||c==',')&&!hasDecimal){if(c==decimalSep){result+='.';hasDecimal=true;}}
+        else if(c=='-'&&result.empty()){result+=c;}}
+    return result.empty()?str:result;
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
