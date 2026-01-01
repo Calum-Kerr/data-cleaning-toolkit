@@ -447,7 +447,8 @@
         }
         function displayDataTypes(data){
             if(!data.types){return;}
-            let html='<h4>Detected Data Types:</h4><table border="1" cellpadding="8" style="width:100%;border-collapse:collapse"><tr><th>Column Name</th><th>Detected Type</th></tr>';
+            let html='<h4>Detected Data Types:</h4><table border="1" cellpadding="8" style="width:100%;border-collapse:collapse"><tr><th>Column Name</th><th>Detected Type</th><th>Action</th></tr>';
+            let colIndex=0;
             for(const colName in data.types){
                 const type=data.types[colName];
                 let typeColor='#e8f4f8';
@@ -455,10 +456,62 @@
                 else if(type==='date'){typeColor='#fff3e0';}
                 else if(type==='boolean'){typeColor='#f3e5f5';}
                 else if(type==='name'){typeColor='#fce4ec';}
-                html+='<tr><td>'+colName+'</td><td style="background:'+typeColor+'"><strong>'+type+'</strong></td></tr>';
+                let actionBtn='';
+                if(type==='date'){actionBtn='<button onclick="standardiseDateColumn('+colIndex+')" style="padding:5px 10px;font-size:12px">Standardise Dates</button>';}
+                else if(type==='numeric'){actionBtn='<button onclick="standardiseNumberColumn('+colIndex+')" style="padding:5px 10px;font-size:12px">Standardise Numbers</button>';}
+                html+='<tr><td>'+colName+'</td><td style="background:'+typeColor+'"><strong>'+type+'</strong></td><td>'+actionBtn+'</td></tr>';
+                colIndex++;
             }
             html+='</table>';
             document.getElementById('detectionResults').innerHTML=html;
+        }
+        async function standardiseDateColumn(colIndex){
+            if(!uploadCSV){alert('upload a csv file first!');return;}
+            if(wasmReady){
+                try{
+                    cleanedCSV=wasmModule.ccall('standardiseDateColumnString','string',['string','number'],[uploadCSV,colIndex]);
+                    showResult({message:'dates standardised to ISO 8601 format',column:colIndex,mode:'wasm'});
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    const res=await fetch('/api/standardise-date-column',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex})});
+                    const data=await res.json();
+                    cleanedCSV=data.cleaned;
+                    showResult(data);
+                }
+            }else{
+                const res=await fetch('/api/standardise-date-column',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex})});
+                const data=await res.json();
+                cleanedCSV=data.cleaned;
+                showResult(data);
+            }
+            document.getElementById('downloadBtn').style.display='inline-block';
+            document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
+        }
+        async function standardiseNumberColumn(colIndex){
+            if(!uploadCSV){alert('upload a csv file first!');return;}
+            if(wasmReady){
+                try{
+                    cleanedCSV=wasmModule.ccall('standardiseNumberColumnString','string',['string','number'],[uploadCSV,colIndex]);
+                    showResult({message:'numbers standardised to consistent format',column:colIndex,mode:'wasm'});
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    const res=await fetch('/api/standardise-number-column',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex})});
+                    const data=await res.json();
+                    cleanedCSV=data.cleaned;
+                    showResult(data);
+                }
+            }else{
+                const res=await fetch('/api/standardise-number-column',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex})});
+                const data=await res.json();
+                cleanedCSV=data.cleaned;
+                showResult(data);
+            }
+            document.getElementById('downloadBtn').style.display='inline-block';
+            document.getElementById('auditLogBtn').style.display='inline-block';
+            document.getElementById('comparisonBtn').style.display='inline-block';
+            document.getElementById('tableBtn').style.display='inline-block';
         }
         function displayMappingsUI(){
             if(Object.keys(suggestedMappings).length===0){document.getElementById('mappingsDisplay').style.display='none';document.getElementById('applyStandardisationBtn').style.display='none';return;}
