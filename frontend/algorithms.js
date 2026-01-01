@@ -1770,6 +1770,7 @@ var _detectOutliers = Module['_detectOutliers'] = makeInvalidEarlyAccess('_detec
 var _removeOutliersString = Module['_removeOutliersString'] = makeInvalidEarlyAccess('_removeOutliersString');
 var _detectInconsistentValues = Module['_detectInconsistentValues'] = makeInvalidEarlyAccess('_detectInconsistentValues');
 var _standardiseValuesString = Module['_standardiseValuesString'] = makeInvalidEarlyAccess('_standardiseValuesString');
+var _detectDataTypes = Module['_detectDataTypes'] = makeInvalidEarlyAccess('_detectDataTypes');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_init = makeInvalidEarlyAccess('_emscripten_stack_init');
@@ -1814,6 +1815,8 @@ function assignWasmExports(wasmExports) {
   _detectInconsistentValues = Module['_detectInconsistentValues'] = createExportWrapper('detectInconsistentValues', 1);
   assert(typeof wasmExports['standardiseValuesString'] != 'undefined', 'missing Wasm export: standardiseValuesString');
   _standardiseValuesString = Module['_standardiseValuesString'] = createExportWrapper('standardiseValuesString', 2);
+  assert(typeof wasmExports['detectDataTypes'] != 'undefined', 'missing Wasm export: detectDataTypes');
+  _detectDataTypes = Module['_detectDataTypes'] = createExportWrapper('detectDataTypes', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
