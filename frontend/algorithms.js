@@ -1773,6 +1773,7 @@ var _standardiseValuesString = Module['_standardiseValuesString'] = makeInvalidE
 var _detectDataTypes = Module['_detectDataTypes'] = makeInvalidEarlyAccess('_detectDataTypes');
 var _standardiseDateColumnString = Module['_standardiseDateColumnString'] = makeInvalidEarlyAccess('_standardiseDateColumnString');
 var _standardiseNumberColumnString = Module['_standardiseNumberColumnString'] = makeInvalidEarlyAccess('_standardiseNumberColumnString');
+var _detectFileEncoding = Module['_detectFileEncoding'] = makeInvalidEarlyAccess('_detectFileEncoding');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_init = makeInvalidEarlyAccess('_emscripten_stack_init');
@@ -1823,6 +1824,8 @@ function assignWasmExports(wasmExports) {
   _standardiseDateColumnString = Module['_standardiseDateColumnString'] = createExportWrapper('standardiseDateColumnString', 2);
   assert(typeof wasmExports['standardiseNumberColumnString'] != 'undefined', 'missing Wasm export: standardiseNumberColumnString');
   _standardiseNumberColumnString = Module['_standardiseNumberColumnString'] = createExportWrapper('standardiseNumberColumnString', 2);
+  assert(typeof wasmExports['detectFileEncoding'] != 'undefined', 'missing Wasm export: detectFileEncoding');
+  _detectFileEncoding = Module['_detectFileEncoding'] = createExportWrapper('detectFileEncoding', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
