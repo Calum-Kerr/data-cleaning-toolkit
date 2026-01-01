@@ -172,6 +172,30 @@ std::string normalizeToUTF8(const std::string& data){
     return data;
 }
 
+bool isEmailFormat(const std::string& str){
+    size_t atPos=str.find('@');
+    if(atPos==std::string::npos||atPos==0||atPos==str.length()-1)return false;
+    size_t dotPos=str.find('.',atPos);
+    return dotPos!=std::string::npos&&dotPos>atPos+1&&dotPos<str.length()-1;
+}
+
+bool isPhoneFormat(const std::string& str){
+    int digitCount=0;
+    for(char c:str){if(c>='0'&&c<='9')digitCount++;}
+    return digitCount>=7&&digitCount<=15;
+}
+
+bool isPostalCodeFormat(const std::string& str){
+    if(str.length()<4||str.length()>10)return false;
+    int digitCount=0,letterCount=0;
+    for(char c:str){
+        if(c>='0'&&c<='9')digitCount++;
+        else if((c>='A'&&c<='Z')||(c>='a'&&c<='z'))letterCount++;
+        else if(c!=' '&&c!='-')return false;
+    }
+    return (digitCount+letterCount)>=4;
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
