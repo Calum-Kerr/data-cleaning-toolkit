@@ -133,6 +133,21 @@ std::string inferColumnType(const std::string& colName,const std::vector<std::st
     return "text";
 }
 
+int validateColumnType(const std::vector<std::string>& values,const std::string& expectedType){
+    int validCount=0;
+    for(const auto& val:values){
+        if(val.empty())continue;
+        bool isValid=false;
+        if(expectedType=="numeric"){isValid=isNumeric(val);}
+        else if(expectedType=="date"){isValid=isDateFormat(val);}
+        else if(expectedType=="boolean"){isValid=isBoolean(val);}
+        else if(expectedType=="name"){isValid=!val.empty();}
+        else{isValid=true;}
+        if(isValid)validCount++;
+    }
+    return validCount;
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
@@ -501,6 +516,44 @@ extern "C"{
             if(col>0)result<<",";
             result<<"\""+colName+"\":\""+type+"\"";}
         result<<"},\"message\":\"data types detected\"}";
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
+    }
+    EMSCRIPTEN_KEEPALIVE
+    const char* standardiseDateColumnString(const char* csvData,int colIndex){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::stringstream result;
+        for(size_t row=0;row<parsed.size();row++){
+            for(size_t col=0;col<parsed[row].size();col++){
+                std::string cell=parsed[row][col];
+                if(col==(size_t)colIndex&&row>0&&isDateFormat(cell)){cell=standardiseDateToISO(cell);}
+                if(col>0)result<<",";
+                result<<cell;
+            }
+            result<<"\n";
+        }
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
+    }
+    EMSCRIPTEN_KEEPALIVE
+    const char* standardiseNumberColumnString(const char* csvData,int colIndex){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::stringstream result;
+        for(size_t row=0;row<parsed.size();row++){
+            for(size_t col=0;col<parsed[row].size();col++){
+                std::string cell=parsed[row][col];
+                if(col==(size_t)colIndex&&row>0&&!cell.empty()){cell=standardiseNumber(cell);}
+                if(col>0)result<<",";
+                result<<cell;
+            }
+            result<<"\n";
+        }
         std::string resultStr=result.str();
         char* cstr=new char[resultStr.length()+1];
         std::strcpy(cstr,resultStr.c_str());
