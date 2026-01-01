@@ -169,7 +169,51 @@
     <script>
         let uploadCSV='';
         let cleanedCSV='';
+        let batchFiles=[];
         document.getElementById('fileInput').addEventListener('change',async(e)=>{const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=async(e)=>{uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;document.getElementById('autoDetectBtn').style.display='inline-block'};reader.readAsText(file);}});
+        function handleFileUpload(e){const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=(e)=>{uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;document.getElementById('autoDetectBtn').style.display='inline-block'};reader.readAsText(file);}}
+        function handleBatchFileUpload(e){batchFiles=Array.from(e.target.files);if(batchFiles.length>0){document.getElementById('batchProcessBtn').style.display='inline-block';alert('Selected '+batchFiles.length+' files for batch processing');}}
+        async function processBatch(){
+            if(batchFiles.length===0){alert('select files first!');return;}
+            const results=[];
+            for(let i=0;i<batchFiles.length;i++){
+                const file=batchFiles[i];
+                const reader=new FileReader();
+                reader.onload=async(e)=>{
+                    const csvData=e.target.result;
+                    const fileResult={filename:file.name,status:'processing'};
+                    try{
+                        if(wasmReady){
+                            const rows=wasmModule.ccall('parseCSV','number',['string'],[csvData]);
+                            const missing=wasmModule.ccall('detectMissing','number',['string'],[csvData]);
+                            const duplicates=wasmModule.ccall('detectDuplicates','number',['string'],[csvData]);
+                            fileResult.rows=rows;
+                            fileResult.missing=missing;
+                            fileResult.duplicates=duplicates;
+                            fileResult.status='completed';
+                            fileResult.mode='wasm';
+                        }else{
+                            const res=await fetch(API_URL+'/api/parse',{method:'POST',body:csvData});
+                            const data=await res.json();
+                            fileResult.rows=data.rows;
+                            fileResult.status='completed';
+                            fileResult.mode='api';
+                        }
+                    }catch(err){fileResult.status='error';fileResult.error=err.message;}
+                    results.push(fileResult);
+                    if(results.length===batchFiles.length){displayBatchResults(results);}
+                };
+                reader.readAsText(file);
+            }
+        }
+        function displayBatchResults(results){
+            let html='<h3>Batch Processing Results</h3><table border="1" cellpadding="8" style="width:100%;border-collapse:collapse"><tr><th>File</th><th>Status</th><th>Rows</th><th>Missing</th><th>Duplicates</th></tr>';
+            for(const result of results){
+                html+='<tr><td>'+result.filename+'</td><td style="background:'+(result.status==='completed'?'#e8f5e9':'#ffebee')+'">'+result.status+'</td><td>'+(result.rows||'-')+'</td><td>'+(result.missing||'-')+'</td><td>'+(result.duplicates||'-')+'</td></tr>';
+            }
+            html+='</table>';
+            document.getElementById('detectionResults').innerHTML=html;
+        }
         async function autoDetect(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
             const results={};
