@@ -76,6 +76,28 @@ std::string detectDateFormat(const std::string& str){
     return "";
 }
 
+std::string standardiseDateToISO(const std::string& str){
+    if(str.length()<6)return str;
+    char sep='/';
+    if(str.find('-')!=std::string::npos)sep='-';
+    else if(str.find('.')!=std::string::npos)sep='.';
+    std::vector<std::string> parts;
+    std::stringstream ss(str);
+    std::string part;
+    while(std::getline(ss,part,sep))parts.push_back(part);
+    if(parts.size()!=3)return str;
+    std::string year,month,day;
+    if(parts[0].length()==4){year=parts[0];month=parts[1];day=parts[2];}
+    else if(parts[2].length()==4){year=parts[2];
+        if(std::stoi(parts[0])>12){day=parts[0];month=parts[1];}
+        else if(std::stoi(parts[1])>12){month=parts[0];day=parts[1];}
+        else{day=parts[0];month=parts[1];}}
+    else{return str;}
+    if(month.length()==1)month="0"+month;
+    if(day.length()==1)day="0"+day;
+    return year+"-"+month+"-"+day;
+}
+
 int levenshteinDistance(const std::string& s1,const std::string& s2){
     size_t m=s1.length();
     size_t n=s2.length();
