@@ -583,4 +583,15 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* detectFileEncoding(const char* csvData){
+        std::string data(csvData);
+        std::string encoding=detectEncoding(data);
+        std::stringstream result;
+        result<<"{\"encoding\":\""+encoding+"\",\"message\":\"encoding detected\"}";
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
+    }
 }
