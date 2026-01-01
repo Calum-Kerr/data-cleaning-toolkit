@@ -219,6 +219,45 @@
             html+='</table>';
             document.getElementById('detectionResults').innerHTML=html;
         }
+        function recordOperation(operation,data){
+            operationHistory=operationHistory.slice(0,historyIndex+1);
+            operationHistory.push({operation:operation,data:data,timestamp:new Date().toLocaleTimeString()});
+            historyIndex=operationHistory.length-1;
+            updateHistoryButtons();
+        }
+        function undoOperation(){
+            if(historyIndex>0){
+                historyIndex--;
+                const prevState=operationHistory[historyIndex];
+                cleanedCSV=prevState.data.csv;
+                showResult({message:'undo: '+prevState.operation,timestamp:prevState.timestamp});
+                updateHistoryButtons();
+            }
+        }
+        function redoOperation(){
+            if(historyIndex<operationHistory.length-1){
+                historyIndex++;
+                const nextState=operationHistory[historyIndex];
+                cleanedCSV=nextState.data.csv;
+                showResult({message:'redo: '+nextState.operation,timestamp:nextState.timestamp});
+                updateHistoryButtons();
+            }
+        }
+        function updateHistoryButtons(){
+            document.getElementById('undoBtn').disabled=historyIndex<=0;
+            document.getElementById('redoBtn').disabled=historyIndex>=operationHistory.length-1;
+            document.getElementById('historyBtn').style.display=operationHistory.length>0?'inline-block':'none';
+        }
+        function displayOperationHistory(){
+            let html='<h3>Operation History</h3><table border="1" cellpadding="8" style="width:100%;border-collapse:collapse"><tr><th>#</th><th>Operation</th><th>Time</th></tr>';
+            for(let i=0;i<operationHistory.length;i++){
+                const op=operationHistory[i];
+                const isCurrent=i===historyIndex;
+                html+='<tr style="background:'+(isCurrent?'#fff3cd':'#fff')+'"><td>'+(i+1)+'</td><td>'+(isCurrent?'→ '+op.operation+' (current)':op.operation)+'</td><td>'+op.timestamp+'</td></tr>';
+            }
+            html+='</table>';
+            document.getElementById('detectionResults').innerHTML=html;
+        }
         async function autoDetect(){
             if(!uploadCSV){alert('upload a csv file first!');return;}
             const results={};
