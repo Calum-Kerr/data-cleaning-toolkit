@@ -538,6 +538,29 @@
                 showResult(data);
             }
         }
+        async function detectPatterns(){
+            const csv=document.getElementById('csvInput').value;
+            if(!csv){alert('upload a csv file first!');return;}
+            if(wasmReady){
+                try{
+                    const result=wasmModule.ccall('detectPatterns','string',['string'],[csv]);
+                    const data=JSON.parse(result);
+                    data.mode='wasm';
+                    showResult(data);
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    const res=await fetch('/api/detect-patterns',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                    const data=await res.json();
+                    data.mode='api';
+                    showResult(data);
+                }
+            }else{
+                const res=await fetch('/api/detect-patterns',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                const data=await res.json();
+                data.mode='api';
+                showResult(data);
+            }
+        }
         function displayMappingsUI(){
             if(Object.keys(suggestedMappings).length===0){document.getElementById('mappingsDisplay').style.display='none';document.getElementById('applyStandardisationBtn').style.display='none';return;}
             let html='<h4>Review and Edit Mappings</h4>';
