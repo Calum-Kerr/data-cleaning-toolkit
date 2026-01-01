@@ -45,10 +45,12 @@
         <p>Paste CSV data below or upload a file:</p>
         <textarea id="csvInput" rows="8" placeholder="Paste CSV data here, or upload a file below"></textarea>
         <div style="margin-top:10px">
-            <label>Or upload CSV file: <input type="file" id="fileInput" accept=".csv"></label>
+            <label>Single file: <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)"></label>
+            <label style="margin-left:20px">Batch files: <input type="file" id="batchFileInput" accept=".csv" multiple onchange="handleBatchFileUpload(event)"></label>
         </div>
         <div class="button-group">
             <button id="installBtn" style="display:none">Install App</button>
+            <button id="batchProcessBtn" style="display:none" onclick="processBatch()">Process Batch</button>
         </div>
     </div>
     <div class="section">
