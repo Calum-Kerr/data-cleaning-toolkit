@@ -170,6 +170,8 @@
         let uploadCSV='';
         let cleanedCSV='';
         let batchFiles=[];
+        let operationHistory=[];
+        let historyIndex=-1;
         document.getElementById('fileInput').addEventListener('change',async(e)=>{const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=async(e)=>{uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;document.getElementById('autoDetectBtn').style.display='inline-block'};reader.readAsText(file);}});
         function handleFileUpload(e){const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=(e)=>{uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;document.getElementById('autoDetectBtn').style.display='inline-block'};reader.readAsText(file);}}
         function handleBatchFileUpload(e){batchFiles=Array.from(e.target.files);if(batchFiles.length>0){document.getElementById('batchProcessBtn').style.display='inline-block';alert('Selected '+batchFiles.length+' files for batch processing');}}
