@@ -618,4 +618,26 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* detectPatterns(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        if(parsed.size()<2){char* cstr=new char[1];cstr[0]='\0';return cstr;}
+        std::stringstream result;
+        result<<"{\"patterns\":{";
+        int emailCount=0,phoneCount=0,postalCount=0;
+        for(size_t row=1;row<parsed.size();row++){
+            for(size_t col=0;col<parsed[row].size();col++){
+                if(isEmailFormat(parsed[row][col]))emailCount++;
+                if(isPhoneFormat(parsed[row][col]))phoneCount++;
+                if(isPostalCodeFormat(parsed[row][col]))postalCount++;
+            }
+        }
+        result<<"\"email\":"<<emailCount<<",\"phone\":"<<phoneCount<<",\"postal\":"<<postalCount;
+        result<<"},\"message\":\"patterns detected\"}";
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
+    }
 }
