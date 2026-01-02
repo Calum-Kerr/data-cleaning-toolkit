@@ -674,4 +674,27 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* measurePerformance(const char* csvData){
+        auto start=std::chrono::high_resolution_clock::now();
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        int rows=parsed.size();
+        int cols=rows>0?parsed[0].size():0;
+        int cells=rows*cols;
+        auto end=std::chrono::high_resolution_clock::now();
+        auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(end-start);
+        std::stringstream result;
+        result<<"{\"metrics\":{";
+        result<<"\"rows\":"<<rows<<",";
+        result<<"\"columns\":"<<cols<<",";
+        result<<"\"totalCells\":"<<cells<<",";
+        result<<"\"executionTimeMs\":"<<duration.count()<<",";
+        result<<"\"cellsPerSecond\":"<<(cells>0?(cells*1000)/duration.count():0);
+        result<<"},\"message\":\"performance measured\"}";
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
+    }
 }
