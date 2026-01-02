@@ -1,0 +1,22 @@
+sku,product_name,category,stock_level,reorder_point,supplier
+SKU001,Laptop Computer,Electronics,45,10,TechSupply Inc
+SKU002,Wireless Mouse,Electronics,120,,TechSupply Inc
+SKU003,USB Keyboard,Electronics,85,15,TechSupply Inc
+SKU004,Monitor 27",Electronics,32,8,DisplayCorp
+SKU005,HDMI Cable,Electronics,250,50,CableWorld
+SKU006,Laptop Computer,Electronics,45,10,TechSupply Inc
+SKU007,Desk Chair,Furniture,,5,FurniturePlus
+SKU008,Standing Desk,Furniture,12,3,FurniturePlus
+SKU009,Desk Lamp,Furniture,67,10,LightingCo
+SKU010,Monitor 27",Electronics,32,8,DisplayCorp
+SKU011,Wireless Mouse,electronics,120,,TechSupply Inc
+SKU012,USB Keyboard,ELECTRONICS,85,15,TechSupply Inc
+SKU013,Desk Chair,Furniture,18,5,FurniturePlus
+SKU014,Standing Desk,furniture,12,3,FurniturePlus
+SKU015,Desk Lamp,Furniture,67,10,LightingCo
+SKU016,HDMI Cable,Electronics,250,50,CableWorld
+SKU017,Laptop Computer,Electronics,45,10,
+SKU018,Wireless Mouse,Electronics,120,,TechSupply Inc
+SKU019,USB Keyboard,Electronics,85,15,TechSupply Inc
+SKU020,Monitor 27",Electronics,32,8,DisplayCorp
+

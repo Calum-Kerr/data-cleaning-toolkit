@@ -1,0 +1,51 @@
+BENCHMARK DATASETS FOR DATA CLEANING TOOLKIT EVALUATION
+
+Dataset 1: Customer Data (dataset1-customers.csv)
+- Domain: Customer relationship management
+- Size: 20 rows, 7 columns
+- Quality Issues:
+  * Duplicate rows (rows 1 and 3, rows 4 and 6)
+  * Missing values (row 8: email field)
+  * Whitespace issues (row 7: "  USA  " with extra spaces)
+  * Case inconsistencies (row 9: "usa" vs "USA")
+  * Duplicate values (row 15 and 20: same customer)
+- Expected Cleaning Results:
+  * Remove 2 duplicate rows
+  * Trim whitespace from 1 cell
+  * Standardise case in 1 cell
+  * Identify 1 missing email
+
+Dataset 2: Sales Data (dataset2-sales.csv)
+- Domain: E-commerce sales transactions
+- Size: 20 rows, 6 columns
+- Quality Issues:
+  * Date format inconsistencies (mixed formats: YYYY-MM-DD and MM/DD/YYYY)
+  * Currency format inconsistencies (some with $, some without)
+  * Duplicate rows (rows 1 and 5, rows 2 and 6)
+  * Missing currency symbols (rows 13-14)
+- Expected Cleaning Results:
+  * Standardise dates to ISO 8601 format
+  * Standardise currency format
+  * Remove 2 duplicate rows
+  * Standardise currency symbols
+
+Dataset 3: Inventory Data (dataset3-inventory.csv)
+- Domain: Product inventory management
+- Size: 20 rows, 6 columns
+- Quality Issues:
+  * Missing values (rows 7, 17, 18: reorder_point or supplier)
+  * Case inconsistencies (rows 11-12: "electronics" vs "ELECTRONICS" vs "Electronics")
+  * Duplicate rows (rows 1 and 6, rows 4 and 10, rows 7 and 14)
+  * Whitespace in product names (row 4: "Monitor 27\"")
+- Expected Cleaning Results:
+  * Identify 3 missing values
+  * Standardise case in 3 cells
+  * Remove 3 duplicate rows
+  * Trim whitespace from 1 cell
+
+EVALUATION METRICS:
+- Accuracy: % of issues correctly identified and cleaned
+- Performance: Time taken to process each dataset
+- Memory usage: Peak memory during processing
+- Reproducibility: Same input produces same output
+
