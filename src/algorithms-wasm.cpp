@@ -4,6 +4,7 @@
 #include <set>
 #include <map>
 #include <algorithm>
+#include <chrono>
 #include <emscripten/emscripten.h>
 
 bool isNumeric(const std::string& str){
