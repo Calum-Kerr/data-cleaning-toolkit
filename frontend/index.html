@@ -67,7 +67,7 @@
             <button onclick="detectDataTypes()">Detect Data Types</button>
             <button onclick="detectEncoding()">Detect Encoding</button>
             <button onclick="detectPatterns()">Detect Patterns</button>
-            <button onclick="measurePerformance()">📊 Measure Performance</button>
+            <button onclick="measurePerformance()">Measure Performance</button>
         </div>
         <div id="detectionResults"></div>
     </div>
@@ -708,6 +708,43 @@
                 data.mode='api';
                 showResult(data);
             }
+        }
+        async function measurePerformance(){
+            const csv=document.getElementById('csvInput').value;
+            if(!csv){alert('upload a csv file first!');return;}
+            if(wasmReady){
+                try{
+                    const result=wasmModule.ccall('measurePerformance','string',['string'],[csv]);
+                    const data=JSON.parse(result);
+                    data.mode='wasm';
+                    displayPerformanceMetrics(data);
+                }catch(e){
+                    console.log('WASM function not available, falling back to API: '+e.message);
+                    const res=await fetch('/api/measure-performance',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                    const data=await res.json();
+                    data.mode='api';
+                    displayPerformanceMetrics(data);
+                }
+            }else{
+                const res=await fetch('/api/measure-performance',{method:'POST',headers:{'Content-Type':'text/plain'},body:csv});
+                const data=await res.json();
+                data.mode='api';
+                displayPerformanceMetrics(data);
+            }
+        }
+        function displayPerformanceMetrics(data){
+            if(!data.metrics){showResult(data);return;}
+            const m=data.metrics;
+            let html='<h3>Performance Metrics</h3><table border="1" cellpadding="8" style="width:100%;border-collapse:collapse">';
+            html+='<tr><th>Metric</th><th>Value</th></tr>';
+            html+='<tr><td>Rows</td><td>'+m.rows+'</td></tr>';
+            html+='<tr><td>Columns</td><td>'+m.columns+'</td></tr>';
+            html+='<tr><td>Total Cells</td><td>'+m.totalCells+'</td></tr>';
+            html+='<tr><td>Execution Time</td><td>'+m.executionTimeMs+' ms</td></tr>';
+            html+='<tr><td>Cells/Second</td><td>'+m.cellsPerSecond.toLocaleString()+'</td></tr>';
+            html+='</table>';
+            html+='<p style="margin-top:15px;font-size:12px;color:#666">Mode: '+data.mode+'</p>';
+            document.getElementById('detectionResults').innerHTML=html;
         }
         async function autoDetectAll(){
             const csv=document.getElementById('csvInput').value;
