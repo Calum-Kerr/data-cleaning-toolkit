@@ -1,0 +1,21 @@
+customer_id,first_name,last_name,email,phone,country,signup_date
+1,John,Smith,john.smith@example.com,555-1234,USA,2023-01-15
+2,Jane,Doe,jane.doe@example.com,555-5678,USA,2023-01-20
+3,John,Smith,john.smith@example.com,555-1234,USA,2023-01-15
+4,Bob,Johnson,bob.johnson@example.com,,USA,2023-02-10
+5,Alice,Williams,alice.williams@example.com,555-9999,UK,2023-02-15
+6,Bob,Johnson,bob.johnson@example.com,,USA,2023-02-10
+7,Charlie,Brown,charlie.brown@example.com,555-4444,  USA  ,2023-03-01
+8,Diana,Davis,,555-7777,USA,2023-03-05
+9,Eve,Miller,eve.miller@example.com,555-8888,usa,2023-03-10
+10,Frank,Wilson,frank.wilson@example.com,555-2222,USA,2023-03-15
+11,Grace,Moore,grace.moore@example.com,555-3333,USA,2023-03-20
+12,Henry,Taylor,henry.taylor@example.com,555-6666,USA,2023-03-25
+13,Ivy,Anderson,ivy.anderson@example.com,555-1111,USA,2023-04-01
+14,Jack,Thomas,jack.thomas@example.com,555-5555,USA,2023-04-05
+15,Kate,Jackson,kate.jackson@example.com,555-9999,USA,2023-04-10
+16,Liam,White,liam.white@example.com,555-4444,USA,2023-04-15
+17,Mia,Harris,mia.harris@example.com,555-7777,USA,2023-04-20
+18,Noah,Martin,noah.martin@example.com,555-8888,USA,2023-04-25
+19,Olivia,Thompson,olivia.thompson@example.com,555-2222,USA,2023-05-01
+20,Olivia,Thompson,olivia.thompson@example.com,555-2222,USA,2023-05-01
