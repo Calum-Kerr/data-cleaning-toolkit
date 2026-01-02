@@ -992,6 +992,41 @@ async function createWasm() {
       }
     };
 
+  var _emscripten_get_now = () => performance.now();
+  
+  var _emscripten_date_now = () => Date.now();
+  
+  var nowIsMonotonic = 1;
+  
+  var checkWasiClock = (clock_id) => clock_id >= 0 && clock_id <= 3;
+  
+  var INT53_MAX = 9007199254740992;
+  
+  var INT53_MIN = -9007199254740992;
+  var bigintToI53Checked = (num) => (num < INT53_MIN || num > INT53_MAX) ? NaN : Number(num);
+  function _clock_time_get(clk_id, ignored_precision, ptime) {
+    ignored_precision = bigintToI53Checked(ignored_precision);
+  
+  
+      if (!checkWasiClock(clk_id)) {
+        return 28;
+      }
+      var now;
+      // all wasi clocks but realtime are monotonic
+      if (clk_id === 0) {
+        now = _emscripten_date_now();
+      } else if (nowIsMonotonic) {
+        now = _emscripten_get_now();
+      } else {
+        return 52;
+      }
+      // "now" is in ms, and wasi times are in ns.
+      var nsec = Math.round(now * 1000 * 1000);
+      HEAP64[((ptime)>>3)] = BigInt(nsec);
+      return 0;
+    ;
+  }
+
   var abortOnCannotGrowMemory = (requestedSize) => {
       abort(`Cannot enlarge memory arrays to size ${requestedSize} bytes (OOM). Either (1) compile with -sINITIAL_MEMORY=X with X higher than the current value ${HEAP8.length}, (2) compile with -sALLOW_MEMORY_GROWTH which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with -sABORTING_MALLOC=0`);
     };
@@ -1149,10 +1184,6 @@ async function createWasm() {
       abort('fd_close called without SYSCALLS_REQUIRE_FILESYSTEM');
     };
 
-  var INT53_MAX = 9007199254740992;
-  
-  var INT53_MIN = -9007199254740992;
-  var bigintToI53Checked = (num) => (num < INT53_MIN || num > INT53_MAX) ? NaN : Number(num);
   function _fd_seek(fd, offset, whence, newOffset) {
     offset = bigintToI53Checked(offset);
   
@@ -1453,7 +1484,6 @@ Module['FS_createPreloadedFile'] = FS.createPreloadedFile;
   'jsStackTrace',
   'getCallstack',
   'convertPCtoSourceLocation',
-  'checkWasiClock',
   'wasiRightsToMuslOFlags',
   'wasiOFlagsToMuslOFlags',
   'initRandomFill',
@@ -1582,6 +1612,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'UNWIND_CACHE',
   'ExitStatus',
   'getEnvStrings',
+  'checkWasiClock',
   'flush_NO_FILESYSTEM',
   'emSetImmediate',
   'emClearImmediate_deps',
@@ -1776,6 +1807,7 @@ var _standardiseNumberColumnString = Module['_standardiseNumberColumnString'] = 
 var _detectFileEncoding = Module['_detectFileEncoding'] = makeInvalidEarlyAccess('_detectFileEncoding');
 var _detectPatterns = Module['_detectPatterns'] = makeInvalidEarlyAccess('_detectPatterns');
 var _autoDetectAll = Module['_autoDetectAll'] = makeInvalidEarlyAccess('_autoDetectAll');
+var _measurePerformance = Module['_measurePerformance'] = makeInvalidEarlyAccess('_measurePerformance');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _strerror = makeInvalidEarlyAccess('_strerror');
 var _emscripten_stack_init = makeInvalidEarlyAccess('_emscripten_stack_init');
@@ -1832,6 +1864,8 @@ function assignWasmExports(wasmExports) {
   _detectPatterns = Module['_detectPatterns'] = createExportWrapper('detectPatterns', 1);
   assert(typeof wasmExports['autoDetectAll'] != 'undefined', 'missing Wasm export: autoDetectAll');
   _autoDetectAll = Module['_autoDetectAll'] = createExportWrapper('autoDetectAll', 1);
+  assert(typeof wasmExports['measurePerformance'] != 'undefined', 'missing Wasm export: measurePerformance');
+  _measurePerformance = Module['_measurePerformance'] = createExportWrapper('measurePerformance', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['strerror'] != 'undefined', 'missing Wasm export: strerror');
@@ -1863,6 +1897,8 @@ var wasmImports = {
   _abort_js: __abort_js,
   /** @export */
   _tzset_js: __tzset_js,
+  /** @export */
+  clock_time_get: _clock_time_get,
   /** @export */
   emscripten_resize_heap: _emscripten_resize_heap,
   /** @export */
