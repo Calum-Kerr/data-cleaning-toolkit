@@ -1,0 +1,22 @@
+person_id,name,age,gender,ethnicity,income,employment_status,credit_score,loan_approved
+1,John Smith,35,M,White,75000,Employed,750,Yes
+2,Jane Doe,28,F,White,65000,Employed,720,Yes
+3,Ahmed Hassan,42,M,Middle Eastern,55000,Employed,680,No
+4,Maria Garcia,31,F,Hispanic,60000,Employed,700,Yes
+5,David Chen,38,M,Asian,85000,Employed,780,Yes
+6,Sarah Johnson,26,F,White,50000,Employed,650,No
+7,Kwame Osei,45,M,Black,70000,Employed,710,Yes
+8,Lisa Anderson,33,F,White,72000,Employed,740,Yes
+9,Raj Patel,40,M,Asian,80000,Employed,770,Yes
+10,Emma Wilson,29,F,White,58000,Employed,690,Yes
+11,Carlos Rodriguez,36,M,Hispanic,62000,Employed,705,Yes
+12,Aisha Mohammed,34,F,Black,68000,Employed,725,Yes
+13,James O'Brien,44,M,White,78000,Employed,755,Yes
+14,Priya Singh,27,F,Asian,64000,Employed,715,Yes
+15,Michael Brown,39,M,Black,66000,Employed,700,Yes
+16,Sophie Martin,32,F,White,71000,Employed,735,Yes
+17,Hassan Al-Rashid,41,M,Middle Eastern,,Employed,670,No
+18,Isabella Rossi,30,F,White,69000,Employed,730,Yes
+19,Jamal Washington,37,M,Black,61000,Employed,695,No
+20,Yuki Tanaka,35,F,Asian,76000,Employed,745,Yes
+
