@@ -9,10 +9,32 @@
 #include <filesystem>
 #include <optional>
 #include <vector>
+#include <string>
+
+#ifdef __linux__
+#include <unistd.h>
+#include <limits.h>
+#endif
 
 namespace fs = std::filesystem;
 
 static std::optional<fs::path> g_frontendDir;
+static std::string g_frontendDiag;
+
+#ifdef __linux__
+static std::optional<fs::path> getSelfExePath(){
+    // in linux containers, argv[0] can be relative or misleading.
+    // /proc/self/exe is the most reliable way to locate the running binary.
+    std::vector<char> buf;
+    buf.resize(4096);
+    const ssize_t len = ::readlink("/proc/self/exe", buf.data(), (ssize_t)buf.size() - 1);
+    if(len <= 0){
+        return std::nullopt;
+    }
+    buf[(size_t)len] = '\0';
+    return fs::path(std::string(buf.data()));
+}
+#endif
 
 static std::optional<fs::path> findFrontendDirFrom(fs::path startDir){
     // walk up a few parents looking for frontend/index.html
@@ -38,12 +60,44 @@ static void initFrontendDir(const fs::path& argv0){
         return;
     }
 
+    // allow manual override
+    const char* envFrontend = std::getenv("FRONTEND_DIR");
+    if(envFrontend && envFrontend[0] != '\0'){
+        try{
+            fs::path p(envFrontend);
+            if(fs::exists(p / "index.html")){
+                g_frontendDir = p;
+                g_frontendDiag = std::string("FRONTEND_DIR override: ") + p.string();
+                return;
+            }
+            if(fs::exists(p / "frontend" / "index.html")){
+                g_frontendDir = p / "frontend";
+                g_frontendDiag = std::string("FRONTEND_DIR override: ") + (p / "frontend").string();
+                return;
+            }
+        }catch(...){
+            // ignore
+        }
+    }
+
     std::vector<fs::path> starts;
     try{
         starts.push_back(fs::current_path());
     }catch(...){
         // ignore
     }
+
+#ifdef __linux__
+    try{
+        auto selfExe = getSelfExePath();
+        if(selfExe && selfExe->has_parent_path()){
+            starts.push_back(selfExe->parent_path());
+            g_frontendDiag = std::string("selfExe=") + selfExe->string();
+        }
+    }catch(...){
+        // ignore
+    }
+#endif
 
     if(!argv0.empty()){
         try{
@@ -53,6 +107,11 @@ static void initFrontendDir(const fs::path& argv0){
             }
             if(exePath.has_parent_path()){
                 starts.push_back(exePath.parent_path());
+                if(g_frontendDiag.empty()){
+                    g_frontendDiag = std::string("argv0=") + exePath.string();
+                }else{
+                    g_frontendDiag += std::string(" argv0=") + exePath.string();
+                }
             }
         }catch(...){
             // ignore
@@ -63,8 +122,24 @@ static void initFrontendDir(const fs::path& argv0){
         auto found = findFrontendDirFrom(s);
         if(found){
             g_frontendDir = *found;
+            if(g_frontendDiag.empty()){
+                g_frontendDiag = std::string("frontendDir=") + found->string();
+            }else{
+                g_frontendDiag += std::string(" frontendDir=") + found->string();
+            }
             return;
         }
+    }
+
+    // keep a small hint for error responses
+    try{
+        if(g_frontendDiag.empty()){
+            g_frontendDiag = std::string("cwd=") + fs::current_path().string();
+        }else{
+            g_frontendDiag += std::string(" cwd=") + fs::current_path().string();
+        }
+    }catch(...){
+        // ignore
     }
 }
 
@@ -120,7 +195,9 @@ int main(int argc, char* argv[]){
 	([](){
 		auto html = readFrontendAsset("index.html", false);
 		if(!html){
-			return crow::response(500, "could not load frontend/index.html (check working directory and that frontend/ is deployed)");
+			std::string msg = "could not load frontend/index.html (check that frontend/ is deployed). ";
+			msg += g_frontendDiag;
+			return crow::response(500, msg);
 		}
 		auto response = crow::response(*html);
 		response.add_header("Content-Type", "text/html; charset=utf-8");
