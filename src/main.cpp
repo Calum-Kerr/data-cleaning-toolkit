@@ -6,6 +6,53 @@
 #include <sstream>
 #include <chrono>
 #include <iomanip>
+#include <filesystem>
+#include <optional>
+
+namespace fs = std::filesystem;
+
+static std::optional<fs::path> findFrontendDir(){
+    // try current working dir first, then walk up a few parents.
+    // this fixes the common "blank /app" case when the exe is started from build/.
+    fs::path dir = fs::current_path();
+    for(int depth=0; depth<10; ++depth){
+        fs::path candidate = dir / "frontend";
+        if(fs::exists(candidate / "index.html")){
+            return candidate;
+        }
+        if(!dir.has_parent_path()){
+            break;
+        }
+        fs::path parent = dir.parent_path();
+        if(parent == dir){
+            break;
+        }
+        dir = parent;
+    }
+    return std::nullopt;
+}
+
+static std::optional<std::string> readFileToString(const fs::path& filePath, bool binary){
+    std::ios::openmode mode = std::ios::in;
+    if(binary){
+        mode |= std::ios::binary;
+    }
+    std::ifstream file(filePath, mode);
+    if(!file.is_open()){
+        return std::nullopt;
+    }
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
+static std::optional<std::string> readFrontendAsset(const std::string& filename, bool binary){
+    auto frontendDir = findFrontendDir();
+    if(!frontendDir){
+        return std::nullopt;
+    }
+    return readFileToString((*frontendDir) / filename, binary);
+}
 crow::response addSecurityHeaders(crow::response response) {
     response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
     response.add_header("X-Content-Type-Options", "nosniff");
@@ -29,27 +76,31 @@ int main(){
     });
 
     CROW_ROUTE(app,"/app")
-    ([](){
-        std::ifstream file("frontend/index.html");
-        std::stringstream buffer;
-        buffer<<file.rdbuf();
-        auto response = crow::response(buffer.str());
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests; worker-src 'self'; child-src 'self'");
-        response.add_header("X-Content-Type-Options", "nosniff");
-        response.add_header("X-Frame-Options", "DENY");
-        response.add_header("Referrer-Policy", "no-referrer");
-        response.add_header("X-XSS-Protection", "1; mode=block");
-        response.add_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
-        response.add_header("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
-        return response;
-    });
+	([](){
+		auto html = readFrontendAsset("index.html", false);
+		if(!html){
+			return crow::response(500, "could not load frontend/index.html (check working directory and that frontend/ is deployed)");
+		}
+		auto response = crow::response(*html);
+		response.add_header("Content-Type", "text/html; charset=utf-8");
+		// no google fonts: keep everything local. allow inline script/style because index.html is a single-file app.
+		response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests; worker-src 'self'; child-src 'self'");
+		response.add_header("X-Content-Type-Options", "nosniff");
+		response.add_header("X-Frame-Options", "DENY");
+		response.add_header("Referrer-Policy", "no-referrer");
+		response.add_header("X-XSS-Protection", "1; mode=block");
+		response.add_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+		response.add_header("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+		return response;
+	});
 
     CROW_ROUTE(app,"/algorithms.js")
-    ([](){
-        std::ifstream file ("frontend/algorithms.js");
-        std::stringstream buffer;
-        buffer<<file.rdbuf();
-        auto response=crow::response(buffer.str());
+	([](){
+		auto js = readFrontendAsset("algorithms.js", false);
+		if(!js){
+			return crow::response(404);
+		}
+		auto response=crow::response(*js);
         response.add_header("Content-Type","application/javascript");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
@@ -59,11 +110,12 @@ int main(){
     });
 
     CROW_ROUTE(app, "/algorithms.wasm")
-    ([](){
-        std::ifstream file("frontend/algorithms.wasm",std::ios::binary);
-        std::stringstream buffer;
-        buffer<<file.rdbuf();
-        auto response=crow::response(buffer.str());
+	([](){
+		auto wasm = readFrontendAsset("algorithms.wasm", true);
+		if(!wasm){
+			return crow::response(404);
+		}
+		auto response=crow::response(*wasm);
         response.add_header("Content-Type","application/wasm");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
@@ -73,11 +125,12 @@ int main(){
     });
 
     CROW_ROUTE(app,"/manifest.json")
-    ([](){
-        std::ifstream file("frontend/manifest.json");
-        std::stringstream buffer;
-        buffer<<file.rdbuf();
-        auto response=crow::response(buffer.str());
+	([](){
+		auto manifest = readFrontendAsset("manifest.json", false);
+		if(!manifest){
+			return crow::response(404);
+		}
+		auto response=crow::response(*manifest);
         response.add_header("Content-Type","application/json");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
@@ -87,11 +140,12 @@ int main(){
     });
 
     CROW_ROUTE(app,"/service-worker.js")
-    ([](){
-        std::ifstream file("frontend/service-worker.js");
-        std::stringstream buffer;
-        buffer<<file.rdbuf();
-        auto response=crow::response(buffer.str());
+	([](){
+		auto sw = readFrontendAsset("service-worker.js", false);
+		if(!sw){
+			return crow::response(404);
+		}
+		auto response=crow::response(*sw);
         response.add_header("Content-Type","application/javascript");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
@@ -269,11 +323,12 @@ int main(){
     });
     
     CROW_ROUTE(app,"/favicon.ico")
-    ([](){
-        std::ifstream file("frontend/favicon.ico",std::ios::binary);
-        std::stringstream buffer;
-        buffer<<file.rdbuf();
-        auto response=crow::response(buffer.str());
+	([](){
+		auto ico = readFrontendAsset("favicon.ico", true);
+		if(!ico){
+			return crow::response(404);
+		}
+		auto response=crow::response(*ico);
         response.add_header("Content-Type","image/x-icon");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
@@ -283,11 +338,12 @@ int main(){
     });
 
     CROW_ROUTE(app,"/android-chrome-192x192.png")
-    ([](){
-        std::ifstream file("frontend/android-chrome-192x192.png",std::ios::binary);
-        std::stringstream buffer;
-        buffer<<file.rdbuf();
-        auto response=crow::response(buffer.str());
+	([](){
+		auto png = readFrontendAsset("android-chrome-192x192.png", true);
+		if(!png){
+			return crow::response(404);
+		}
+		auto response=crow::response(*png);
         response.add_header("Content-Type","image/png");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
@@ -297,11 +353,12 @@ int main(){
     });
 
     CROW_ROUTE(app,"/android-chrome-512x512.png")
-    ([](){
-        std::ifstream file("frontend/android-chrome-512x512.png",std::ios::binary);
-        std::stringstream buffer;
-        buffer<<file.rdbuf();
-        auto response=crow::response(buffer.str());
+	([](){
+		auto png = readFrontendAsset("android-chrome-512x512.png", true);
+		if(!png){
+			return crow::response(404);
+		}
+		auto response=crow::response(*png);
         response.add_header("Content-Type","image/png");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
