@@ -24,11 +24,11 @@ Try it now: **https://www.calumkerr.com/app**
 
 | Feature | Detection | Cleaning |
 |---------|-----------|----------|
-| Missing Values | ✅ | - |
-| Duplicate Rows | ✅ | ✅ |
-| Whitespace Issues | ✅ | ✅ |
-| Case Inconsistency | ✅ | ✅ |
-| Null Representations | ✅ | ✅ |
+| Missing Values | yes | - |
+| Duplicate Rows | yes | yes |
+| Whitespace Issues | yes | yes |
+| Case Inconsistency | yes | yes |
+| Null Representations | yes | yes |
 
 ## Quick Start
 
