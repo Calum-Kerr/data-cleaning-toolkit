@@ -13,9 +13,10 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 COPY . .
+COPY vcpkg.json .
 RUN git clone https://github.com/Microsoft/vcpkg.git
 RUN cd vcpkg && ./bootstrap-vcpkg.sh
-RUN cd vcpkg && ./vcpkg install asio:x64-linux boost-algorithm:x64-linux boost-functional:x64-linux boost-optional:x64-linux boost-lexical-cast:x64-linux boost-array:x64-linux
+RUN cd vcpkg && ./vcpkg install
 RUN mkdir build && \
     cd build && \
     cmake .. -DCMAKE_TOOLCHAIN_FILE="../vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release && \
