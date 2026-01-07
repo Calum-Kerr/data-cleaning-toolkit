@@ -15,21 +15,11 @@ include_directories(include)
 set(SOURCES src/main.cpp src/algorithms.cpp)
 add_executable(Toolkit ${SOURCES})
 find_package(Threads REQUIRED)
-find_package(asio CONFIG QUIET)
-if(asio_FOUND)
-    target_link_libraries(Toolkit PRIVATE asio::asio)
-else()
-    find_path(ASIO_INCLUDE_DIR asio.hpp
-        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/installed/x64-linux/include
-              ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/installed/x64-windows/include
-              /usr/include
-        NO_DEFAULT_PATH)
-    if(ASIO_INCLUDE_DIR)
-        target_include_directories(Toolkit PRIVATE ${ASIO_INCLUDE_DIR})
-    else()
-        # Fallback to ASIO standalone
-        target_compile_definitions(Toolkit PRIVATE ASIO_STANDALONE)
-    endif()
+
+find_path(ASIO_INCLUDE_DIR NAMES asio.hpp)
+if(ASIO_INCLUDE_DIR)
+    target_include_directories(Toolkit PRIVATE ${ASIO_INCLUDE_DIR})
+    target_compile_definitions(Toolkit PRIVATE ASIO_STANDALONE)
 endif()
 
 if(WIN32)
