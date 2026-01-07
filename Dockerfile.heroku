@@ -18,10 +18,12 @@ COPY . .
 RUN if [ ! -d "vcpkg" ]; then \
         git clone https://github.com/Microsoft/vcpkg.git && \
         cd vcpkg && \
+        chmod +x ./bootstrap-vcpkg.sh && \
         ./bootstrap-vcpkg.sh && \
         ./vcpkg install asio:x64-linux boost-algorithm:x64-linux boost-functional:x64-linux boost-optional:x64-linux boost-lexical-cast:x64-linux boost-array:x64-linux; \
     else \
         cd vcpkg && \
+        chmod +x ./bootstrap-vcpkg.sh && \
         ./bootstrap-vcpkg.sh && \
         ./vcpkg install asio:x64-linux boost-algorithm:x64-linux boost-functional:x64-linux boost-optional:x64-linux boost-lexical-cast:x64-linux boost-array:x64-linux; \
     fi
