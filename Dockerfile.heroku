@@ -15,8 +15,16 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 COPY . .
-RUN git submodule update --init --recursive
-RUN cd vcpkg && ./bootstrap-vcpkg.sh && ./vcpkg install asio:x64-linux boost-algorithm:x64-linux boost-functional:x64-linux boost-optional:x64-linux boost-lexical-cast:x64-linux boost-array:x64-linux
+RUN if [ ! -d "vcpkg" ]; then \
+        git clone https://github.com/Microsoft/vcpkg.git && \
+        cd vcpkg && \
+        ./bootstrap-vcpkg.sh && \
+        ./vcpkg install asio:x64-linux boost-algorithm:x64-linux boost-functional:x64-linux boost-optional:x64-linux boost-lexical-cast:x64-linux boost-array:x64-linux; \
+    else \
+        cd vcpkg && \
+        ./bootstrap-vcpkg.sh && \
+        ./vcpkg install asio:x64-linux boost-algorithm:x64-linux boost-functional:x64-linux boost-optional:x64-linux boost-lexical-cast:x64-linux boost-array:x64-linux; \
+    fi
 RUN mkdir build && \
     cd build && \
     cmake .. -DCMAKE_TOOLCHAIN_FILE="../vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release && \
