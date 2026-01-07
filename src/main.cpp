@@ -7,7 +7,7 @@
 #include <chrono>
 #include <iomanip>
 crow::response addSecurityHeaders(crow::response response) {
-    response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+    response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
     response.add_header("X-Content-Type-Options", "nosniff");
     response.add_header("X-Frame-Options", "DENY");
     response.add_header("Referrer-Policy", "no-referrer");
@@ -34,7 +34,7 @@ int main(){
         std::stringstream buffer;
         buffer<<file.rdbuf();
         auto response = crow::response(buffer.str());
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests; worker-src 'self'; child-src 'self'");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests; worker-src 'self'; child-src 'self'");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
@@ -51,7 +51,7 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","application/javascript");
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
@@ -65,7 +65,7 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","application/wasm");
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
@@ -79,7 +79,7 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","application/json");
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
@@ -93,7 +93,7 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","application/javascript");
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
@@ -108,7 +108,7 @@ int main(){
         result["rows"]=parsed.size();
         result["message"]="CSV parsed successfully";
         auto response = crow::response(result);
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
@@ -275,7 +275,7 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","image/x-icon");
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
@@ -289,7 +289,7 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","image/png");
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
@@ -303,7 +303,7 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","image/png");
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
