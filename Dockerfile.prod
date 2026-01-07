@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
 RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 WORKDIR /app
 COPY --from=builder /app/build/Toolkit /app/Toolkit
+COPY --from=builder /app/frontend /app/frontend
 RUN chown -R appuser:appgroup /app
 USER appuser
 EXPOSE $PORT
