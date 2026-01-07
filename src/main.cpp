@@ -34,7 +34,7 @@ int main(){
         std::stringstream buffer;
         buffer<<file.rdbuf();
         auto response = crow::response(buffer.str());
-        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-eval'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests; worker-src 'self'; child-src 'self'");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests; worker-src 'self'; child-src 'self'");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
