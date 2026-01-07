@@ -8,28 +8,64 @@
 #include <iomanip>
 #include <filesystem>
 #include <optional>
+#include <vector>
 
 namespace fs = std::filesystem;
 
-static std::optional<fs::path> findFrontendDir(){
-    // try current working dir first, then walk up a few parents.
-    // this fixes the common "blank /app" case when the exe is started from build/.
-    fs::path dir = fs::current_path();
+static std::optional<fs::path> g_frontendDir;
+
+static std::optional<fs::path> findFrontendDirFrom(fs::path startDir){
+    // walk up a few parents looking for frontend/index.html
     for(int depth=0; depth<10; ++depth){
-        fs::path candidate = dir / "frontend";
+        fs::path candidate = startDir / "frontend";
         if(fs::exists(candidate / "index.html")){
             return candidate;
         }
-        if(!dir.has_parent_path()){
+        if(!startDir.has_parent_path()){
             break;
         }
-        fs::path parent = dir.parent_path();
-        if(parent == dir){
+        fs::path parent = startDir.parent_path();
+        if(parent == startDir){
             break;
         }
-        dir = parent;
+        startDir = parent;
     }
     return std::nullopt;
+}
+
+static void initFrontendDir(const fs::path& argv0){
+    if(g_frontendDir){
+        return;
+    }
+
+    std::vector<fs::path> starts;
+    try{
+        starts.push_back(fs::current_path());
+    }catch(...){
+        // ignore
+    }
+
+    if(!argv0.empty()){
+        try{
+            fs::path exePath = argv0;
+            if(exePath.is_relative()){
+                exePath = fs::absolute(exePath);
+            }
+            if(exePath.has_parent_path()){
+                starts.push_back(exePath.parent_path());
+            }
+        }catch(...){
+            // ignore
+        }
+    }
+
+    for(const auto& s : starts){
+        auto found = findFrontendDirFrom(s);
+        if(found){
+            g_frontendDir = *found;
+            return;
+        }
+    }
 }
 
 static std::optional<std::string> readFileToString(const fs::path& filePath, bool binary){
@@ -47,11 +83,10 @@ static std::optional<std::string> readFileToString(const fs::path& filePath, boo
 }
 
 static std::optional<std::string> readFrontendAsset(const std::string& filename, bool binary){
-    auto frontendDir = findFrontendDir();
-    if(!frontendDir){
+    if(!g_frontendDir){
         return std::nullopt;
     }
-    return readFileToString((*frontendDir) / filename, binary);
+    return readFileToString((*g_frontendDir) / filename, binary);
 }
 crow::response addSecurityHeaders(crow::response response) {
     response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
@@ -62,10 +97,16 @@ crow::response addSecurityHeaders(crow::response response) {
     return response;
 }
 
-int main(){
+int main(int argc, char* argv[]){
     crow::SimpleApp app;
     DataCleaner cleaner;
     AuditLog auditLog;
+
+	fs::path argv0;
+	if(argc > 0 && argv && argv[0]){
+		argv0 = fs::path(argv[0]);
+	}
+	initFrontendDir(argv0);
 
     const char* port_env=std::getenv("PORT");
     int port=port_env?std::stoi(port_env):8080;
