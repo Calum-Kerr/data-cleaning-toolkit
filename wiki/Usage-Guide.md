@@ -63,7 +63,7 @@ Removes leading and trailing whitespace from all cells.
 - Result shows count of cells trimmed
 - Download button appears to get cleaned data
 
-### Standardize Case
+### standardise Case
 
 Converts text to consistent case.
 
@@ -71,11 +71,11 @@ Converts text to consistent case.
 - Applies to all text cells
 - Result shows count of cells converted
 
-### Standardize Null Values
+### standardise Null Values
 
 Converts all null representations to empty strings.
 
-- Click "Standardize Null Values"
+- Click "standardise Null Values"
 - All recognized null values become empty cells
 - Ensures consistency for downstream processing
 

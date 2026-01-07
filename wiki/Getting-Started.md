@@ -23,8 +23,8 @@ The easiest way to use the toolkit is through the live demo:
 ### Cleaning
 - **Remove Duplicates**: Removes duplicate rows, keeps first occurrence
 - **Trim Whitespace**: Removes leading/trailing whitespace from all cells
-- **Standardize Case**: Converts text to uppercase or lowercase
-- **Standardize Null Values**: Converts all null representations to empty strings
+- **standardise Case**: Converts text to uppercase or lowercase
+- **standardise Null Values**: Converts all null representations to empty strings
 
 ## Offline Mode
 

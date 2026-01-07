@@ -137,8 +137,8 @@ bash build-wasm.sh
 - `POST /api/detect-null-values` - Find null representations
 - `POST /api/clean` - Remove duplicates
 - `POST /api/trim-whitespace` - Trim whitespace
-- `POST /api/standardize-case` - Standardize case
-- `POST /api/standardize-null-values` - Standardize nulls
+- `POST /api/standardise-case` - standardise case
+- `POST /api/standardise-null-values` - standardise nulls
 
 ## Documentation
 

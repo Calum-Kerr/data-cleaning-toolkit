@@ -101,7 +101,7 @@
             </div>
             <div class="setting-option">
                 <label>
-                    <input type="checkbox" id="standardizeNullsSetting" checked> Standardize Null Values
+                    <input type="checkbox" id="standardizeNullsSetting" checked> standardise Null Values
                 </label>
             </div>
         </div>
@@ -236,7 +236,7 @@
                     if(wasmReady){current=wasmModule.ccall('toUpperCaseString','string',['string'],[current]);}
                     else{const res=await fetch(API_URL+'/api/to-uppercase',{method:'POST',headers:{'Content-Type':'text/plain'},body:current});const data=await res.json();current=data.cleaned||current;}
                 }
-                updateProgress(5,'Finalizing cleaned data...');
+                updateProgress(5,'Finalising cleaned data...');
                 cleanedCSV=current;
                 setTimeout(()=>{document.getElementById('cleaningSection').classList.add('hidden');document.getElementById('resultSection').style.display='block';triggerDownload();},1000);
             }catch(error){
