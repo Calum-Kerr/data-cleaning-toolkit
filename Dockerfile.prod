@@ -1,0 +1,36 @@
+FROM ubuntu:20.04 as builder
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    curl \
+    zip \
+    unzip \
+    tar \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY . .
+RUN git clone https://github.com/Microsoft/vcpkg.git
+RUN cd vcpkg && ./bootstrap-vcpkg.sh
+RUN cd vcpkg && ./vcpkg install asio:x64-linux boost-algorithm:x64-linux boost-functional:x64-linux boost-optional:x64-linux boost-lexical-cast:x64-linux boost-array:x64-linux
+RUN mkdir build && \
+    cd build && \
+    cmake .. -DCMAKE_TOOLCHAIN_FILE="../vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release && \
+    make
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Etc/UTC
+ENV PORT=8080
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+WORKDIR /app
+COPY --from=builder /app/build/Toolkit /app/Toolkit
+RUN chown -R appuser:appgroup /app
+USER appuser
+EXPOSE $PORT
+CMD ["./Toolkit"]
