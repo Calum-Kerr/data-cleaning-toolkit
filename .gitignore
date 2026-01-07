@@ -1,9 +1,13 @@
 build/
 *.o
-*.exe 
-*.dll 
+*.exe
+*.dll
 *.so
 .DS_Store
 node_modules/
 .vscode/
 emsdk/
+tests/
+workflows/
+build-tests/
+QWEN.md

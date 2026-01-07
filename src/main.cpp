@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
+#include <chrono>
+#include <iomanip>
 
 int main(){
     crow::SimpleApp app;
@@ -529,6 +531,331 @@ int main(){
         result["valuesStandardised"]=valuesStandardised;
         result["cleaned"]=cleanedCSV.str();
         result["message"]="values standardised successfully";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
+    CROW_ROUTE(app,"/api/detect-data-types").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        crow::json::wvalue result;
+        result["types"]=crow::json::wvalue::object();
+        if(parsed.size()<2){result["message"]="insufficient data for type detection";result["mode"]="api";return crow::response(result);}
+        auto isNumericStr=[](const std::string& str)->bool{if(str.empty())return false;size_t start=0;if(str[0]=='-'||str[0]=='+')start=1;if(start>=str.length())return false;bool hasDecimal=false;for(size_t i=start;i<str.length();i++){if(str[i]=='.'){if(hasDecimal)return false;hasDecimal=true;}else if(str[i]<'0'||str[i]>'9')return false;}return true;};
+        auto isDateStr=[](const std::string& str)->bool{if(str.length()<8)return false;int slashCount=0,dashCount=0;for(char c:str){if(c=='/')slashCount++;if(c=='-')dashCount++;}if(slashCount==2||dashCount==2)return true;return false;};
+        auto isBoolStr=[](const std::string& str)->bool{std::string lower=str;std::transform(lower.begin(),lower.end(),lower.begin(),::tolower);return lower=="true"||lower=="false"||lower=="yes"||lower=="no"||lower=="1"||lower=="0";};
+        size_t numCols=parsed[0].size();
+        for(size_t col=0;col<numCols;col++){
+            std::string colName=parsed[0][col];
+            int numericCount=0,dateCount=0,boolCount=0,textCount=0,emptyCount=0;
+            for(size_t row=1;row<parsed.size();row++){
+                if(col>=parsed[row].size()||parsed[row][col].empty()){emptyCount++;continue;}
+                std::string val=parsed[row][col];
+                if(isNumericStr(val))numericCount++;
+                else if(isDateStr(val))dateCount++;
+                else if(isBoolStr(val))boolCount++;
+                else textCount++;
+            }
+            int total=numericCount+dateCount+boolCount+textCount;
+            if(total==0){result["types"][colName]="empty";}
+            else if(numericCount>total*0.8)result["types"][colName]="numeric";
+            else if(dateCount>total*0.8)result["types"][colName]="date";
+            else if(boolCount>total*0.8)result["types"][colName]="boolean";
+            else result["types"][colName]="text";
+        }
+        result["message"]="data types detected";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
+    CROW_ROUTE(app,"/api/detect-encoding").methods("POST"_method)
+    ([](const crow::request& req){
+        std::string csvData=req.body;
+        crow::json::wvalue result;
+        std::string encoding="UTF-8";
+        bool hasHighBytes=false;
+        bool hasBOM=false;
+        int nonAsciiCount=0;
+        if(csvData.size()>=3&&(unsigned char)csvData[0]==0xEF&&(unsigned char)csvData[1]==0xBB&&(unsigned char)csvData[2]==0xBF){hasBOM=true;encoding="UTF-8 with BOM";}
+        else if(csvData.size()>=2&&(unsigned char)csvData[0]==0xFF&&(unsigned char)csvData[1]==0xFE){encoding="UTF-16 LE";}
+        else if(csvData.size()>=2&&(unsigned char)csvData[0]==0xFE&&(unsigned char)csvData[1]==0xFF){encoding="UTF-16 BE";}
+        else{
+            for(size_t i=0;i<csvData.size()&&i<10000;i++){
+                unsigned char c=(unsigned char)csvData[i];
+                if(c>127){hasHighBytes=true;nonAsciiCount++;}
+            }
+            if(!hasHighBytes)encoding="ASCII";
+            else{
+                bool validUtf8=true;
+                for(size_t i=0;i<csvData.size()&&i<10000;i++){
+                    unsigned char c=(unsigned char)csvData[i];
+                    if(c<=127)continue;
+                    int expectedBytes=0;
+                    if((c&0xE0)==0xC0)expectedBytes=1;
+                    else if((c&0xF0)==0xE0)expectedBytes=2;
+                    else if((c&0xF8)==0xF0)expectedBytes=3;
+                    else{validUtf8=false;break;}
+                    for(int j=0;j<expectedBytes&&i+1<csvData.size();j++){
+                        i++;
+                        if(((unsigned char)csvData[i]&0xC0)!=0x80){validUtf8=false;break;}
+                    }
+                }
+                if(validUtf8)encoding="UTF-8";
+                else encoding="Latin-1 (ISO-8859-1)";
+            }
+        }
+        result["encoding"]=encoding;
+        result["hasBOM"]=hasBOM;
+        result["nonAsciiCharacters"]=nonAsciiCount;
+        result["message"]="encoding detected";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
+    CROW_ROUTE(app,"/api/detect-patterns").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        crow::json::wvalue result;
+        result["patterns"]=crow::json::wvalue::list();
+        if(parsed.size()<2){result["message"]="insufficient data for pattern detection";result["mode"]="api";return crow::response(result);}
+        auto isEmail=[](const std::string& str)->bool{size_t at=str.find('@');if(at==std::string::npos||at==0||at==str.length()-1)return false;size_t dot=str.find('.',at);return dot!=std::string::npos&&dot>at+1&&dot<str.length()-1;};
+        auto isPhone=[](const std::string& str)->bool{int digits=0;for(char c:str){if(c>='0'&&c<='9')digits++;}return digits>=7&&digits<=15;};
+        auto isPostalCode=[](const std::string& str)->bool{if(str.length()<3||str.length()>10)return false;int digits=0,letters=0;for(char c:str){if(c>='0'&&c<='9')digits++;if((c>='A'&&c<='Z')||(c>='a'&&c<='z'))letters++;}return(digits>=2&&letters>=1)||(digits>=3&&digits<=5&&letters==0);};
+        auto isURL=[](const std::string& str)->bool{return str.find("http://")==0||str.find("https://")==0||str.find("www.")==0;};
+        size_t numCols=parsed[0].size();
+        int patternIdx=0;
+        for(size_t col=0;col<numCols;col++){
+            std::string colName=parsed[0][col];
+            int emailCount=0,phoneCount=0,postalCount=0,urlCount=0,totalValues=0;
+            for(size_t row=1;row<parsed.size();row++){
+                if(col>=parsed[row].size()||parsed[row][col].empty())continue;
+                std::string val=parsed[row][col];
+                totalValues++;
+                if(isEmail(val))emailCount++;
+                else if(isPhone(val))phoneCount++;
+                else if(isPostalCode(val))postalCount++;
+                else if(isURL(val))urlCount++;
+            }
+            if(totalValues>0){
+                if(emailCount>totalValues*0.5){result["patterns"][patternIdx]["column"]=colName;result["patterns"][patternIdx]["pattern"]="email";result["patterns"][patternIdx]["count"]=emailCount;patternIdx++;}
+                if(phoneCount>totalValues*0.5){result["patterns"][patternIdx]["column"]=colName;result["patterns"][patternIdx]["pattern"]="phone";result["patterns"][patternIdx]["count"]=phoneCount;patternIdx++;}
+                if(postalCount>totalValues*0.5){result["patterns"][patternIdx]["column"]=colName;result["patterns"][patternIdx]["pattern"]="postal_code";result["patterns"][patternIdx]["count"]=postalCount;patternIdx++;}
+                if(urlCount>totalValues*0.5){result["patterns"][patternIdx]["column"]=colName;result["patterns"][patternIdx]["pattern"]="url";result["patterns"][patternIdx]["count"]=urlCount;patternIdx++;}
+            }
+        }
+        result["message"]="patterns detected";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
+    CROW_ROUTE(app,"/api/measure-performance").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto startTime=std::chrono::high_resolution_clock::now();
+        auto parsed=cleaner.parseCSV(csvData);
+        auto missingMatrix=cleaner.detectMissingValues(parsed);
+        auto dupVector=cleaner.detectDuplicates(parsed);
+        auto cleaned=cleaner.cleanData(parsed);
+        auto endTime=std::chrono::high_resolution_clock::now();
+        auto duration=std::chrono::duration_cast<std::chrono::microseconds>(endTime-startTime);
+        double executionTimeMs=duration.count()/1000.0;
+        int rows=(int)parsed.size();
+        int cols=parsed.empty()?0:(int)parsed[0].size();
+        int totalCells=rows*cols;
+        double cellsPerSecond=executionTimeMs>0?(totalCells*1000.0/executionTimeMs):0;
+        int missingCount=0;for(const auto& row:missingMatrix){for(bool b:row){if(b)missingCount++;}}
+        int dupCount=0;for(bool b:dupVector){if(b)dupCount++;}
+        crow::json::wvalue result;
+        result["metrics"]=crow::json::wvalue::object();
+        result["metrics"]["rows"]=rows;
+        result["metrics"]["columns"]=cols;
+        result["metrics"]["totalCells"]=totalCells;
+        result["metrics"]["executionTimeMs"]=executionTimeMs;
+        result["metrics"]["cellsPerSecond"]=(int)cellsPerSecond;
+        result["metrics"]["missingValues"]=missingCount;
+        result["metrics"]["duplicateRows"]=dupCount;
+        result["metrics"]["cleanedRows"]=(int)cleaned.size();
+        result["message"]="performance measured";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
+    CROW_ROUTE(app,"/api/auto-detect-all").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        int totalRows=(int)parsed.size();
+        int totalColumns=parsed.empty()?0:(int)parsed[0].size();
+        auto missingMatrix=cleaner.detectMissingValues(parsed);
+        int missingValues=0;
+        for(const auto& row:missingMatrix){for(bool b:row){if(b)missingValues++;}}
+        auto dupVector=cleaner.detectDuplicates(parsed);
+        int duplicateRows=0;
+        for(bool b:dupVector){if(b)duplicateRows++;}
+        int whitespaceIssues=0;
+        int nullValueIssues=0;
+        int outliers=0;
+        int inconsistentValues=0;
+        auto isWhitespace=[](const std::string& str)->bool{if(str.empty())return false;return str[0]==' '||str[0]=='\t'||str.back()==' '||str.back()=='\t';};
+        auto isNullValue=[](const std::string& str)->bool{std::string lower=str;std::transform(lower.begin(),lower.end(),lower.begin(),::tolower);return lower=="null"||lower=="na"||lower=="n/a"||lower=="none"||lower=="-"||lower=="--"||lower=="nil"||lower=="nan";};
+        for(size_t row=1;row<parsed.size();row++){
+            for(size_t col=0;col<parsed[row].size();col++){
+                if(isWhitespace(parsed[row][col]))whitespaceIssues++;
+                if(isNullValue(parsed[row][col]))nullValueIssues++;
+            }
+        }
+        auto isNumericStr=[](const std::string& str)->bool{if(str.empty())return false;size_t start=0;if(str[0]=='-'||str[0]=='+')start=1;if(start>=str.length())return false;bool hasDecimal=false;for(size_t i=start;i<str.length();i++){if(str[i]=='.'){if(hasDecimal)return false;hasDecimal=true;}else if(str[i]<'0'||str[i]>'9')return false;}return true;};
+        for(size_t col=0;col<(size_t)totalColumns;col++){
+            std::vector<double> values;
+            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&isNumericStr(parsed[row][col])){values.push_back(std::stod(parsed[row][col]));}}
+            if(values.size()<4)continue;
+            std::vector<double> sorted=values;std::sort(sorted.begin(),sorted.end());
+            double q1=sorted[sorted.size()/4];double q3=sorted[3*sorted.size()/4];double iqr=q3-q1;
+            double lower=q1-1.5*iqr;double upper=q3+1.5*iqr;
+            for(double v:values){if(v<lower||v>upper)outliers++;}
+        }
+        crow::json::wvalue result;
+        result["summary"]=crow::json::wvalue::object();
+        result["summary"]["totalRows"]=totalRows;
+        result["summary"]["totalColumns"]=totalColumns;
+        result["summary"]["missingValues"]=missingValues;
+        result["summary"]["duplicateRows"]=duplicateRows;
+        result["summary"]["whitespaceIssues"]=whitespaceIssues;
+        result["summary"]["nullValueIssues"]=nullValueIssues;
+        result["summary"]["outliers"]=outliers;
+        result["summary"]["inconsistentValues"]=inconsistentValues;
+        result["message"]="auto detection completed";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
+    CROW_ROUTE(app,"/api/auto-clean-all").methods("POST"_method)
+    ([&cleaner, &auditLog](const crow::request& req){
+        auto body=crow::json::load(req.body);
+        if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+        std::string csvData=body["csvData"].s();
+        auto parsed=cleaner.parseCSV(csvData);
+        int originalRows=(int)parsed.size();
+        int operationsPerformed=0;
+        auto trimStr=[](std::string& str){size_t start=str.find_first_not_of(" \t\r\n");size_t end=str.find_last_not_of(" \t\r\n");if(start==std::string::npos){str="";}else{str=str.substr(start,end-start+1);}};
+        auto isNullValue=[](const std::string& str)->bool{std::string lower=str;std::transform(lower.begin(),lower.end(),lower.begin(),::tolower);return lower=="null"||lower=="na"||lower=="n/a"||lower=="none"||lower=="-"||lower=="--"||lower=="nil"||lower=="nan";};
+        int trimmed=0,nullsFixed=0;
+        for(size_t row=0;row<parsed.size();row++){
+            for(size_t col=0;col<parsed[row].size();col++){
+                std::string original=parsed[row][col];
+                trimStr(parsed[row][col]);
+                if(original!=parsed[row][col])trimmed++;
+                if(row>0&&isNullValue(parsed[row][col])){parsed[row][col]="";nullsFixed++;}
+            }
+        }
+        if(trimmed>0)operationsPerformed++;
+        if(nullsFixed>0)operationsPerformed++;
+        auto cleaned=cleaner.cleanData(parsed);
+        int duplicatesRemoved=originalRows-(int)cleaned.size();
+        if(duplicatesRemoved>0)operationsPerformed++;
+        std::stringstream cleanedCSV;
+        for(const auto& row:cleaned){
+            for(size_t i=0;i<row.size();i++){
+                if(i>0)cleanedCSV<<",";
+                cleanedCSV<<row[i];
+            }
+            cleanedCSV<<"\n";
+        }
+        auditLog.addEntry("Auto Clean All", duplicatesRemoved+trimmed+nullsFixed, originalRows, (int)cleaned.size());
+        crow::json::wvalue result;
+        result["cleaned"]=cleanedCSV.str();
+        result["originalRows"]=originalRows;
+        result["cleanedRows"]=(int)cleaned.size();
+        result["duplicatesRemoved"]=duplicatesRemoved;
+        result["cellsTrimmed"]=trimmed;
+        result["nullsStandardised"]=nullsFixed;
+        result["operationsPerformed"]=operationsPerformed;
+        result["message"]="auto cleaning completed";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
+    CROW_ROUTE(app,"/api/standardise-date-column").methods("POST"_method)
+    ([&cleaner, &auditLog](const crow::request& req){
+        auto body=crow::json::load(req.body);
+        if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+        std::string csvData=body["csvData"].s();
+        int colIndex=0;
+        if(body.has("colIndex"))colIndex=(int)body["colIndex"].i();
+        auto parsed=cleaner.parseCSV(csvData);
+        int datesStandardised=0;
+        auto parseDate=[](const std::string& str,int& day,int& month,int& year)->bool{
+            std::vector<int> nums;std::string current;
+            for(char c:str){if(c>='0'&&c<='9'){current+=c;}else if(!current.empty()){nums.push_back(std::stoi(current));current="";}}
+            if(!current.empty())nums.push_back(std::stoi(current));
+            if(nums.size()!=3)return false;
+            if(nums[2]>31){year=nums[2];if(nums[0]>12){day=nums[0];month=nums[1];}else if(nums[1]>12){day=nums[1];month=nums[0];}else{month=nums[0];day=nums[1];}}
+            else if(nums[0]>31){year=nums[0];month=nums[1];day=nums[2];}
+            else{day=nums[0];month=nums[1];year=nums[2];}
+            if(year<100)year+=2000;
+            return day>=1&&day<=31&&month>=1&&month<=12&&year>=1900&&year<=2100;
+        };
+        for(size_t row=1;row<parsed.size();row++){
+            if((size_t)colIndex<parsed[row].size()&&!parsed[row][colIndex].empty()){
+                int day,month,year;
+                if(parseDate(parsed[row][colIndex],day,month,year)){
+                    char buf[11];
+                    snprintf(buf,sizeof(buf),"%04d-%02d-%02d",year,month,day);
+                    parsed[row][colIndex]=buf;
+                    datesStandardised++;
+                }
+            }
+        }
+        std::stringstream cleanedCSV;
+        for(const auto& row:parsed){for(size_t i=0;i<row.size();i++){if(i>0)cleanedCSV<<",";cleanedCSV<<row[i];}cleanedCSV<<"\n";}
+        auditLog.addEntry("Standardise Dates", datesStandardised, (int)parsed.size(), (int)parsed.size());
+        crow::json::wvalue result;
+        result["cleaned"]=cleanedCSV.str();
+        result["datesStandardised"]=datesStandardised;
+        result["column"]=colIndex;
+        result["message"]="dates standardised to ISO 8601 format";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
+    CROW_ROUTE(app,"/api/standardise-number-column").methods("POST"_method)
+    ([&cleaner, &auditLog](const crow::request& req){
+        auto body=crow::json::load(req.body);
+        if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+        std::string csvData=body["csvData"].s();
+        int colIndex=0;
+        if(body.has("colIndex"))colIndex=(int)body["colIndex"].i();
+        auto parsed=cleaner.parseCSV(csvData);
+        int numbersStandardised=0;
+        auto parseNumber=[](const std::string& str,double& result)->bool{
+            std::string cleaned;
+            for(char c:str){if((c>='0'&&c<='9')||c=='.'||c=='-'||c=='+')cleaned+=c;}
+            if(cleaned.empty())return false;
+            try{result=std::stod(cleaned);return true;}catch(...){return false;}
+        };
+        for(size_t row=1;row<parsed.size();row++){
+            if((size_t)colIndex<parsed[row].size()&&!parsed[row][colIndex].empty()){
+                double num;
+                if(parseNumber(parsed[row][colIndex],num)){
+                    std::stringstream ss;
+                    ss<<std::fixed<<std::setprecision(2)<<num;
+                    std::string formatted=ss.str();
+                    size_t dotPos=formatted.find('.');
+                    if(dotPos!=std::string::npos){while(formatted.back()=='0')formatted.pop_back();if(formatted.back()=='.')formatted.pop_back();}
+                    if(formatted!=parsed[row][colIndex]){parsed[row][colIndex]=formatted;numbersStandardised++;}
+                }
+            }
+        }
+        std::stringstream cleanedCSV;
+        for(const auto& row:parsed){for(size_t i=0;i<row.size();i++){if(i>0)cleanedCSV<<",";cleanedCSV<<row[i];}cleanedCSV<<"\n";}
+        auditLog.addEntry("Standardise Numbers", numbersStandardised, (int)parsed.size(), (int)parsed.size());
+        crow::json::wvalue result;
+        result["cleaned"]=cleanedCSV.str();
+        result["numbersStandardised"]=numbersStandardised;
+        result["column"]=colIndex;
+        result["message"]="numbers standardised to consistent format";
         result["mode"]="api";
         return crow::response(result);
     });
