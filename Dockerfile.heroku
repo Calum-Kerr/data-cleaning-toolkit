@@ -1,17 +1,22 @@
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
+ENV PORT=8080
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
     git \
     wget \
     && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY . .
 RUN mkdir build && \
     cd build && \
-    cmake .. && \
-    cmake --build .
-EXPOSE 8080
+    cmake -DCMAKE_BUILD_TYPE=Release .. && \
+    make
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+RUN chown -R appuser:appgroup /app
+USER appuser
+EXPOSE $PORT
 CMD ["./build/Toolkit"]
