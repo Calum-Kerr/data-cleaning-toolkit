@@ -1,4 +1,6 @@
-const CACHE_VERSION = 'v3-security';
+// bump this when you change frontend assets, so older cached HTML/CSS is dropped
+// (this helps avoid stale pages still referencing removed resources like Google Fonts)
+const CACHE_VERSION = 'v4-no-google-fonts';
 const CACHE_NAME = 'data-cleaning-toolkit-' + CACHE_VERSION;
 const WASM_HASH = 'sha384-placeholder-hash-will-be-generated-at-build-time';
 const ALLOWED_ORIGINS = [
@@ -27,6 +29,27 @@ self.addEventListener('fetch', event => {
     if (!ALLOWED_ORIGINS.some(origin => event.request.url.startsWith(origin))) {
         return;
     }
+
+    // only cache GET requests (CacheStorage does not support POST/PUT/etc.)
+    if (event.request.method !== 'GET') {
+        return;
+    }
+
+    // for page navigations: prefer fresh HTML, but allow offline fallback
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request)
+                .then(fetchResponse => {
+                    if (fetchResponse && fetchResponse.ok) {
+                        caches.open(CACHE_NAME).then(cache => cache.put(event.request, fetchResponse.clone()));
+                    }
+                    return fetchResponse;
+                })
+                .catch(() => caches.match(event.request))
+        );
+        return;
+    }
+
     if (event.request.url.includes('/algorithms.wasm') || event.request.url.includes('/algorithms.js')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
@@ -68,7 +91,7 @@ self.addEventListener('fetch', event => {
             caches.open(CACHE_NAME).then(cache => {
                 return cache.match(event.request).then(response => {
                     return response || fetch(event.request).then(fetchResponse => {
-                        if (event.request.method === 'GET' && fetchResponse.ok) {
+                        if (fetchResponse.ok) {
                             cache.put(event.request, fetchResponse.clone());
                         }
                         return fetchResponse;
