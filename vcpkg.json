@@ -1,9 +1,10 @@
 {
-  "name": "data-cleaning-toolkit",
-  "version": "1.0.0",
   "dependencies": [
     "asio",
-    "boost"
+    "boost-algorithm",
+    "boost-functional",
+    "boost-optional",
+    "boost-lexical-cast",
+    "boost-array"
   ]
 }
-
