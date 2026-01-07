@@ -1,3 +1,6 @@
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+    set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+endif()
 cmake_minimum_required(VERSION 3.10)
 project(DataCleaningToolkit)
 set(CMAKE_CXX_STANDARD 17)
@@ -8,11 +11,27 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat -Wformat-security")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIE")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,noexecstack -Wl,-z,relro,-z,now")
-add_definitions(-DASIO_STANDALONE)
 include_directories(include)
-include_directories(vcpkg/installed/x64-windows/include)
 set(SOURCES src/main.cpp src/algorithms.cpp)
 add_executable(Toolkit ${SOURCES})
+find_package(Threads REQUIRED)
+find_package(asio CONFIG QUIET)
+if(asio_FOUND)
+    target_link_libraries(Toolkit PRIVATE asio::asio)
+else()
+    find_path(ASIO_INCLUDE_DIR asio.hpp
+        PATHS ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/installed/x64-linux/include
+              ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/installed/x64-windows/include
+              /usr/include
+        NO_DEFAULT_PATH)
+    if(ASIO_INCLUDE_DIR)
+        target_include_directories(Toolkit PRIVATE ${ASIO_INCLUDE_DIR})
+    else()
+        # Fallback to ASIO standalone
+        target_compile_definitions(Toolkit PRIVATE ASIO_STANDALONE)
+    endif()
+endif()
+
 if(WIN32)
     target_link_libraries(Toolkit PRIVATE ws2_32 wsock32)
 endif()
