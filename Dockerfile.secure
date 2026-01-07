@@ -1,0 +1,17 @@
+FROM alpine:latest
+RUN apk add --no-cache \
+    build-base \
+    cmake \
+    git \
+    && rm -rf /var/cache/apk/*
+RUN addgroup -g 1001 -S appgroup && \
+    adduser -u 1001 -S appuser -G appgroup
+WORKDIR /app
+COPY . .
+USER appuser
+RUN mkdir build && \
+    cd build && \
+    cmake .. && \
+    make
+EXPOSE 8080
+CMD ["./build/Toolkit"]

@@ -6,6 +6,14 @@
 #include <sstream>
 #include <chrono>
 #include <iomanip>
+crow::response addSecurityHeaders(crow::response response) {
+    response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+    response.add_header("X-Content-Type-Options", "nosniff");
+    response.add_header("X-Frame-Options", "DENY");
+    response.add_header("Referrer-Policy", "no-referrer");
+    response.add_header("X-XSS-Protection", "1; mode=block");
+    return response;
+}
 
 int main(){
     crow::SimpleApp app;
@@ -25,7 +33,15 @@ int main(){
         std::ifstream file("frontend/index.html");
         std::stringstream buffer;
         buffer<<file.rdbuf();
-        return crow::response(buffer.str());
+        auto response = crow::response(buffer.str());
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-eval'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests; worker-src 'self'; child-src 'self'");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
+        response.add_header("X-XSS-Protection", "1; mode=block");
+        response.add_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+        response.add_header("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+        return response;
     });
 
     CROW_ROUTE(app,"/algorithms.js")
@@ -35,6 +51,10 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","application/javascript");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
         return response;
     });
 
@@ -45,6 +65,10 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","application/wasm");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
         return response;
     });
 
@@ -55,6 +79,10 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","application/json");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
         return response;
     });
 
@@ -65,6 +93,10 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","application/javascript");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
         return response;
     });
 
@@ -75,7 +107,12 @@ int main(){
         crow::json::wvalue result;
         result["rows"]=parsed.size();
         result["message"]="CSV parsed successfully";
-        return crow::response(result);
+        auto response = crow::response(result);
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
+        return response;
     });
 
     CROW_ROUTE(app,"/api/detect-missing").methods("POST"_method)
@@ -238,6 +275,10 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","image/x-icon");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
         return response;
     });
 
@@ -248,6 +289,10 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","image/png");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
         return response;
     });
 
@@ -258,6 +303,10 @@ int main(){
         buffer<<file.rdbuf();
         auto response=crow::response(buffer.str());
         response.add_header("Content-Type","image/png");
+        response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+        response.add_header("X-Content-Type-Options", "nosniff");
+        response.add_header("X-Frame-Options", "DENY");
+        response.add_header("Referrer-Policy", "no-referrer");
         return response;
     });
 
