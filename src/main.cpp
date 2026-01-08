@@ -262,6 +262,7 @@ int main(int argc, char* argv[]){
 		auto response = crow::response(*html);
 		response.add_header("Content-Type", "text/html; charset=utf-8");
 			response.add_header("Vary", "User-Agent");
+			response.add_header("X-Render-Mode", isCrawler ? "seo" : "app");
 		// no google fonts: keep everything local. allow inline script/style because index.html is a single-file app.
 		response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests; worker-src 'self'; child-src 'self'");
 		response.add_header("X-Content-Type-Options", "nosniff");
