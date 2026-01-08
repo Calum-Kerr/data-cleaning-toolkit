@@ -243,6 +243,7 @@ int main(int argc, char* argv[]){
 			xml += "</urlset>\n";
 			auto res = crow::response(xml);
 			res.add_header("Content-Type", "application/xml; charset=utf-8");
+			res.add_header("Cache-Control", "public, max-age=3600");
 			return res;
 		});
 
