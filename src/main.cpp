@@ -218,6 +218,19 @@ int main(int argc, char* argv[]){
         return "Data Cleaning Toolkit API is running! If this works, the web app is available at /app in the address bar up top :)";
     });
 
+	CROW_ROUTE(app, "/robots.txt")
+		([](const crow::request& req){
+			auto base = getSeoBaseUrl(req);
+			std::string body;
+			body += "User-agent: *\n";
+			body += "Allow: /app\n";
+			body += "Disallow: /api/\n";
+			body += "Sitemap: " + base + "/sitemap.xml\n";
+			auto res = crow::response(body);
+			res.add_header("Content-Type", "text/plain; charset=utf-8");
+			return res;
+		});
+
     CROW_ROUTE(app,"/app")
 		([](const crow::request& req){
 			// next commits will use this for crawler detection
