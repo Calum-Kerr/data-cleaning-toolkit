@@ -271,6 +271,14 @@ int main(int argc, char* argv[]){
 		return response;
 	});
 
+	CROW_ROUTE(app, "/app/")
+		([](){
+			crow::response res;
+			res.code = 301;
+			res.add_header("Location", "/app");
+			return res;
+		});
+
     CROW_ROUTE(app,"/algorithms.js")
 	([](){
 		auto js = readFrontendAsset("algorithms.js", false);
