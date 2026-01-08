@@ -30,6 +30,24 @@ static bool isSeoCrawlerUserAgent(const std::string& ua){
 	return false;
 }
 
+static std::string getSeoBaseUrl(const crow::request& req){
+	// optional override for canonical urls in robots/sitemap
+	const char* envBase = std::getenv("SEO_BASE_URL");
+	if(envBase && envBase[0] != '\0'){
+		std::string v(envBase);
+		while(!v.empty() && v.back() == '/') v.pop_back();
+		return v;
+	}
+
+	auto proto = req.get_header_value("X-Forwarded-Proto");
+	if(proto.empty()) proto = "http";
+
+	auto host = req.get_header_value("X-Forwarded-Host");
+	if(host.empty()) host = req.get_header_value("Host");
+
+	return proto + "://" + host;
+}
+
 #ifdef __linux__
 static std::optional<fs::path> getSelfExePath(){
     // in linux containers, argv[0] can be relative or misleading.
