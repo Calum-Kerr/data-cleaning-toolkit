@@ -231,6 +231,20 @@ int main(int argc, char* argv[]){
 			return res;
 		});
 
+	CROW_ROUTE(app, "/sitemap.xml")
+		([](const crow::request& req){
+			auto base = getSeoBaseUrl(req);
+			// small sitemap: we only expose /app right now
+			std::string xml;
+			xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+			xml += "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+			xml += "  <url><loc>" + base + "/app</loc></url>\n";
+			xml += "</urlset>\n";
+			auto res = crow::response(xml);
+			res.add_header("Content-Type", "application/xml; charset=utf-8");
+			return res;
+		});
+
     CROW_ROUTE(app,"/app")
 		([](const crow::request& req){
 			// next commits will use this for crawler detection
