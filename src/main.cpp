@@ -254,9 +254,12 @@ int main(int argc, char* argv[]){
 	if(webConcurrency > 16) webConcurrency = 16;
 
     CROW_ROUTE(app,"/")
-    ([](){
-        return "Data Cleaning Toolkit API is running! If this works, the web app is available at /app in the address bar up top :)";
-    });
+	([](){
+		crow::response res;
+		res.code = 301;
+		res.add_header("Location", "/app");
+		return res;
+	});
 
 	CROW_ROUTE(app, "/robots.txt")
 		([](const crow::request& req){
