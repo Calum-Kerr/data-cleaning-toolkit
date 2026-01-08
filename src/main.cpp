@@ -192,7 +192,10 @@ int main(int argc, char* argv[]){
     });
 
     CROW_ROUTE(app,"/app")
-	([](){
+		([](const crow::request& req){
+			// next commits will use this for crawler detection
+			auto ua = req.get_header_value("User-Agent");
+			(void)ua;
 		auto html = readFrontendAsset("index.html", false);
 		if(!html){
 			std::string msg = "could not load frontend/index.html (check that frontend/ is deployed). ";
