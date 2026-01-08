@@ -21,6 +21,15 @@ namespace fs = std::filesystem;
 static std::optional<fs::path> g_frontendDir;
 static std::string g_frontendDiag;
 
+static bool isSeoCrawlerUserAgent(const std::string& ua){
+	// keep this simple and explicit. we only need to recognise google for now.
+	if(ua.find("Googlebot") != std::string::npos) return true;
+	if(ua.find("googlebot") != std::string::npos) return true;
+	if(ua.find("Google-InspectionTool") != std::string::npos) return true;
+	if(ua.find("google-inspectiontool") != std::string::npos) return true;
+	return false;
+}
+
 #ifdef __linux__
 static std::optional<fs::path> getSelfExePath(){
     // in linux containers, argv[0] can be relative or misleading.
