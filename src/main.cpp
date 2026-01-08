@@ -2,6 +2,7 @@
 #include "algorithms.h"
 #include <iostream>
 #include <cstdlib>
+#include <exception>
 #include <fstream>
 #include <sstream>
 #include <chrono>
@@ -200,6 +201,23 @@ crow::response addSecurityHeaders(crow::response response) {
 }
 
 int main(int argc, char* argv[]){
+	// never let an uncaught exception abort the dyno with status 134 without a useful log line.
+	std::set_terminate([](){
+		std::exception_ptr eptr = std::current_exception();
+		if(eptr){
+			try{
+				std::rethrow_exception(eptr);
+			}catch(const std::exception& e){
+				std::cerr << "fatal: std::terminate called: " << e.what() << std::endl;
+			}catch(...){
+				std::cerr << "fatal: std::terminate called: unknown exception" << std::endl;
+			}
+		}else{
+			std::cerr << "fatal: std::terminate called (no active exception)" << std::endl;
+		}
+		std::_Exit(1);
+	});
+
     crow::SimpleApp app;
     DataCleaner cleaner;
     AuditLog auditLog;
@@ -218,15 +236,22 @@ int main(int argc, char* argv[]){
 		g_frontendDiag = "initFrontendDir failed: unknown error";
 	}
 
-	int port = 8080;
-	if(const char* port_env = std::getenv("PORT")){
-		// avoid std::stoi here (it throws on bad input)
+	auto parseIntEnv = [](const char* s, int fallback)->int{
+		if(!s) return fallback;
 		char* end = nullptr;
-		long v = std::strtol(port_env, &end, 10);
-		if(end && *end == '\0' && v > 0 && v < 65536){
-			port = static_cast<int>(v);
-		}
-	}
+		long v = std::strtol(s, &end, 10);
+		if(!end) return fallback;
+		// allow trailing whitespace
+		while(*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n') ++end;
+		if(*end != '\0') return fallback;
+		if(v <= 0 || v >= 65536) return fallback;
+		return static_cast<int>(v);
+	};
+
+	int port = parseIntEnv(std::getenv("PORT"), 8080);
+	int webConcurrency = parseIntEnv(std::getenv("WEB_CONCURRENCY"), 2);
+	if(webConcurrency < 1) webConcurrency = 1;
+	if(webConcurrency > 16) webConcurrency = 16;
 
     CROW_ROUTE(app,"/")
     ([](){
@@ -1224,5 +1249,15 @@ int main(int argc, char* argv[]){
         return crow::response(result);
     });
 
-    app.port(port).multithreaded().run();
+	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
+	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
+	try{
+		app.port(port).concurrency((unsigned int)webConcurrency).run();
+	}catch(const std::exception& e){
+		std::cerr << "fatal: server failed to start: " << e.what() << std::endl;
+		return 1;
+	}catch(...){
+		std::cerr << "fatal: server failed to start: unknown error" << std::endl;
+		return 1;
+	}
 }
