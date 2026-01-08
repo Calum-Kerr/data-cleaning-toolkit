@@ -208,10 +208,25 @@ int main(int argc, char* argv[]){
 	if(argc > 0 && argv && argv[0]){
 		argv0 = fs::path(argv[0]);
 	}
-	initFrontendDir(argv0);
+	// heroku crashes with status 134 if we throw during startup (uncaught exception => abort)
+	// so keep startup fully exception-safe.
+	try{
+		initFrontendDir(argv0);
+	}catch(const std::exception& e){
+		g_frontendDiag = std::string("initFrontendDir failed: ") + e.what();
+	}catch(...){
+		g_frontendDiag = "initFrontendDir failed: unknown error";
+	}
 
-    const char* port_env=std::getenv("PORT");
-    int port=port_env?std::stoi(port_env):8080;
+	int port = 8080;
+	if(const char* port_env = std::getenv("PORT")){
+		// avoid std::stoi here (it throws on bad input)
+		char* end = nullptr;
+		long v = std::strtol(port_env, &end, 10);
+		if(end && *end == '\0' && v > 0 && v < 65536){
+			port = static_cast<int>(v);
+		}
+	}
 
     CROW_ROUTE(app,"/")
     ([](){
