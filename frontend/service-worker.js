@@ -1,6 +1,6 @@
 // bump this when you change frontend assets, so older cached HTML/CSS is dropped
 // (this helps avoid stale pages still referencing removed resources like Google Fonts)
-const CACHE_VERSION = 'v5-seo-meta';
+const CACHE_VERSION = 'v6-sw-clone-fix';
 const CACHE_NAME = 'data-cleaning-toolkit-' + CACHE_VERSION;
 const WASM_HASH = 'sha384-placeholder-hash-will-be-generated-at-build-time';
 const ALLOWED_ORIGINS = [
@@ -41,7 +41,10 @@ self.addEventListener('fetch', event => {
             fetch(event.request)
                 .then(fetchResponse => {
                     if (fetchResponse && fetchResponse.ok) {
-                        caches.open(CACHE_NAME).then(cache => cache.put(event.request, fetchResponse.clone()));
+                        // clone immediately (before returning the response), otherwise the body
+                        // can become "already used" by the browser before we cache it.
+                        const copy = fetchResponse.clone();
+                        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
                     }
                     return fetchResponse;
                 })
