@@ -320,6 +320,7 @@ int main(int argc, char* argv[]){
 		}
 		auto response=crow::response(*manifest);
         response.add_header("Content-Type","application/json");
+	    response.add_header("Cache-Control", "public, max-age=3600");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
@@ -335,6 +336,8 @@ int main(int argc, char* argv[]){
 		}
 		auto response=crow::response(*sw);
         response.add_header("Content-Type","application/javascript");
+	    // make sure browsers revalidate the service worker script, so updates roll out
+	    response.add_header("Cache-Control", "no-cache");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
@@ -518,12 +521,61 @@ int main(int argc, char* argv[]){
 		}
 		auto response=crow::response(*ico);
         response.add_header("Content-Type","image/x-icon");
+	    response.add_header("Cache-Control", "public, max-age=86400");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
         response.add_header("Referrer-Policy", "no-referrer");
         return response;
     });
+
+	CROW_ROUTE(app,"/favicon-32x32.png")
+	([](){
+		auto png = readFrontendAsset("favicon-32x32.png", true);
+		if(!png){
+			return crow::response(404);
+		}
+		auto response=crow::response(*png);
+		response.add_header("Content-Type","image/png");
+		response.add_header("Cache-Control", "public, max-age=86400");
+		response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+		response.add_header("X-Content-Type-Options", "nosniff");
+		response.add_header("X-Frame-Options", "DENY");
+		response.add_header("Referrer-Policy", "no-referrer");
+		return response;
+	});
+
+	CROW_ROUTE(app,"/favicon-16x16.png")
+	([](){
+		auto png = readFrontendAsset("favicon-16x16.png", true);
+		if(!png){
+			return crow::response(404);
+		}
+		auto response=crow::response(*png);
+		response.add_header("Content-Type","image/png");
+		response.add_header("Cache-Control", "public, max-age=86400");
+		response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+		response.add_header("X-Content-Type-Options", "nosniff");
+		response.add_header("X-Frame-Options", "DENY");
+		response.add_header("Referrer-Policy", "no-referrer");
+		return response;
+	});
+
+	CROW_ROUTE(app,"/apple-touch-icon.png")
+	([](){
+		auto png = readFrontendAsset("apple-touch-icon.png", true);
+		if(!png){
+			return crow::response(404);
+		}
+		auto response=crow::response(*png);
+		response.add_header("Content-Type","image/png");
+		response.add_header("Cache-Control", "public, max-age=86400");
+		response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+		response.add_header("X-Content-Type-Options", "nosniff");
+		response.add_header("X-Frame-Options", "DENY");
+		response.add_header("Referrer-Policy", "no-referrer");
+		return response;
+	});
 
     CROW_ROUTE(app,"/android-chrome-192x192.png")
 	([](){
@@ -533,6 +585,7 @@ int main(int argc, char* argv[]){
 		}
 		auto response=crow::response(*png);
         response.add_header("Content-Type","image/png");
+	    response.add_header("Cache-Control", "public, max-age=86400");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
@@ -548,6 +601,7 @@ int main(int argc, char* argv[]){
 		}
 		auto response=crow::response(*png);
         response.add_header("Content-Type","image/png");
+	    response.add_header("Cache-Control", "public, max-age=86400");
         response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
         response.add_header("X-Content-Type-Options", "nosniff");
         response.add_header("X-Frame-Options", "DENY");
