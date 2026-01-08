@@ -228,6 +228,7 @@ int main(int argc, char* argv[]){
 			body += "Sitemap: " + base + "/sitemap.xml\n";
 			auto res = crow::response(body);
 			res.add_header("Content-Type", "text/plain; charset=utf-8");
+			res.add_header("Cache-Control", "public, max-age=3600");
 			return res;
 		});
 
