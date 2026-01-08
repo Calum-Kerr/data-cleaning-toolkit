@@ -205,10 +205,10 @@ int main(int argc, char* argv[]){
 			// next commits will use this for crawler detection
 			auto ua = req.get_header_value("User-Agent");
 			auto isCrawler = isSeoCrawlerUserAgent(ua);
-			(void)isCrawler;
-		auto html = readFrontendAsset("index.html", false);
+			const char* htmlName = isCrawler ? "app-seo.html" : "index.html";
+			auto html = readFrontendAsset(htmlName, false);
 		if(!html){
-			std::string msg = "could not load frontend/index.html (check that frontend/ is deployed). ";
+				std::string msg = std::string("could not load frontend/") + htmlName + " (check that frontend/ is deployed). ";
 			msg += g_frontendDiag;
 			return crow::response(500, msg);
 		}
