@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	    <meta name="description" content="A privacy-first, browser-based data cleaning toolkit that runs offline using WebAssembly (Wasm). Detect missing values, duplicates, and clean CSV data with transparent algorithms.">
 	    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
-	    <meta name="theme-color" content="#000000">
+		    <meta name="theme-color" content="#f4f4f4">
 	    <title>Data Cleaning Toolkit | Calum Kerr</title>
 	    <link rel="canonical" href="https://www.calumkerr.com/app">
 	    <meta property="og:type" content="website">
@@ -29,41 +29,57 @@
 	    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 	    <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Data Cleaning Toolkit","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"A privacy-first, browser-based data cleaning toolkit that runs offline using WebAssembly (Wasm). Detect missing values, duplicates, and clean CSV data with transparent algorithms.","url":"https://www.calumkerr.com/app","creator":{"@type":"Person","name":"Calum Kerr","url":"https://www.calumkerr.com"},"offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"}}</script>
 	    <link rel="manifest" href="/manifest.json">
-    <style>
-        body{font-family:Arial,sans-serif;max-width:1200px;margin:0 auto;padding:20px;background:#f9f9f9;color:#333}
-        h1{margin-top:0;text-align:center;color:#333}
-        .welcome-section{text-align:center;margin:40px 0;padding:30px;background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-        .welcome-section h2{margin-bottom:30px;color:#333;font-size:24px}
-        .cta-buttons{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:30px}
-        .cta-button{padding:20px 30px;background:#333;color:white;border:none;border-radius:8px;cursor:pointer;font-size:18px;min-width:200px;transition:background 0.3s}
-        .cta-button:hover{background:#555}
-        .cta-button.coming-soon{background:#ccc;cursor:not-allowed}
-        .cta-button.coming-soon:hover{background:#bbb}
-        .structured-section{display:none;margin:20px 0;padding:20px;background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-        .section-title{margin-top:0;color:#333;border-bottom:2px solid #333;padding-bottom:10px}
-        .upload-area{border:2px dashed #ccc;border-radius:8px;padding:40px;text-align:center;margin:20px 0;transition:border-color 0.3s}
-        .upload-area.drag-over{border-color:#333;background:#f0f0f0}
-        .upload-options{display:flex;justify-content:center;gap:15px;margin:20px 0;flex-wrap:wrap}
-        .upload-option{padding:12px 20px;background:#e0e0e0;border:none;border-radius:4px;cursor:pointer}
-        .upload-option:hover{background:#d0d0d0}
-        textarea{width:100%;padding:15px;border:1px solid #ddd;border-radius:4px;font-family:monospace;font-size:14px;box-sizing:border-box;min-height:200px;resize:vertical}
-        .profile-section{display:none;margin:20px 0;padding:20px;background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-        .profile-details{margin:15px 0;padding:15px;background:#f8f9fa;border-radius:4px;border-left:4px solid #007bff}
-        .issues-list{margin:15px 0;padding:15px;background:#fff3cd;border-radius:4px;border-left:4px solid #ffc107}
-        .cleaning-section{display:none;margin:20px 0;padding:20px;background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-        .progress-container{margin:20px 0;background:#f0f0f0;border-radius:4px;height:30px;overflow:hidden}
-        .progress-bar{height:100%;background:#28a745;width:0%;transition:width 0.3s}
-        .settings-section{margin:20px 0;padding:15px;background:#f8f9fa;border-radius:4px}
-        .setting-option{margin:10px 0}
-        .result-section{display:none;margin:20px 0;padding:20px;background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-        .success-message{text-align:center;padding:30px;background:#d4edda;border-radius:8px;color:#155724;margin:20px 0}
-        .hidden{display:none}
-        @media (max-width:768px){body{padding:10px}.cta-buttons{flex-direction:column;align-items:center}.cta-button{width:100%;max-width:300px}}
-    </style>
+	    <style>
+	        :root{--c60:#f4f4f4;--c30:#ffffff;--c10:#0000ee;--t:#111;--muted:#555;--line:#d9d9d9}
+	        body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
+	        a{color:var(--c10);text-decoration:underline}
+	        a:focus{outline:2px dotted #000;outline-offset:2px}
+	        .wrap{max-width:980px;margin:0 auto;padding:18px}
+	        .topnav{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:0 0 10px 0}
+	        .topnav a{display:inline-block;padding:4px 8px;border:1px solid var(--line);background:var(--c30)}
+	        h1{margin:0 0 10px 0;text-align:center;color:var(--t);font-size:22px}
+	        .panel{background:var(--c30);border:1px solid var(--line);padding:14px;margin:12px 0}
+	        .welcome-section{text-align:center}
+	        .welcome-section h2{margin:0 0 10px 0;color:var(--t);font-size:16px}
+	        .cta-buttons{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+	        .cta-button{padding:10px 14px;background:#fff;color:var(--c10);border:1px solid var(--line);cursor:pointer;font-size:14px;min-width:180px}
+	        .cta-button:hover{background:#f0f0f0}
+	        .cta-button.coming-soon{color:var(--muted);cursor:not-allowed}
+	        .cta-button.coming-soon:hover{background:#fff}
+	        .structured-section{display:none}
+	        .section-title{margin:0 0 10px 0;color:var(--t);border-bottom:1px solid var(--line);padding-bottom:8px;font-size:16px}
+	        .upload-area{border:2px dashed var(--line);padding:18px;text-align:center;margin:12px 0}
+	        .upload-area.drag-over{border-color:var(--c10);background:#f0f0f0}
+	        .upload-options{display:flex;justify-content:center;gap:10px;margin:10px 0;flex-wrap:wrap}
+	        .upload-option{padding:8px 10px;background:#fff;border:1px solid var(--line);cursor:pointer;color:var(--t)}
+	        .upload-option:hover{background:#f0f0f0}
+	        textarea{width:100%;padding:10px;border:1px solid var(--line);font-family:Consolas,Monaco,monospace;font-size:12px;box-sizing:border-box;min-height:200px;resize:vertical}
+	        .profile-section{display:none}
+	        .profile-details{margin:10px 0;padding:10px;border:1px solid var(--line);background:#fafafa}
+	        .issues-list{margin:10px 0;padding:10px;border:1px solid var(--line);background:#fff}
+	        .cleaning-section{display:none}
+	        .progress-container{margin:12px 0;background:#fff;border:1px solid var(--line);height:18px;overflow:hidden}
+	        .progress-bar{height:100%;background:var(--c10);width:0%}
+	        .settings-section{margin:12px 0;padding:10px;border:1px solid var(--line);background:#fafafa}
+	        .setting-option{margin:8px 0}
+	        .result-section{display:none}
+	        .success-message{text-align:center;padding:14px;border:1px solid var(--line);background:#fafafa;color:var(--t);margin:12px 0}
+	        .hidden{display:none}
+	        @media (max-width:768px){.wrap{padding:10px}.cta-button{width:100%;max-width:320px}}
+	    </style>
 </head>
-<body>
-    <h1>Data Cleaning Toolkit</h1>
-    <div class="welcome-section" id="welcomeSection">
+	<body>
+	  <div class="wrap">
+	    <nav class="topnav" aria-label="site">
+	      <a href="/">home</a>
+	      <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">github</a>
+	      <a href="https://www.linkedin.com/in/kerr-x-calum/" rel="noopener" target="_blank">linkedin</a>
+	      <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose" rel="noopener" target="_blank">report a bug / request a feature</a>
+	      <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit/discussions" rel="noopener" target="_blank">discussions</a>
+	    </nav>
+	    <h1>Data Cleaning Toolkit</h1>
+	    <main role="main">
+	    <div class="welcome-section panel" id="welcomeSection">
         <h2>Choose Your Data Type</h2>
         <p>Select the type of data you want to clean:</p>
         <div class="cta-buttons">
@@ -72,7 +88,7 @@
             <button class="cta-button coming-soon" onclick="showComingSoon('Unstructured')">Unstructured (Coming Soon)</button>
         </div>
     </div>
-    <div class="structured-section" id="structuredSection">
+	    <div class="structured-section panel" id="structuredSection">
         <h2 class="section-title">Structured Data Cleaning</h2>
         <p>Upload your CSV file to begin the automated cleaning process.</p>
 
@@ -86,11 +102,11 @@
             <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)" style="display: none;">
         </div>
         <textarea id="csvInput" placeholder="Paste your CSV data here..."></textarea>
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="beginProfiling()" id="profileBtn" disabled>Analyze & Profile Data</button>
-        </div>
+	        <div style="text-align: center; margin-top: 20px;">
+	            <button onclick="beginProfiling()" id="profileBtn" disabled>Analyse & Profile Data</button>
+	        </div>
     </div>
-    <div class="profile-section" id="profileSection">
+	    <div class="profile-section panel" id="profileSection">
         <h2 class="section-title">Data Profile</h2>
         <p>Detailed analysis of your uploaded data:</p>
         <div class="profile-details" id="profileDetails"></div>
@@ -99,13 +115,13 @@
             <button onclick="startAutoCleaning()">Start Auto-Cleaning</button>
         </div>
     </div>
-    <div class="cleaning-section" id="cleaningSection">
+	    <div class="cleaning-section panel" id="cleaningSection">
         <h2 class="section-title">Auto-Cleaning in Progress</h2>
         <p>Your data is being automatically cleaned based on the detected issues...</p>
         <div class="progress-container">
             <div class="progress-bar" id="progressBar"></div>
         </div>
-        <div id="progressText" style="text-align: center; margin: 10px 0;">Initializing...</div>
+	        <div id="progressText" style="text-align: center; margin: 10px 0;">Initialising...</div>
         <div class="settings-section">
             <h3>Cleaning Settings</h3>
             <div class="setting-option">
@@ -130,7 +146,7 @@
             </div>
         </div>
     </div>
-    <div class="result-section" id="resultSection">
+	    <div class="result-section panel" id="resultSection">
         <h2 class="section-title">Cleaning Complete!</h2>
         <div class="success-message">
             <h3>Your data has been successfully cleaned</h3>
@@ -140,6 +156,8 @@
             <button onclick="startNewSession()">Clean Another File</button>
         </div>
     </div>
+	    </main>
+	  </div>
     <script src="algorithms.js"></script>
     <script>
         let wasmModule=null;let wasmReady=false;let uploadCSV='';let cleanedCSV='';

@@ -253,12 +253,26 @@ int main(int argc, char* argv[]){
 	if(webConcurrency < 1) webConcurrency = 1;
 	if(webConcurrency > 16) webConcurrency = 16;
 
-    CROW_ROUTE(app,"/")
+	CROW_ROUTE(app,"/")
 	([](){
-		crow::response res;
-		res.code = 301;
-		res.add_header("Location", "/app");
-		return res;
+		auto html = readFrontendAsset("home.html", false);
+		if(!html){
+			std::string msg = "could not load frontend/home.html (check that frontend/ is deployed). ";
+			msg += g_frontendDiag;
+			return crow::response(500, msg);
+		}
+		auto response = crow::response(*html);
+		response.add_header("Content-Type", "text/html; charset=utf-8");
+		response.add_header("Cache-Control", "no-cache");
+		// homepage does not need inline script. keep a stricter policy.
+		response.add_header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; upgrade-insecure-requests");
+		response.add_header("X-Content-Type-Options", "nosniff");
+		response.add_header("X-Frame-Options", "DENY");
+		response.add_header("Referrer-Policy", "no-referrer");
+		response.add_header("X-XSS-Protection", "1; mode=block");
+		response.add_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+		response.add_header("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+		return response;
 	});
 
 	CROW_ROUTE(app, "/robots.txt")
@@ -266,6 +280,7 @@ int main(int argc, char* argv[]){
 			auto base = getSeoBaseUrl(req);
 			std::string body;
 			body += "User-agent: *\n";
+				body += "Allow: /\n";
 			body += "Allow: /app\n";
 			body += "Disallow: /api/\n";
 			body += "Sitemap: " + base + "/sitemap.xml\n";
@@ -276,12 +291,13 @@ int main(int argc, char* argv[]){
 		});
 
 	CROW_ROUTE(app, "/sitemap.xml")
-		([](const crow::request& req){
+			([](const crow::request& req){
 			auto base = getSeoBaseUrl(req);
-			// small sitemap: we only expose /app right now
+				// small sitemap: homepage + app
 			std::string xml;
 			xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 			xml += "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+				xml += "  <url><loc>" + base + "/</loc></url>\n";
 			xml += "  <url><loc>" + base + "/app</loc></url>\n";
 			xml += "</urlset>\n";
 			auto res = crow::response(xml);
