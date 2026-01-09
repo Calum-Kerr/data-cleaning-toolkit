@@ -55,22 +55,100 @@
   }
   </script>
 
-  <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5;margin:0;padding:24px;color:#111;background:#fff}
-    main{max-width:900px;margin:0 auto}
-    h1{margin:0 0 8px 0;font-size:28px}
-    p{margin:10px 0}
-    .k{display:inline-block;padding:2px 6px;border:1px solid #ddd;border-radius:6px;background:#fafafa}
-    a{color:#0645ad}
-  </style>
+	  <style>
+	    :root{
+	      /* 60 / 30 / 10 colour rule: background / panels / accents */
+	      --c60:#f4f4f4;
+	      --c30:#ffffff;
+	      --c10:#0000ee;
+	      --t:#111;
+	      --muted:#555;
+	      --line:#d9d9d9;
+	    }
+	    body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
+	    a{color:var(--c10);text-decoration:underline}
+	    a:focus{outline:2px dotted #000;outline-offset:2px}
+	    .wrap{max-width:980px;margin:0 auto;padding:18px}
+	    .box{background:var(--c30);border:1px solid var(--line);padding:14px}
+	    .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
+	    h1{font-size:22px;margin:0 0 6px 0}
+	    h2{font-size:16px;margin:16px 0 6px 0}
+	    p{margin:0 0 10px 0}
+	    .muted{color:var(--muted)}
+	    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+	    .btn{display:inline-block;padding:6px 10px;border:1px solid var(--line);background:#fff}
+	    .btn.primary{border-color:var(--c10)}
+	    .cols{display:grid;grid-template-columns:1fr;gap:14px}
+	    @media (min-width:840px){.cols{grid-template-columns:1fr 1fr}}
+	    ul{margin:6px 0 10px 18px;padding:0}
+	    li{margin:0 0 4px 0}
+	    hr{border:none;border-top:1px solid var(--line);margin:14px 0}
+	    footer{font-size:12px;color:var(--muted)}
+	  </style>
 </head>
-<body>
-  <main>
-    <h1>Data Cleaning Toolkit</h1>
-    <p>This is an offline-first data cleaning tool for CSV files. It is designed to run in your browser using <span class="k">WebAssembly (Wasm)</span>, so your data can stay on your device.</p>
-    <p>It focuses on clear, transparent algorithms rather than black-box cleaning. You can detect missing values, find duplicates, and produce a cleaned output.</p>
-    <p>If you are a human visitor, open the interactive app at <a href="/app">/app</a>.</p>
-  </main>
-</body>
+	<body>
+	  <div class="wrap">
+	    <main class="box" role="main">
+	      <div class="top">
+	        <div>
+	          <h1>Data Cleaning Toolkit</h1>
+	          <p class="muted">privacy-first csv cleaning with transparent algorithms, built in c++</p>
+	          <div class="btns">
+	            <a class="btn primary" href="/app">open the app</a>
+	            <a class="btn" href="/">home</a>
+	            <a class="btn" href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">github</a>
+	            <a class="btn" href="https://www.linkedin.com/in/kerr-x-calum/" rel="noopener" target="_blank">linkedin</a>
+	            <a class="btn" href="https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose" rel="noopener" target="_blank">report a bug / request a feature</a>
+	            <a class="btn" href="https://github.com/Calum-Kerr/data-cleaning-toolkit/discussions" rel="noopener" target="_blank">discussions (forum)</a>
+	          </div>
+	        </div>
+	        <div class="muted">
+	          <p><strong>app page</strong></p>
+	          <p>offline-first via webassembly</p>
+	        </div>
+	      </div>
+
+	      <hr />
+
+	      <div class="cols">
+	        <section>
+	          <h2>what it does</h2>
+	          <p>this is an offline-first data cleaning tool for csv files. it is designed to run in your browser using webassembly (wasm), so your data can stay on your device.</p>
+	          <ul>
+	            <li>detect missing values</li>
+	            <li>detect and remove duplicate rows</li>
+	            <li>produce a cleaned output you can download</li>
+	          </ul>
+	        </section>
+
+	        <section>
+	          <h2>transparent by design</h2>
+	          <p>i focus on clear, repeatable steps rather than black-box cleaning. the source code is public, and the goal is that the same input gives the same output.</p>
+	          <p>source code: <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">github</a>.</p>
+	        </section>
+	      </div>
+
+	      <div class="cols">
+	        <section>
+	          <h2>privacy and offline</h2>
+	          <p>when the app runs in offline mode (webassembly), your csv stays on your device. when offline mode is not available, the app can fall back to api mode to run the same cleaning logic on the server.</p>
+	        </section>
+	        <section>
+	          <h2>quick links</h2>
+	          <ul>
+	            <li><a href="/">homepage</a></li>
+	            <li><a href="/app">open the app</a></li>
+	            <li><a href="/sitemap.xml">sitemap</a> and <a href="/robots.txt">robots.txt</a></li>
+	          </ul>
+	        </section>
+	      </div>
+
+	      <hr />
+	      <footer>
+	        <p>made by calum kerr. simple design on purpose.</p>
+	      </footer>
+	    </main>
+	  </div>
+	</body>
 </html>
 
