@@ -59,7 +59,7 @@ winget install Microsoft.VisualStudio.2022.BuildTools
 
 ```powershell
 git clone https://github.com/Calum-Kerr/data-cleaning-toolkit.git
-cd HonoursProject
+cd data-cleaning-toolkit
 
 git submodule update --init --recursive
 
@@ -104,7 +104,7 @@ For offline mode, build the WASM version:
 ```bash
 # Install Emscripten first
 git clone https://github.com/emscripten-core/emsdk.git ../emsdk
-cd ../emsdk && ./emsdk install latest && ./emsdk activate latest && cd ../HonoursProject
+cd ../emsdk && ./emsdk install latest && ./emsdk activate latest && cd ../data-cleaning-toolkit
 
 # Build WASM
 source ../emsdk/emsdk_env.sh
