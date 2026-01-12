@@ -45,7 +45,7 @@ If you discover a security vulnerability, please report it responsibly:
 
 This policy applies to the data cleaning toolkit hosted at:
 
-- GitHub: https://github.com/Calum-Kerr/HonoursProject
+- GitHub: https://github.com/Calum-Kerr/data-cleaning-toolkit
 - Live Demo: https://www.calumkerr.com/app
 
 ## Academic Context
