@@ -6,7 +6,7 @@ This project is an honours dissertation currently in active development. Only th
 
 | Version | Supported          |
 | ------- | ------------------ |
-| Latest  | :white_check_mark: |
+| Latest  | yes |
 
 ## Security by Design
 
