@@ -58,7 +58,7 @@ winget install Microsoft.VisualStudio.2022.BuildTools
 ### Fresh Clone Setup
 
 ```powershell
-git clone https://github.com/Calum-Kerr/HonoursProject.git
+git clone https://github.com/Calum-Kerr/data-cleaning-toolkit.git
 cd HonoursProject
 
 git submodule update --init --recursive
