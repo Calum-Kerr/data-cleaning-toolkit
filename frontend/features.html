@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Features | Data Cleaning Toolkit</title>
+    <meta name="description" content="Features of the Data Cleaning Toolkit: missing value detection, duplicate detection and removal, null standardisation, offline-first WebAssembly mode, and repeatable results." />
+    <link rel="canonical" href="https://www.calumkerr.com/features" />
+    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+    <meta name="theme-color" content="#f4f4f4" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Features | Data Cleaning Toolkit" />
+    <meta property="og:site_name" content="Calum Kerr" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:description" content="What the Data Cleaning Toolkit can detect and clean, and how offline-first mode works." />
+    <meta property="og:url" content="https://www.calumkerr.com/features" />
+    <meta property="og:image" content="https://www.calumkerr.com/android-chrome-512x512.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Data Cleaning Toolkit app icon" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Features | Data Cleaning Toolkit" />
+    <meta name="twitter:description" content="What the Data Cleaning Toolkit can detect and clean, and how offline-first mode works." />
+    <meta name="twitter:image" content="https://www.calumkerr.com/android-chrome-512x512.png" />
+    <meta name="twitter:image:alt" content="Data Cleaning Toolkit app icon" />
+
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <style>
+      :root{
+        /* 60 / 30 / 10 colour rule: background / panels / accents */
+        --c60:#f4f4f4;
+        --c30:#ffffff;
+        --c10:#0000ee;
+        --t:#111;
+        --muted:#555;
+        --line:#d9d9d9;
+      }
+      body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
+      a{color:var(--c10);text-decoration:underline}
+      a:focus{outline:2px dotted #000;outline-offset:2px}
+      .wrap{max-width:980px;margin:0 auto;padding:18px}
+      .box{background:var(--c30);border:1px solid var(--line);padding:14px}
+      .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
+      h1{font-size:22px;margin:0 0 6px 0}
+      h2{font-size:16px;margin:16px 0 6px 0}
+      p{margin:0 0 10px 0}
+      .muted{color:var(--muted)}
+      .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+      .btn{display:inline-block;padding:6px 10px;border:1px solid var(--line);background:#fff}
+      .btn.primary{border-color:var(--c10)}
+      .cols{display:grid;grid-template-columns:1fr;gap:14px}
+      @media (min-width:840px){.cols{grid-template-columns:1fr 1fr}}
+      ul{margin:6px 0 10px 18px;padding:0}
+      li{margin:0 0 4px 0}
+      hr{border:none;border-top:1px solid var(--line);margin:14px 0}
+      footer{font-size:12px;color:var(--muted)}
+      code{font-family:Consolas,Monaco,monospace;font-size:12px}
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <main class="box" role="main">
+        <div class="top">
+          <div>
+            <h1>Features</h1>
+            <p class="muted">A clear list of what the tool can do, with plain limits and behaviour.</p>
+            <div class="btns">
+              <a class="btn primary" href="/app">open the app</a>
+              <a class="btn" href="/">home</a>
+              <a class="btn" href="/honours-project">honours project</a>
+              <a class="btn" href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">github</a>
+            </div>
+          </div>
+          <div class="muted">
+            <p><strong>Goal</strong></p>
+            <p>Fast cleaning, repeatable results, and no mystery behaviour.</p>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="cols">
+          <section>
+            <h2>Supported input</h2>
+            <p>The current focus is structured CSV files: rows and columns with commas separating values. That covers most simple datasets used in spreadsheets, basic analytics, and machine learning demos.</p>
+            <p>If your data is messy text, mixed formats, or deeply nested structures, that is in the future roadmap (semi-structured and unstructured).</p>
+          </section>
+
+          <section>
+            <h2>How you use it</h2>
+            <p>You can upload a CSV or paste CSV text. Then you run detection to see what issues exist, and run cleaning steps to produce a cleaned file you can download.</p>
+            <p>It is designed so you can explain what you did in plain English, for example: you removed duplicate rows and standardised null values.</p>
+          </section>
+        </div>
+
+        <div class="cols">
+          <section>
+            <h2>Detection</h2>
+            <p>Detection measures issues without changing data. This makes it easier to justify changes and compare before and after.</p>
+            <ul>
+              <li><strong>Missing value detection:</strong> counts empty cells and missing entries.</li>
+              <li><strong>Duplicate detection:</strong> identifies duplicated rows.</li>
+            </ul>
+            <p class="muted">These are deliberately simple and deterministic so results are stable and easy to audit.</p>
+          </section>
+
+          <section>
+            <h2>Cleaning</h2>
+            <p>Cleaning applies a known change, and the output is a new CSV.</p>
+            <ul>
+              <li><strong>Remove duplicate rows:</strong> keeps the first occurrence of each row and removes later duplicates.</li>
+              <li><strong>Standardise common null values:</strong> converts text like <code>n/a</code>, <code>null</code>, or <code>none</code> into a consistent missing representation.</li>
+              <li><strong>Download cleaned CSV:</strong> exports the cleaned result for reuse.</li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="cols">
+          <section>
+            <h2>Offline-first mode (privacy)</h2>
+            <p>The app tries to run locally first using WebAssembly. WebAssembly is a browser feature that lets compiled code run inside the page, so the cleaning logic can run without sending data away.</p>
+            <p>When offline mode is active, your CSV stays on your device. This matters if you are working with sensitive data.</p>
+          </section>
+
+          <section>
+            <h2>API fallback mode (compatibility)</h2>
+            <p>If WebAssembly is not available, the app can fall back to calling the server API to run the same style of operations. This keeps the tool usable in more environments.</p>
+            <p class="muted">If you are privacy-conscious, prefer offline mode and double check the mode shown in the app.</p>
+          </section>
+        </div>
+
+        <div class="cols">
+          <section>
+            <h2>Limits and non-goals</h2>
+            <p>This is not a spreadsheet replacement and it is not an enterprise pipeline tool. It is a focused toolkit that keeps the behaviour understandable and visible.</p>
+            <ul>
+              <li>No hidden smart cleaning rules.</li>
+              <li>No automatic changes without you choosing the operation.</li>
+              <li>No requirement to sign in.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Links</h2>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/app">Open the app</a></li>
+              <li><a href="/honours-project">Honours project</a></li>
+              <li><a href="/sitemap.xml">Sitemap</a> and <a href="/robots.txt">robots.txt</a></li>
+            </ul>
+          </section>
+        </div>
+
+        <hr />
+        <footer>
+          <p>Made by Calum Kerr. Simple design on purpose. If something feels unclear, that is a bug.</p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
