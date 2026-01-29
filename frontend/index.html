@@ -406,8 +406,8 @@
             displayFacets();
         }
         async function performQuickClean(caseType){
-            document.getElementById('quickCleanSection').classList.add('hidden');
-            document.getElementById('cleaningSection').style.display='block';
+            document.getElementById('cleaningSection').style.display='none';
+            document.getElementById('progressSection').style.display='block';
             const API_URL=window.location.origin;
             let current=uploadCSV;
             function updateProgress(message){document.getElementById('progressText').textContent=message;}
