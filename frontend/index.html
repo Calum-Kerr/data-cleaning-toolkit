@@ -419,9 +419,6 @@
                 updateProgress('Removing empty rows...');
                 if(wasmReady){current=wasmModule.ccall('removeEmptyRowsString','string',['string'],[current]);}
                 else{const res=await fetch(API_URL+'/api/remove-empty-rows',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});const data=await res.json();current=data.csvData;}
-                updateProgress('Removing duplicates...');
-                if(wasmReady){current=wasmModule.ccall('removeAllDuplicatesString','string',['string'],[current]);}
-                else{const res=await fetch(API_URL+'/api/remove-duplicates',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});const data=await res.json();current=data.csvData;}
                 updateProgress('Standardising case for all columns...');
                 const lines=current.split('\n');
                 const header=lines[0];
@@ -430,6 +427,9 @@
                     if(wasmReady){current=wasmModule.ccall('testStandardize','string',['string','number','string'],[current,col,caseType]);}
                     else{const res=await fetch(API_URL+'/api/standardize-column-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current,colIndex:col,caseType:caseType})});const data=await res.json();current=data.csvData;}
                 }
+                updateProgress('Removing duplicates...');
+                if(wasmReady){current=wasmModule.ccall('removeAllDuplicatesString','string',['string'],[current]);}
+                else{const res=await fetch(API_URL+'/api/remove-duplicates',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});const data=await res.json();current=data.csvData;}
                 updateProgress('Trimming whitespace...');
                 if(wasmReady){current=wasmModule.ccall('trimWhitespaceString','string',['string'],[current]);}
                 else{const res=await fetch(API_URL+'/api/trim-whitespace',{method:'POST',headers:{'Content-Type':'text/plain'},body:current});const data=await res.json();current=data.cleaned||current;}
