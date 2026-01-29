@@ -1885,6 +1885,8 @@ var _autoDetectAll = Module['_autoDetectAll'] = makeInvalidEarlyAccess('_autoDet
 var _measurePerformance = Module['_measurePerformance'] = makeInvalidEarlyAccess('_measurePerformance');
 var _profileColumn = Module['_profileColumn'] = makeInvalidEarlyAccess('_profileColumn');
 var _testStandardize = Module['_testStandardize'] = makeInvalidEarlyAccess('_testStandardize');
+var _removeEmptyRowsString = Module['_removeEmptyRowsString'] = makeInvalidEarlyAccess('_removeEmptyRowsString');
+var _removeAllDuplicatesString = Module['_removeAllDuplicatesString'] = makeInvalidEarlyAccess('_removeAllDuplicatesString');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _emscripten_stack_get_end = makeInvalidEarlyAccess('_emscripten_stack_get_end');
 var _emscripten_stack_get_base = makeInvalidEarlyAccess('_emscripten_stack_get_base');
@@ -1947,6 +1949,10 @@ function assignWasmExports(wasmExports) {
   _profileColumn = Module['_profileColumn'] = createExportWrapper('profileColumn', 2);
   assert(typeof wasmExports['testStandardize'] != 'undefined', 'missing Wasm export: testStandardize');
   _testStandardize = Module['_testStandardize'] = createExportWrapper('testStandardize', 3);
+  assert(typeof wasmExports['removeEmptyRowsString'] != 'undefined', 'missing Wasm export: removeEmptyRowsString');
+  _removeEmptyRowsString = Module['_removeEmptyRowsString'] = createExportWrapper('removeEmptyRowsString', 1);
+  assert(typeof wasmExports['removeAllDuplicatesString'] != 'undefined', 'missing Wasm export: removeAllDuplicatesString');
+  _removeAllDuplicatesString = Module['_removeAllDuplicatesString'] = createExportWrapper('removeAllDuplicatesString', 1);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['emscripten_stack_get_end'] != 'undefined', 'missing Wasm export: emscripten_stack_get_end');
