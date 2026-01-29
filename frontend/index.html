@@ -403,6 +403,41 @@
             }
             displayFacets();
         }
+        async function performQuickClean(caseType){
+            document.getElementById('quickCleanSection').classList.add('hidden');
+            document.getElementById('cleaningSection').style.display='block';
+            const API_URL=window.location.origin;
+            let current=uploadCSV;
+            function updateProgress(message){document.getElementById('progressText').textContent=message;}
+            try{
+                updateProgress('Removing empty rows...');
+                if(wasmReady){current=wasmModule.ccall('removeEmptyRowsString','string',['string'],[current]);}
+                else{const res=await fetch(API_URL+'/api/remove-empty-rows',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});const data=await res.json();current=data.csvData;}
+                updateProgress('Removing duplicates...');
+                if(wasmReady){current=wasmModule.ccall('removeAllDuplicatesString','string',['string'],[current]);}
+                else{const res=await fetch(API_URL+'/api/remove-duplicates',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});const data=await res.json();current=data.csvData;}
+                updateProgress('Standardising case for all columns...');
+                const lines=current.split('\n');
+                const header=lines[0];
+                const columnCount=header.split(',').length;
+                for(let col=0;col<columnCount;col++){
+                    if(wasmReady){current=wasmModule.ccall('testStandardize','string',['string','number','string'],[current,col,caseType]);}
+                    else{const res=await fetch(API_URL+'/api/standardize-column-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current,colIndex:col,caseType:caseType})});const data=await res.json();current=data.csvData;}
+                }
+                updateProgress('Trimming whitespace...');
+                if(wasmReady){current=wasmModule.ccall('trimWhitespaceString','string',['string'],[current]);}
+                else{const res=await fetch(API_URL+'/api/trim-whitespace',{method:'POST',headers:{'Content-Type':'text/plain'},body:current});const data=await res.json();current=data.cleaned||current;}
+                updateProgress('Standardising null values...');
+                if(wasmReady){current=wasmModule.ccall('standardiseNullValueString','string',['string'],[current]);}
+                else{const res=await fetch(API_URL+'/api/standardise-null-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:current});const data=await res.json();current=data.cleaned||current;}
+                uploadCSV=current;
+                cleanedCSV=current;
+                showCleaningComplete();
+            }catch(err){
+                console.error('Error during quick clean:',err);
+                updateProgress('Error during cleaning. Please try again.');
+            }
+        }
         if('serviceWorker'in navigator){navigator.serviceWorker.register('service-worker.js').then(registration=>{console.log('Service Worker registered with scope:',registration.scope);}).catch(error=>{console.log('Service Worker registration failed:',error);});}
     </script>
 </body>
