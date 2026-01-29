@@ -72,3 +72,27 @@ std::vector<std::vector<std::string>> DataCleaner::standardizeColumnCase(const s
     }
     return result;
 }
+
+std::vector<std::vector<std::string>> DataCleaner::removeEmptyRows(const std::vector<std::vector<std::string>>& data){
+    std::vector<std::vector<std::string>> result;
+    for(const auto& row:data){
+        bool isEmpty=true;
+        for(const auto& cell:row){
+            if(!cell.empty()){isEmpty=false;break;}
+        }
+        if(!isEmpty){result.push_back(row);}
+    }
+    return result;
+}
+
+std::vector<std::vector<std::string>> DataCleaner::removeDuplicates(const std::vector<std::vector<std::string>>& data){
+    std::vector<std::vector<std::string>> result;
+    std::set<std::vector<std::string>> seen;
+    for(const auto& row:data){
+        if(!seen.count(row)){
+            seen.insert(row);
+            result.push_back(row);
+        }
+    }
+    return result;
+}
