@@ -117,22 +117,12 @@
             <button onclick="startQuickClean()">Clean Data</button>
         </div>
     </div>
-	    <div class="faceting-section panel" id="facetingSection" style="display:none;">
-        <h2 class="section-title">Column Faceting</h2>
-        <p>Explore unique values in each column:</p>
-        <div id="columnSelector" style="margin:10px 0;"></div>
-        <div id="facetResults" style="margin:10px 0;padding:10px;border:1px solid var(--line);background:#fafafa;min-height:100px;"></div>
-        <div style="margin:10px 0;">
-            <button onclick="standardizeCase('upper')">Standardize to UPPERCASE</button>
-            <button onclick="standardizeCase('lower')">Standardize to lowercase</button>
-        </div>
-        <div style="margin:10px 0;">
-            <button onclick="removeEmptyRows()">Remove Empty Rows</button>
-            <button onclick="removeDuplicates()">Remove Duplicates</button>
-        </div>
+	    <div class="quick-clean-section panel" id="quickCleanSection" style="display:none;">
+        <h2 class="section-title">Choose Cleaning Method</h2>
+        <p>Select how you would like to clean your data:</p>
         <div style="text-align: center; margin-top: 20px;">
-            <button onclick="backToProfile()">Back to Profile</button>
-            <button onclick="startAutoCleaning()">Start Auto-Cleaning</button>
+            <button onclick="performQuickClean('upper')">Clean & Standardise to UPPERCASE</button>
+            <button onclick="performQuickClean('lower')">Clean & Standardise to lowercase</button>
         </div>
     </div>
 	    <div class="cleaning-section panel" id="cleaningSection">
