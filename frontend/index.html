@@ -114,6 +114,17 @@
         <div class="profile-details" id="profileDetails"></div>
         <div class="issues-list" id="issuesList"></div>
         <div style="text-align: center; margin-top: 20px;">
+            <button onclick="showFaceting()">View Column Facets</button>
+            <button onclick="startAutoCleaning()">Start Auto-Cleaning</button>
+        </div>
+    </div>
+	    <div class="faceting-section panel" id="facetingSection" style="display:none;">
+        <h2 class="section-title">Column Faceting</h2>
+        <p>Explore unique values in each column:</p>
+        <div id="columnSelector" style="margin:10px 0;"></div>
+        <div id="facetResults" style="margin:10px 0;padding:10px;border:1px solid var(--line);background:#fafafa;min-height:100px;"></div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="backToProfile()">Back to Profile</button>
             <button onclick="startAutoCleaning()">Start Auto-Cleaning</button>
         </div>
     </div>
