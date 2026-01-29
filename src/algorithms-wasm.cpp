@@ -773,4 +773,60 @@ extern "C"{
         std::strcpy(cstr,outputStr.c_str());
         return cstr;
     }
+
+    EMSCRIPTEN_KEEPALIVE
+    const char* removeEmptyRowsString(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::vector<std::vector<std::string>> result;
+        for(const auto& row:parsed){
+            bool isEmpty=true;
+            for(const auto& cell:row){
+                if(!cell.empty()){isEmpty=false;break;}
+            }
+            if(!isEmpty){result.push_back(row);}
+        }
+        std::string lineEnding="\n";
+        if(data.find("\r\n")!=std::string::npos){lineEnding="\r\n";}
+        std::stringstream output;
+        for(size_t i=0;i<result.size();++i){
+            for(size_t j=0;j<result[i].size();++j){
+                if(j>0)output<<",";
+                output<<result[i][j];
+            }
+            output<<lineEnding;
+        }
+        std::string outputStr=output.str();
+        char* cstr=new char[outputStr.length()+1];
+        std::strcpy(cstr,outputStr.c_str());
+        return cstr;
+    }
+
+    EMSCRIPTEN_KEEPALIVE
+    const char* removeAllDuplicatesString(const char* csvData){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::vector<std::vector<std::string>> result;
+        std::set<std::vector<std::string>> seen;
+        for(const auto& row:parsed){
+            if(!seen.count(row)){
+                seen.insert(row);
+                result.push_back(row);
+            }
+        }
+        std::string lineEnding="\n";
+        if(data.find("\r\n")!=std::string::npos){lineEnding="\r\n";}
+        std::stringstream output;
+        for(size_t i=0;i<result.size();++i){
+            for(size_t j=0;j<result[i].size();++j){
+                if(j>0)output<<",";
+                output<<result[i][j];
+            }
+            output<<lineEnding;
+        }
+        std::string outputStr=output.str();
+        char* cstr=new char[outputStr.length()+1];
+        std::strcpy(cstr,outputStr.c_str());
+        return cstr;
+    }
 }
