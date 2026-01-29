@@ -91,38 +91,35 @@
         </div>
     </div>
 	    <div class="structured-section panel" id="structuredSection">
-        <h2 class="section-title">Structured Data Cleaning</h2>
-        <p>Upload your CSV file to begin the automated cleaning process.</p>
-
-        <div class="upload-area" id="uploadArea" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-            <h3>Upload CSV File</h3>
-            <p>Drag and drop your file here, or paste CSV data below</p>
-            <div class="upload-options">
-                <button class="upload-option" onclick="document.getElementById('fileInput').click()">Choose File</button>
-                <button class="upload-option" onclick="pasteFromClipboard()">Paste from Clipboard</button>
+        <div id="uploadSection">
+            <h2 class="section-title">Upload CSV File</h2>
+            <div class="upload-area" id="uploadArea" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                <p>Drag and drop your file here, or paste CSV data below</p>
+                <div class="upload-options">
+                    <button class="upload-option" onclick="document.getElementById('fileInput').click()">Choose File</button>
+                    <button class="upload-option" onclick="pasteFromClipboard()">Paste from Clipboard</button>
+                </div>
+                <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)" style="display: none;">
             </div>
-            <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)" style="display: none;">
+            <textarea id="csvInput" placeholder="Paste your CSV data here..."></textarea>
         </div>
-        <textarea id="csvInput" placeholder="Paste your CSV data here..."></textarea>
-	        <div style="text-align: center; margin-top: 20px;">
-	            <button onclick="beginProfiling()" id="profileBtn" disabled>Analyse & Profile Data</button>
-	        </div>
-    </div>
-	    <div class="profile-section panel" id="profileSection">
-        <h2 class="section-title">Data Profile</h2>
-        <p>Detailed analysis of your uploaded data:</p>
-        <div class="profile-details" id="profileDetails"></div>
-        <div class="issues-list" id="issuesList"></div>
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="startQuickClean()">Clean Data</button>
+        <div id="cleaningSection" style="display:none;">
+            <h2 class="section-title">Choose Cleaning Method</h2>
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="performQuickClean('upper')">Clean & Standardise to UPPERCASE</button>
+                <button onclick="performQuickClean('lower')">Clean & Standardise to lowercase</button>
+            </div>
         </div>
-    </div>
-	    <div class="quick-clean-section panel" id="quickCleanSection" style="display:none;">
-        <h2 class="section-title">Choose Cleaning Method</h2>
-        <p>Select how you would like to clean your data:</p>
-        <div style="text-align: center; margin-top: 20px;">
-            <button onclick="performQuickClean('upper')">Clean & Standardise to UPPERCASE</button>
-            <button onclick="performQuickClean('lower')">Clean & Standardise to lowercase</button>
+        <div id="progressSection" style="display:none;">
+            <h2 class="section-title">Cleaning in Progress</h2>
+            <div id="progressText" style="text-align: center; margin: 20px 0; font-size: 16px;">Starting...</div>
+        </div>
+        <div id="completeSection" style="display:none;">
+            <h2 class="section-title">Cleaning Complete!</h2>
+            <p style="text-align: center; margin: 20px 0;">Your data has been successfully cleaned and downloaded.</p>
+            <div style="text-align: center;">
+                <button onclick="startNewSession()">Clean Another File</button>
+            </div>
         </div>
     </div>
 	    <div class="cleaning-section panel" id="cleaningSection">
