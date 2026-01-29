@@ -45,3 +45,14 @@ std::vector<std::vector<std::string>> DataCleaner::cleanData(const std::vector<s
     for(size_t i=0;i<cleaned.size();++i){if(!duplicates[i]){result.push_back(cleaned[i]);}}
     return result;
 }
+
+std::map<std::string,int> DataCleaner::profileColumn(const std::vector<std::vector<std::string>>& data, size_t columnIndex){
+    std::map<std::string,int> profile;
+    if(data.empty()||columnIndex>=data[0].size()){return profile;}
+    for(const auto& row:data){
+        if(columnIndex<row.size()){
+            profile[row[columnIndex]]++;
+        }
+    }
+    return profile;
+}
