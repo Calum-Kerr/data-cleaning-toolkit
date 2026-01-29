@@ -735,7 +735,7 @@ extern "C"{
     }
 
     EMSCRIPTEN_KEEPALIVE
-    const char* standardizeColumnCase(const char* csvData, int colIndex, const char* caseType){
+    const char* testStandardize(const char* csvData, int colIndex, const char* caseType){
         std::string data(csvData);
         auto parsed=parseCSVInternal(data);
         if(parsed.empty()||colIndex<0||(size_t)colIndex>=parsed[0].size()){

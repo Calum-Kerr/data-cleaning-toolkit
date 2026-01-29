@@ -9,7 +9,7 @@ REM Run emcc
 call %EMSDK%\upstream\emscripten\emcc src/algorithms-wasm.cpp ^
     -o frontend/algorithms.js ^
     -s WASM=1 ^
-    -s "EXPORTED_FUNCTIONS=[_standardizeColumnCase]" ^
+    -s "EXPORTED_FUNCTIONS=[_testStandardize]" ^
     -s "EXPORTED_RUNTIME_METHODS=[ccall,cwrap]" ^
     -s MODULARIZE=1 ^
     -s EXPORT_NAME=AlgorithmsModule ^
