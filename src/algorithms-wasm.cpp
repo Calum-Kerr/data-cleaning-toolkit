@@ -220,10 +220,14 @@ std::vector<std::vector<std::string>> parseCSVInternal(const std::string& data){
     std::stringstream ss(data);
     std::string line;
     while(std::getline(ss,line)){
+        if(!line.empty()&&line.back()=='\r'){line.pop_back();}
         std::vector<std::string> row;
         std::stringstream lineStream(line);
         std::string cell;
-        while(std::getline(lineStream,cell,',')){row.push_back(cell);}
+        while(std::getline(lineStream,cell,',')){
+            if(!cell.empty()&&cell.back()=='\r'){cell.pop_back();}
+            row.push_back(cell);
+        }
         if(!row.empty()){result.push_back(row);}
     }
     return result;
