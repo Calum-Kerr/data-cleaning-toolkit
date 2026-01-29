@@ -180,7 +180,7 @@
                 const file=files[0];
                 if(file.name.endsWith('.csv')){
                     const reader=new FileReader();
-                    reader.onload=function(e){uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;document.getElementById('profileBtn').disabled=false;};
+                    reader.onload=function(e){uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;beginProfiling();};
                     reader.readAsText(file);
                 }else{alert('Please upload a CSV file.');}
             }
@@ -189,14 +189,14 @@
             const file=e.target.files[0];
             if(file){
                 const reader=new FileReader();
-                reader.onload=function(e){uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;document.getElementById('profileBtn').disabled=false;};
+                reader.onload=function(e){uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;beginProfiling();};
                 reader.readAsText(file);
             }
         }
         async function pasteFromClipboard(){
             try{
                 const text=await navigator.clipboard.readText();
-                if(text){uploadCSV=text;document.getElementById('csvInput').value=uploadCSV;document.getElementById('profileBtn').disabled=false;}
+                if(text){uploadCSV=text;document.getElementById('csvInput').value=uploadCSV;beginProfiling();}
             }catch(err){
                 console.error('Failed to read clipboard contents: ',err);
                 alert('Could not access clipboard. Please paste directly into the text area.');
