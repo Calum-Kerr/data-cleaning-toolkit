@@ -5,6 +5,10 @@ REM Set up the environment
 set EMSDK=%CD%\emsdk
 set PATH=%EMSDK%\upstream\emscripten;%EMSDK%\upstream\bin;%EMSDK%\node\22.16.0_64bit\bin;%PATH%
 
+echo Building WASM...
+echo EMSDK=%EMSDK%
+echo PATH=%PATH%
+
 REM Run emcc
 call %EMSDK%\upstream\emscripten\emcc src/algorithms-wasm.cpp ^
     -o frontend/algorithms.js ^
