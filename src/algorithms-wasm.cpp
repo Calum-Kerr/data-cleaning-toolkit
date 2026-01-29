@@ -755,13 +755,15 @@ extern "C"{
                 }
             }
         }
+        std::string lineEnding="\n";
+        if(data.find("\r\n")!=std::string::npos){lineEnding="\r\n";}
         std::stringstream output;
         for(size_t i=0;i<parsed.size();++i){
             for(size_t j=0;j<parsed[i].size();++j){
                 if(j>0)output<<",";
                 output<<parsed[i][j];
             }
-            output<<"\n";
+            output<<lineEnding;
         }
         std::string outputStr=output.str();
         char* cstr=new char[outputStr.length()+1];
