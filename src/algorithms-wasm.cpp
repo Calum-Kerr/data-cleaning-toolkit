@@ -697,4 +697,40 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+    EMSCRIPTEN_KEEPALIVE
+    const char* profileColumn(const char* csvData, int colIndex){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        if(parsed.empty()||colIndex<0||(size_t)colIndex>=parsed[0].size()){
+            std::string result="{\"values\":{},\"uniqueValues\":0,\"message\":\"invalid column index\"}";
+            char* cstr=new char[result.length()+1];
+            std::strcpy(cstr,result.c_str());
+            return cstr;
+        }
+        std::map<std::string,int> profile;
+        for(const auto& row:parsed){
+            if((size_t)colIndex<row.size()){
+                profile[row[colIndex]]++;
+            }
+        }
+        std::stringstream result;
+        result<<"{\"values\":{";
+        bool first=true;
+        for(const auto& pair:profile){
+            if(!first)result<<",";
+            result<<"\"";
+            for(char c:pair.first){
+                if(c=='"')result<<"\\\"";
+                else result<<c;
+            }
+            result<<"\":";
+            result<<pair.second;
+            first=false;
+        }
+        result<<"},\"uniqueValues\":"<<profile.size()<<",\"columnIndex\":"<<colIndex<<",\"message\":\"column profiled successfully\"}";
+        std::string resultStr=result.str();
+        char* cstr=new char[resultStr.length()+1];
+        std::strcpy(cstr,resultStr.c_str());
+        return cstr;
+    }
 }
