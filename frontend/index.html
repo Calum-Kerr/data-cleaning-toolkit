@@ -311,6 +311,16 @@
             document.getElementById('trimWhitespaceSetting').checked=true;
             document.getElementById('standardizeNullsSetting').checked=true;
         }
+        async function profileColumnData(colIndex){
+            const API_URL=window.location.origin;
+            if(wasmReady){
+                const result=wasmModule.ccall('profileColumn','string',['string','number'],[uploadCSV,colIndex]);
+                return JSON.parse(result);
+            }else{
+                const res=await fetch(API_URL+'/api/profile-column',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex})});
+                return await res.json();
+            }
+        }
         if('serviceWorker'in navigator){navigator.serviceWorker.register('service-worker.js').then(registration=>{console.log('Service Worker registered with scope:',registration.scope);}).catch(error=>{console.log('Service Worker registration failed:',error);});}
     </script>
 </body>
