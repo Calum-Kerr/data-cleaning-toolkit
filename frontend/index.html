@@ -311,19 +311,13 @@
             window.URL.revokeObjectURL(url);
         }
         function startNewSession(){
-            document.getElementById('resultSection').classList.add('hidden');
-            document.getElementById('cleaningSection').classList.add('hidden');
-            document.getElementById('quickCleanSection').classList.add('hidden');
-            document.getElementById('profileSection').classList.add('hidden');
-            document.getElementById('structuredSection').classList.add('hidden');
-            document.getElementById('welcomeSection').classList.remove('hidden');
+            document.getElementById('uploadSection').style.display='block';
+            document.getElementById('cleaningSection').style.display='none';
+            document.getElementById('progressSection').style.display='none';
+            document.getElementById('completeSection').style.display='none';
             document.getElementById('csvInput').value='';
             document.getElementById('fileInput').value='';
             uploadCSV='';cleanedCSV='';
-            document.getElementById('uppercaseSetting').checked=true;
-            document.getElementById('removeDuplicatesSetting').checked=true;
-            document.getElementById('trimWhitespaceSetting').checked=true;
-            document.getElementById('standardizeNullsSetting').checked=true;
         }
         function showFaceting(){
             document.getElementById('profileSection').classList.add('hidden');
