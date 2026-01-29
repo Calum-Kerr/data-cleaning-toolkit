@@ -4,6 +4,7 @@
 #include <string>
 #include <chrono>
 #include <sstream>
+#include <map>
 
 struct AuditLogEntry{
     std::string operationName;
