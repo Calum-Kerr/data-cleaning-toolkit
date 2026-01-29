@@ -721,6 +721,9 @@ extern "C"{
             result<<"\"";
             for(char c:pair.first){
                 if(c=='"')result<<"\\\"";
+                else if(c=='\r')result<<"\\r";
+                else if(c=='\n')result<<"\\n";
+                else if(c=='\\')result<<"\\\\";
                 else result<<c;
             }
             result<<"\":";
