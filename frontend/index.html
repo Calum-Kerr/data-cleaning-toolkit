@@ -373,7 +373,7 @@
             const colIndex=parseInt(document.getElementById('columnSelect').value);
             const API_URL=window.location.origin;
             if(wasmReady){
-                const result=wasmModule.ccall('standardizeColumnCase','string',['string','number','string'],[uploadCSV,colIndex,caseType]);
+                const result=wasmModule.ccall('testStandardize','string',['string','number','string'],[uploadCSV,colIndex,caseType]);
                 const parsed=JSON.parse(result);
                 uploadCSV=parsed.csvData;
             }else{
