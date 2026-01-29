@@ -322,6 +322,39 @@
             document.getElementById('trimWhitespaceSetting').checked=true;
             document.getElementById('standardizeNullsSetting').checked=true;
         }
+        function showFaceting(){
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('facetingSection').style.display='block';
+            populateColumnSelector();
+        }
+        function backToProfile(){
+            document.getElementById('facetingSection').classList.add('hidden');
+            document.getElementById('profileSection').style.display='block';
+        }
+        function populateColumnSelector(){
+            if(!uploadCSV)return;
+            const firstLine=uploadCSV.split('\n')[0];
+            const columns=firstLine.split(',');
+            let html='<label>Select column to view facets: <select id="columnSelect" onchange="displayFacets()">';
+            columns.forEach((col,idx)=>{html+=`<option value="${idx}">${col.trim()}</option>`;});
+            html+='</select></label>';
+            document.getElementById('columnSelector').innerHTML=html;
+            displayFacets();
+        }
+        async function displayFacets(){
+            const colIndex=parseInt(document.getElementById('columnSelect').value);
+            const profile=await profileColumnData(colIndex);
+            let html='<h3>Unique Values</h3><ul>';
+            if(profile.values){
+                const sorted=Object.entries(profile.values).sort((a,b)=>b[1]-a[1]);
+                sorted.forEach(([value,count])=>{
+                    const displayValue=value||'(empty)';
+                    html+=`<li>${displayValue}: <strong>${count}</strong> occurrence${count!==1?'s':''}</li>`;
+                });
+            }
+            html+='</ul>';
+            document.getElementById('facetResults').innerHTML=html;
+        }
         async function profileColumnData(colIndex){
             const API_URL=window.location.origin;
             if(wasmReady){
