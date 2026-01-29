@@ -2,6 +2,7 @@
 #include <sstream>
 #include <algorithm>
 #include <set>
+#include <map>
 
 std::vector<std::vector<std::string>> DataCleaner::parseCSV(const std::string& data){
     std::vector<std::vector<std::string>> result;
