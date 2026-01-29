@@ -56,3 +56,19 @@ std::map<std::string,int> DataCleaner::profileColumn(const std::vector<std::vect
     }
     return profile;
 }
+
+std::vector<std::vector<std::string>> DataCleaner::standardizeColumnCase(const std::vector<std::vector<std::string>>& data, size_t columnIndex, const std::string& caseType){
+    auto result=data;
+    if(data.empty()||columnIndex>=data[0].size()){return result;}
+    for(auto& row:result){
+        if(columnIndex<row.size()){
+            std::string& cell=row[columnIndex];
+            if(caseType=="upper"){
+                for(auto& c:cell){c=std::toupper(c);}
+            }else if(caseType=="lower"){
+                for(auto& c:cell){c=std::tolower(c);}
+            }
+        }
+    }
+    return result;
+}
