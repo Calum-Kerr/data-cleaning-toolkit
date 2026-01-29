@@ -812,10 +812,15 @@ extern "C"{
         auto parsed=parseCSVInternal(data);
         std::vector<std::vector<std::string>> result;
         std::set<std::vector<std::string>> seen;
-        for(const auto& row:parsed){
-            if(!seen.count(row)){
-                seen.insert(row);
+        for(size_t i=0;i<parsed.size();++i){
+            const auto& row=parsed[i];
+            if(i==0){
                 result.push_back(row);
+            }else{
+                if(!seen.count(row)){
+                    seen.insert(row);
+                    result.push_back(row);
+                }
             }
         }
         std::string lineEnding="\n";
