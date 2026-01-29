@@ -362,14 +362,14 @@
                 return await res.json();
             }
         }
-        async function standardizeCase(caseType){
+        async function standardiseCase(caseType){
             const colIndex=parseInt(document.getElementById('columnSelect').value);
             const API_URL=window.location.origin;
             if(wasmReady){
-                const result=wasmModule.ccall('testStandardize','string',['string','number','string'],[uploadCSV,colIndex,caseType]);
+                const result=wasmModule.ccall('testStandardise','string',['string','number','string'],[uploadCSV,colIndex,caseType]);
                 uploadCSV=result;
             }else{
-                const res=await fetch(API_URL+'/api/standardize-column-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex,caseType:caseType})});
+                const res=await fetch(API_URL+'/api/standardise-column-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex,caseType:caseType})});
                 const data=await res.json();
                 uploadCSV=data.csvData;
             }
