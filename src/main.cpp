@@ -1304,6 +1304,33 @@ int main(int argc, char* argv[]){
         return crow::response(result);
     });
 
+    CROW_ROUTE(app,"/api/profile-column").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        auto body=crow::json::load(req.body);
+        if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+        std::string csvData=body["csvData"].s();
+        int colIndex=0;
+        if(body.has("colIndex"))colIndex=(int)body["colIndex"].i();
+        auto parsed=cleaner.parseCSV(csvData);
+        if(parsed.empty()||colIndex<0||(size_t)colIndex>=parsed[0].size()){
+            crow::json::wvalue result;
+            result["message"]="invalid column index";
+            result["values"]=crow::json::wvalue::object();
+            return crow::response(result);
+        }
+        auto profile=cleaner.profileColumn(parsed, (size_t)colIndex);
+        crow::json::wvalue result;
+        result["values"]=crow::json::wvalue::object();
+        for(const auto& pair:profile){
+            result["values"][pair.first]=(int)pair.second;
+        }
+        result["columnIndex"]=colIndex;
+        result["uniqueValues"]=(int)profile.size();
+        result["message"]="column profiled successfully";
+        result["mode"]="api";
+        return crow::response(result);
+    });
+
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
 	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
 	try{
