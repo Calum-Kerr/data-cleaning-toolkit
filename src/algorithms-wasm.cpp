@@ -733,4 +733,39 @@ extern "C"{
         std::strcpy(cstr,resultStr.c_str());
         return cstr;
     }
+
+    EMSCRIPTEN_KEEPALIVE
+    const char* standardizeColumnCase(const char* csvData, int colIndex, const char* caseType){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        if(parsed.empty()||colIndex<0||(size_t)colIndex>=parsed[0].size()){
+            std::string result="{\"csvData\":\"\",\"message\":\"invalid column index\"}";
+            char* cstr=new char[result.length()+1];
+            std::strcpy(cstr,result.c_str());
+            return cstr;
+        }
+        std::string caseTypeStr(caseType);
+        for(auto& row:parsed){
+            if((size_t)colIndex<row.size()){
+                std::string& cell=row[colIndex];
+                if(caseTypeStr=="upper"){
+                    for(auto& c:cell){c=std::toupper(c);}
+                }else if(caseTypeStr=="lower"){
+                    for(auto& c:cell){c=std::tolower(c);}
+                }
+            }
+        }
+        std::stringstream output;
+        for(size_t i=0;i<parsed.size();++i){
+            for(size_t j=0;j<parsed[i].size();++j){
+                if(j>0)output<<",";
+                output<<parsed[i][j];
+            }
+            output<<"\n";
+        }
+        std::string outputStr=output.str();
+        char* cstr=new char[outputStr.length()+1];
+        std::strcpy(cstr,outputStr.c_str());
+        return cstr;
+    }
 }
