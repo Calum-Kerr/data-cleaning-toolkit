@@ -259,6 +259,10 @@
             issuesDiv.innerHTML=issuesHtml;
         }
         function getColumnCount(csv){if(!csv)return 0;const firstLine=csv.split('\n')[0];if(!firstLine)return 0;return firstLine.split(',').length;}
+        function startQuickClean(){
+            document.getElementById('profileSection').classList.add('hidden');
+            document.getElementById('quickCleanSection').style.display='block';
+        }
         function startAutoCleaning(){document.getElementById('profileSection').classList.add('hidden');document.getElementById('cleaningSection').style.display='block';performAutoCleaning();}
         async function performAutoCleaning(){
             const API_URL=window.location.origin;
