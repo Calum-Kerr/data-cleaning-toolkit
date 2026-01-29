@@ -301,6 +301,11 @@
                 updateProgress(5,'Error occurred - cleaning incomplete');
             }
         }
+        function showCleaningComplete(){
+            document.getElementById('cleaningSection').classList.add('hidden');
+            document.getElementById('resultSection').style.display='block';
+            triggerDownload();
+        }
         function triggerDownload(){
             const blob=new Blob([cleanedCSV],{type:'text/csv'});
             const url=window.URL.createObjectURL(blob);
