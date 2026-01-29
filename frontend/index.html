@@ -204,9 +204,8 @@
         }
         function beginProfiling(){
             if(!uploadCSV){alert('Please upload or paste CSV data first.');return;}
-            document.getElementById('structuredSection').classList.add('hidden');
-            document.getElementById('profileSection').style.display='block';
-            performProfiling();
+            document.getElementById('uploadSection').style.display='none';
+            document.getElementById('cleaningSection').style.display='block';
         }
         async function performProfiling(){
             const API_URL=window.location.origin;
