@@ -414,8 +414,8 @@
                 const header=lines[0];
                 const columnCount=header.split(',').length;
                 for(let col=0;col<columnCount;col++){
-                    if(wasmReady){current=wasmModule.ccall('testStandardize','string',['string','number','string'],[current,col,caseType]);}
-                    else{const res=await fetch(API_URL+'/api/standardize-column-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current,colIndex:col,caseType:caseType})});const data=await res.json();current=data.csvData;}
+                    if(wasmReady){current=wasmModule.ccall('testStandardise','string',['string','number','string'],[current,col,caseType]);}
+                    else{const res=await fetch(API_URL+'/api/standardise-column-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current,colIndex:col,caseType:caseType})});const data=await res.json();current=data.csvData;}
                 }
                 updateProgress('Removing duplicates...');
                 if(wasmReady){current=wasmModule.ccall('removeAllDuplicatesString','string',['string'],[current]);}
