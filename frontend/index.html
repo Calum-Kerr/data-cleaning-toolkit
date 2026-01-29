@@ -148,7 +148,7 @@
             </div>
             <div class="setting-option">
                 <label>
-                    <input type="checkbox" id="standardizeNullsSetting" checked> standardise Null Values
+                    <input type="checkbox" id="standardiseNullsSetting" checked> Standardise Null Values
                 </label>
             </div>
         </div>
@@ -278,8 +278,8 @@
                     if(wasmReady){current=wasmModule.ccall('trimWhitespaceString','string',['string'],[current]);}
                     else{const res=await fetch(API_URL+'/api/trim-whitespace',{method:'POST',headers:{'Content-Type':'text/plain'},body:current});const data=await res.json();current=data.cleaned||current;}
                 }
-                updateProgress(3,'Standardizing null values...');
-                if(document.getElementById('standardizeNullsSetting').checked){
+                updateProgress(3,'Standardising null values...');
+                if(document.getElementById('standardiseNullsSetting').checked){
                     if(wasmReady){current=wasmModule.ccall('standardiseNullValueString','string',['string'],[current]);}
                     else{const res=await fetch(API_URL+'/api/standardise-null-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:current});const data=await res.json();current=data.cleaned||current;}
                 }
