@@ -298,8 +298,8 @@
             }
         }
         function showCleaningComplete(){
-            document.getElementById('cleaningSection').classList.add('hidden');
-            document.getElementById('resultSection').style.display='block';
+            document.getElementById('progressSection').style.display='none';
+            document.getElementById('completeSection').style.display='block';
             triggerDownload();
         }
         function triggerDownload(){
