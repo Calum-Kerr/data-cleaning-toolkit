@@ -1884,6 +1884,7 @@ var _detectPatterns = Module['_detectPatterns'] = makeInvalidEarlyAccess('_detec
 var _autoDetectAll = Module['_autoDetectAll'] = makeInvalidEarlyAccess('_autoDetectAll');
 var _measurePerformance = Module['_measurePerformance'] = makeInvalidEarlyAccess('_measurePerformance');
 var _profileColumn = Module['_profileColumn'] = makeInvalidEarlyAccess('_profileColumn');
+var _standardizeColumnCase = Module['_standardizeColumnCase'] = makeInvalidEarlyAccess('_standardizeColumnCase');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _emscripten_stack_get_end = makeInvalidEarlyAccess('_emscripten_stack_get_end');
 var _emscripten_stack_get_base = makeInvalidEarlyAccess('_emscripten_stack_get_base');
@@ -1944,6 +1945,8 @@ function assignWasmExports(wasmExports) {
   _measurePerformance = Module['_measurePerformance'] = createExportWrapper('measurePerformance', 1);
   assert(typeof wasmExports['profileColumn'] != 'undefined', 'missing Wasm export: profileColumn');
   _profileColumn = Module['_profileColumn'] = createExportWrapper('profileColumn', 2);
+  assert(typeof wasmExports['standardizeColumnCase'] != 'undefined', 'missing Wasm export: standardizeColumnCase');
+  _standardizeColumnCase = Module['_standardizeColumnCase'] = createExportWrapper('standardizeColumnCase', 3);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
   _fflush = createExportWrapper('fflush', 1);
   assert(typeof wasmExports['emscripten_stack_get_end'] != 'undefined', 'missing Wasm export: emscripten_stack_get_end');
