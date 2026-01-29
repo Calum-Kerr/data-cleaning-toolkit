@@ -1331,6 +1331,40 @@ int main(int argc, char* argv[]){
         return crow::response(result);
     });
 
+	CROW_ROUTE(app,"/api/standardize-column-case").methods("POST"_method)
+	([&cleaner](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+		std::string csvData=body["csvData"].s();
+		int colIndex=0;
+		std::string caseType="upper";
+		if(body.has("colIndex"))colIndex=(int)body["colIndex"].i();
+		if(body.has("caseType"))caseType=body["caseType"].s();
+		auto parsed=cleaner.parseCSV(csvData);
+		if(parsed.empty()||colIndex<0||(size_t)colIndex>=parsed[0].size()){
+			crow::json::wvalue result;
+			result["message"]="invalid column index";
+			result["mode"]="api";
+			return crow::response(result);
+		}
+		auto standardized=cleaner.standardizeColumnCase(parsed, (size_t)colIndex, caseType);
+		std::string output;
+		for(size_t i=0;i<standardized.size();++i){
+			for(size_t j=0;j<standardized[i].size();++j){
+				if(j>0)output+=",";
+				output+=standardized[i][j];
+			}
+			output+="\n";
+		}
+		crow::json::wvalue result;
+		result["csvData"]=output;
+		result["columnIndex"]=colIndex;
+		result["caseType"]=caseType;
+		result["message"]="column case standardized successfully";
+		result["mode"]="api";
+		return crow::response(result);
+	});
+
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
 	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
 	try{
