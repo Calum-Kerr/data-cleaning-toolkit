@@ -1700,6 +1700,11 @@ int main(int argc, char* argv[]){
 				int maxLen=std::max(loc1.length(), loc2.length());
 				int similarity=(maxLen>0) ? (100*(maxLen-distance)/maxLen) : 0;
 
+				// Debug: log all comparisons for BROOKYLN
+				if(loc1=="BROOKYLN" || loc2=="BROOKYLN"){
+					debugLog3<<"DEBUG PASS3: Comparing "<<loc1<<" vs "<<loc2<<", distance="<<distance<<", maxLen="<<maxLen<<", similarity="<<similarity<<"%"<<std::endl;
+				}
+
 				// If similarity > 85%, consider them the same (typo/spelling mistake)
 				if(similarity>85){
 					debugLog3<<"DEBUG PASS3: Fuzzy match found: "<<loc1<<" (count="<<locationCounts[loc1]<<") <-> "<<loc2<<" (count="<<locationCounts[loc2]<<"), similarity="<<similarity<<"%"<<std::endl;
