@@ -217,11 +217,13 @@ int levenshteinDistance(const std::string& s1,const std::string& s2){
 
 std::vector<std::vector<std::string>> parseCSVInternal(const std::string& data){
     std::vector<std::vector<std::string>> result;
+    result.reserve(1000);
     std::stringstream ss(data);
     std::string line;
     while(std::getline(ss,line)){
         if(!line.empty()&&line.back()=='\r'){line.pop_back();}
         std::vector<std::string> row;
+        row.reserve(50);
         std::stringstream lineStream(line);
         std::string cell;
         while(std::getline(lineStream,cell,',')){
