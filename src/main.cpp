@@ -1394,9 +1394,9 @@ int main(int argc, char* argv[]){
 					cell="";
 				}
 
-				if(caseType=="uppercase"){
+				if(caseType=="upper" || caseType=="uppercase"){
 					std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
-				}else if(caseType=="lowercase"){
+				}else if(caseType=="lower" || caseType=="lowercase"){
 					std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
 				}
 			}
