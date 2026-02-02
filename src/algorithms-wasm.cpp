@@ -888,4 +888,78 @@ extern "C"{
         std::strcpy(cstr,outputStr.c_str());
         return cstr;
     }
+
+    EMSCRIPTEN_KEEPALIVE
+    const char* quickCleanAllStreaming(const char* csvData,const char* caseType){
+        std::string data(csvData);
+        std::string caseStr(caseType);
+        std::stringstream ss(data);
+        std::string line;
+        std::set<std::vector<std::string>> seen;
+        std::stringstream output;
+        bool isHeader=true;
+        std::string lineEnding="\n";
+        if(data.find("\r\n")!=std::string::npos){lineEnding="\r\n";}
+
+        while(std::getline(ss,line)){
+            if(!line.empty()&&line.back()=='\r'){line.pop_back();}
+
+            std::vector<std::string> row;
+            row.reserve(50);
+            std::stringstream lineStream(line);
+            std::string cell;
+            while(std::getline(lineStream,cell,',')){
+                if(!cell.empty()&&cell.back()=='\r'){cell.pop_back();}
+                row.push_back(cell);
+            }
+
+            if(!row.empty()){
+                if(isHeader){
+                    for(size_t i=0;i<row.size();++i){
+                        if(i>0)output<<",";
+                        output<<row[i];
+                    }
+                    output<<lineEnding;
+                    isHeader=false;
+                }else{
+                    bool skipRow=false;
+
+                    for(size_t i=0;i<row.size();++i){
+                        std::string& cell=row[i];
+
+                        if(cell.empty()){skipRow=true;break;}
+
+                        while(!cell.empty()&&(cell.front()==' '||cell.front()=='\t')){cell.erase(0,1);}
+                        while(!cell.empty()&&(cell.back()==' '||cell.back()=='\t')){cell.pop_back();}
+
+                        if(cell.empty()||cell=="N/A"||cell=="n/a"||cell=="NA"||cell=="null"||cell=="NULL"||cell=="None"||cell=="NONE"||cell=="-"||cell=="?"){
+                            cell="";
+                        }
+
+                        if(caseStr=="uppercase"){
+                            std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
+                        }else if(caseStr=="lowercase"){
+                            std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
+                        }
+                    }
+
+                    if(!skipRow){
+                        if(!seen.count(row)){
+                            seen.insert(row);
+                            for(size_t i=0;i<row.size();++i){
+                                if(i>0)output<<",";
+                                output<<row[i];
+                            }
+                            output<<lineEnding;
+                        }
+                    }
+                }
+            }
+        }
+
+        std::string outputStr=output.str();
+        char* cstr=new char[outputStr.length()+1];
+        std::strcpy(cstr,outputStr.c_str());
+        return cstr;
+    }
 }
