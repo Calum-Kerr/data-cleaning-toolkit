@@ -89,6 +89,9 @@ self.addEventListener('fetch', event => {
                 });
             })
         );
+    } else if (event.request.url.includes('cleaned_data.csv') || event.request.url.includes('download')) {
+        // do not cache downloads
+        event.respondWith(fetch(event.request));
     } else {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
