@@ -1641,14 +1641,18 @@ int main(int argc, char* argv[]){
 			for(size_t j=0;j<row.size();++j){
 				std::string& cell=row[j];
 
-				if(cell.empty()){skipRow=true;break;}
-
 				size_t start=cell.find_first_not_of(" \t\r\n");
 				size_t end=cell.find_last_not_of(" \t\r\n");
 				if(start==std::string::npos){cell="";}else{cell=cell.substr(start,end-start+1);}
 
 				if(cell.empty()||cell=="N/A"||cell=="n/a"||cell=="NA"||cell=="null"||cell=="NULL"||cell=="None"||cell=="NONE"||cell=="-"||cell=="?"){
 					cell="";
+				}
+
+				// Skip row only if the first column (location) is empty
+				if(j==0 && cell.empty()){
+					skipRow=true;
+					break;
 				}
 
 				// First convert to uppercase for normalization and mapping lookup
