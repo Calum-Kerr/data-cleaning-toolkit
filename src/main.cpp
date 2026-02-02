@@ -1675,6 +1675,8 @@ int main(int argc, char* argv[]){
 		// PASS 3: Fuzzy matching for spelling mistakes (85%+ similarity)
 		// This catches typos like "BROOKYLN" -> "BROOKLYN"
 		std::set<std::string> fuzzyProcessed;
+		std::ofstream debugLog3("debug.log", std::ios::app);
+		debugLog3<<"DEBUG: Starting PASS 3 (Fuzzy matching)..."<<std::endl;
 		for(auto& loc1 : locations){
 			if(fuzzyProcessed.count(loc1)) continue;
 
@@ -1699,6 +1701,7 @@ int main(int argc, char* argv[]){
 
 				// If similarity > 85%, consider them the same (typo/spelling mistake)
 				if(similarity>85){
+					debugLog3<<"DEBUG PASS3: Fuzzy match found: "<<loc1<<" (count="<<locationCounts[loc1]<<") <-> "<<loc2<<" (count="<<locationCounts[loc2]<<"), similarity="<<similarity<<"%"<<std::endl;
 					fuzzyMatches.push_back(loc2);
 					// Use the more common one as canonical
 					if(locationCounts[loc2]>maxCount){
@@ -1716,6 +1719,8 @@ int main(int argc, char* argv[]){
 
 			fuzzyProcessed.insert(loc1);
 		}
+		debugLog3<<"DEBUG: Finished PASS 3 (Fuzzy matching)"<<std::endl;
+		debugLog3.close();
 
 		// Debug: log mapping size
 		std::ofstream debugLog2("debug.log", std::ios::app);
