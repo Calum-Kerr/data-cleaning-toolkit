@@ -1365,6 +1365,36 @@ int main(int argc, char* argv[]){
 		return crow::response(result);
 	});
 
+	CROW_ROUTE(app,"/api/extract-first-token").methods("POST"_method)
+	([&cleaner, &auditLog](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+		std::string csvData=body["csvData"].s();
+		auto parsed=cleaner.parseCSV(csvData);
+		int originalRows=(int)parsed.size();
+		std::stringstream output;
+		for(size_t i=0;i<parsed.size();++i){
+			for(size_t j=0;j<parsed[i].size();++j){
+				std::string cell=parsed[i][j];
+				size_t spacePos=cell.find(' ');
+				if(spacePos!=std::string::npos){
+					cell=cell.substr(0,spacePos);
+				}
+				if(j>0)output<<",";
+				output<<cell;
+			}
+			output<<"\n";
+		}
+		auditLog.addEntry("Extract First Token", 0, originalRows, originalRows);
+		crow::json::wvalue resp;
+		resp["csvData"]=output.str();
+		resp["originalRows"]=originalRows;
+		resp["cleanedRows"]=originalRows;
+		resp["message"]="first token extracted successfully";
+		resp["mode"]="api";
+		return crow::response(resp);
+	});
+
 	CROW_ROUTE(app,"/api/quick-clean").methods("POST"_method)
 	([&cleaner, &auditLog](const crow::request& req){
 		auto body=crow::json::load(req.body);
