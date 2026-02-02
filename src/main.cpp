@@ -1624,7 +1624,8 @@ int main(int argc, char* argv[]){
 		debugLog<<"DEBUG: locationCounts size = "<<locationCounts.size()<<std::endl;
 		debugLog.close();
 
-		// PASS 2: Build mapping using fuzzy matching with high threshold
+		// PASS 2: Build mapping using fuzzy matching
+		// Strategy: if one location is a substring of another, merge them
 		std::map<std::string, std::string> locationMapping;
 		std::vector<std::string> locations;
 		for(auto& entry : locationCounts){
@@ -1638,17 +1639,33 @@ int main(int argc, char* argv[]){
 
 			std::string canonical=loc1;
 			int maxCount=locationCounts[loc1];
+			std::vector<std::string> similar;
+			similar.push_back(loc1);
 
-			// Find all similar locations (similarity > 75%)
+			// Find all similar locations
 			for(auto& loc2 : locations){
 				if(loc1==loc2 || processed.count(loc2)) continue;
 
-				int distance=levenshteinDistance(loc1, loc2);
-				int maxLen=std::max(loc1.length(), loc2.length());
-				int similarity=(maxLen>0) ? (100*(maxLen-distance)/maxLen) : 0;
+				// Check if one is a substring of the other (with word boundaries)
+				bool isSimilar=false;
 
-				// If similarity > 75%, consider them the same
-				if(similarity>75){
+				// If loc1 is contained in loc2 or vice versa, they are similar
+				if(loc1.find(loc2)!=std::string::npos || loc2.find(loc1)!=std::string::npos){
+					isSimilar=true;
+				}
+
+				// Also check fuzzy matching: if similarity > 80%, merge
+				if(!isSimilar){
+					int distance=levenshteinDistance(loc1, loc2);
+					int maxLen=std::max(loc1.length(), loc2.length());
+					int similarity=(maxLen>0) ? (100*(maxLen-distance)/maxLen) : 0;
+					if(similarity>80){
+						isSimilar=true;
+					}
+				}
+
+				if(isSimilar){
+					similar.push_back(loc2);
 					// Use the more common one as canonical
 					if(locationCounts[loc2]>maxCount){
 						canonical=loc2;
@@ -1659,19 +1676,10 @@ int main(int argc, char* argv[]){
 			}
 
 			// Map all similar locations to the canonical one
-			for(auto& loc2 : locations){
-				if(processed.count(loc2) || loc2==canonical) continue;
-
-				int distance=levenshteinDistance(loc1, loc2);
-				int maxLen=std::max(loc1.length(), loc2.length());
-				int similarity=(maxLen>0) ? (100*(maxLen-distance)/maxLen) : 0;
-
-				if(similarity>75){
-					locationMapping[loc2]=canonical;
-				}
+			for(auto& loc : similar){
+				locationMapping[loc]=canonical;
 			}
 
-			locationMapping[loc1]=canonical;
 			processed.insert(loc1);
 		}
 
