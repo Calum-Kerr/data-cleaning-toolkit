@@ -1365,6 +1365,76 @@ int main(int argc, char* argv[]){
 		return crow::response(result);
 	});
 
+	CROW_ROUTE(app,"/api/quick-clean").methods("POST"_method)
+	([&cleaner, &auditLog](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+		std::string csvData=body["csvData"].s();
+		std::string caseType=body["caseType"].s();
+		auto parsed=cleaner.parseCSV(csvData);
+		int originalRows=(int)parsed.size();
+
+		std::set<std::vector<std::string>> seen;
+		std::vector<std::vector<std::string>> result;
+
+		for(size_t i=0;i<parsed.size();++i){
+			auto row=parsed[i];
+			bool skipRow=false;
+
+			for(size_t j=0;j<row.size();++j){
+				std::string& cell=row[j];
+
+				if(cell.empty()){skipRow=true;break;}
+
+				size_t start=cell.find_first_not_of(" \t\r\n");
+				size_t end=cell.find_last_not_of(" \t\r\n");
+				if(start==std::string::npos){cell="";}else{cell=cell.substr(start,end-start+1);}
+
+				if(cell.empty()||cell=="N/A"||cell=="n/a"||cell=="NA"||cell=="null"||cell=="NULL"||cell=="None"||cell=="NONE"||cell=="-"||cell=="?"){
+					cell="";
+				}
+
+				if(caseType=="uppercase"){
+					std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
+				}else if(caseType=="lowercase"){
+					std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
+				}
+			}
+
+			if(!skipRow){
+				if(i==0){
+					result.push_back(row);
+					seen.insert(row);
+				}else{
+					if(!seen.count(row)){
+						seen.insert(row);
+						result.push_back(row);
+					}
+				}
+			}
+		}
+
+		std::stringstream output;
+		for(size_t i=0;i<result.size();++i){
+			for(size_t j=0;j<result[i].size();++j){
+				if(j>0)output<<",";
+				output<<result[i][j];
+			}
+			output<<"\n";
+		}
+
+		int removedRows=originalRows-result.size();
+		auditLog.addEntry("Quick Clean All", removedRows, originalRows, result.size());
+		crow::json::wvalue resp;
+		resp["csvData"]=output.str();
+		resp["originalRows"]=originalRows;
+		resp["cleanedRows"]=result.size();
+		resp["removedRows"]=removedRows;
+		resp["message"]="data cleaned successfully";
+		resp["mode"]="api";
+		return crow::response(resp);
+	});
+
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
 	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
 	try{
