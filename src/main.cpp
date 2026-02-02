@@ -1581,37 +1581,40 @@ int main(int argc, char* argv[]){
 			}
 		}
 
-		// PASS 2: Build fuzzy matching map
+		// PASS 2: Build mapping by grouping locations with the same first word
 		std::map<std::string, std::string> locationMapping;
-		std::set<std::string> processed;
+		std::map<std::string, std::vector<std::pair<std::string, int>>> firstWordGroups;
+
+		// Group locations by first word
 		for(auto& entry : locationCounts){
 			std::string location=entry.first;
-			if(processed.count(location)) continue;
+			std::string firstWord=location;
 
-			std::string canonical=location;
-			int maxCount=entry.second;
-			std::vector<std::string> group;
-			group.push_back(location);
+			// Extract first word
+			size_t spacePos=location.find(' ');
+			if(spacePos!=std::string::npos){
+				firstWord=location.substr(0, spacePos);
+			}
 
-			// Find all similar locations
-			for(auto& other : locationCounts){
-				if(processed.count(other.first) || other.first==location) continue;
-				int dist=levenshteinDistance(location, other.first);
-				int maxLen=std::max(location.length(), other.first.length());
-				int similarity=100-(dist*100/maxLen);
-				if(similarity>=50){
-					group.push_back(other.first);
-					if(other.second>maxCount){
-						canonical=other.first;
-						maxCount=other.second;
-					}
+			firstWordGroups[firstWord].push_back({location, entry.second});
+		}
+
+		// For each group, find the most common variant as canonical
+		for(auto& group : firstWordGroups){
+			std::string canonical=group.first;
+			int maxCount=0;
+
+			// Find the most common variant in this group
+			for(auto& variant : group.second){
+				if(variant.second>maxCount){
+					canonical=variant.first;
+					maxCount=variant.second;
 				}
 			}
 
-			// Map all similar locations to the canonical one
-			for(auto& loc : group){
-				locationMapping[loc]=canonical;
-				processed.insert(loc);
+			// Map all variants to the canonical one
+			for(auto& variant : group.second){
+				locationMapping[variant.first]=canonical;
 			}
 		}
 
