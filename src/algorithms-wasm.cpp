@@ -902,6 +902,48 @@ extern "C"{
     }
 
     EMSCRIPTEN_KEEPALIVE
+    const char* extractFirstTokenString(const char* csvData){
+        std::string data(csvData);
+        std::stringstream ss(data);
+        std::string line;
+        std::stringstream output;
+        bool isHeader=true;
+        std::string lineEnding="\n";
+        if(data.find("\r\n")!=std::string::npos){lineEnding="\r\n";}
+
+        while(std::getline(ss,line)){
+            if(!line.empty()&&line.back()=='\r'){line.pop_back();}
+            std::vector<std::string> row=parseCSVLine(line);
+            if(!row.empty()){
+                if(isHeader){
+                    for(size_t i=0;i<row.size();++i){
+                        if(i>0)output<<",";
+                        output<<row[i];
+                    }
+                    output<<lineEnding;
+                    isHeader=false;
+                }else{
+                    for(size_t i=0;i<row.size();++i){
+                        std::string cell=row[i];
+                        size_t spacePos=cell.find(' ');
+                        if(spacePos!=std::string::npos){
+                            cell=cell.substr(0,spacePos);
+                        }
+                        if(i>0)output<<",";
+                        output<<cell;
+                    }
+                    output<<lineEnding;
+                }
+            }
+        }
+
+        std::string outputStr=output.str();
+        char* cstr=new char[outputStr.length()+1];
+        std::strcpy(cstr,outputStr.c_str());
+        return cstr;
+    }
+
+    EMSCRIPTEN_KEEPALIVE
     const char* quickCleanAllStreaming(const char* csvData,const char* caseType){
         std::string data(csvData);
         std::string caseStr(caseType);
