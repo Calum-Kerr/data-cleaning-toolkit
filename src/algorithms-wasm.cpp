@@ -969,6 +969,48 @@ extern "C"{
     }
 
     EMSCRIPTEN_KEEPALIVE
+    const char* fuzzyMatchAndMergeString(const char* csvData, double threshold){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+        std::map<std::string,std::vector<std::string>> groups;
+        std::vector<std::string> uniqueValues;
+
+        for(size_t i=1;i<parsed.size();++i){
+            if(!parsed[i].empty()){
+                std::string cellValue=parsed[i][0];
+                bool foundGroup=false;
+
+                for(const auto& uniqueVal:uniqueValues){
+                    double similarity=calculateSimilarity(cellValue,uniqueVal);
+                    if(similarity>=threshold){
+                        groups[uniqueVal].push_back(cellValue);
+                        foundGroup=true;
+                        break;
+                    }
+                }
+
+                if(!foundGroup){
+                    uniqueValues.push_back(cellValue);
+                    groups[cellValue].push_back(cellValue);
+                }
+            }
+        }
+
+        std::stringstream output;
+        output<<"original,merged\n";
+        for(const auto& pair:groups){
+            for(const auto& val:pair.second){
+                output<<val<<\",\"<<pair.first<<\"\\n\";
+            }
+        }
+
+        std::string outputStr=output.str();
+        char* cstr=new char[outputStr.length()+1];
+        std::strcpy(cstr,outputStr.c_str());
+        return cstr;
+    }
+
+    EMSCRIPTEN_KEEPALIVE
     const char* quickCleanAllStreaming(const char* csvData,const char* caseType){
         std::string data(csvData);
         std::string caseStr(caseType);
