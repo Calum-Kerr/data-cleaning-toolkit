@@ -1692,8 +1692,9 @@ int main(int argc, char* argv[]){
 			for(auto& loc2 : locations){
 				if(loc1==loc2 || fuzzyProcessed.count(loc2)) continue;
 
-				// Skip if already merged in Pass 1
-				if(locationMapping[loc2]!=loc2) continue;
+				// For fuzzy matching, we can match against locations that were already merged
+				// because we want to find the canonical location they map to
+				std::string loc2Canonical=locationMapping[loc2];
 
 				int distance=levenshteinDistance(loc1, loc2);
 				int maxLen=std::max(loc1.length(), loc2.length());
@@ -1703,9 +1704,9 @@ int main(int argc, char* argv[]){
 				if(similarity>85){
 					debugLog3<<"DEBUG PASS3: Fuzzy match found: "<<loc1<<" (count="<<locationCounts[loc1]<<") <-> "<<loc2<<" (count="<<locationCounts[loc2]<<"), similarity="<<similarity<<"%"<<std::endl;
 					fuzzyMatches.push_back(loc2);
-					// Use the more common one as canonical
+					// Use the more common one as canonical (compare against the canonical form)
 					if(locationCounts[loc2]>maxCount){
-						canonical=loc2;
+						canonical=loc2Canonical;
 						maxCount=locationCounts[loc2];
 					}
 					fuzzyProcessed.insert(loc2);
