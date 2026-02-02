@@ -1618,6 +1618,19 @@ int main(int argc, char* argv[]){
 			}
 		}
 
+		// Debug: log mapping size
+		std::cerr<<"DEBUG: locationMapping size = "<<locationMapping.size()<<std::endl;
+		if(locationMapping.size()>0){
+			std::cerr<<"DEBUG: Sample mappings:"<<std::endl;
+			int count=0;
+			for(auto& m : locationMapping){
+				if(count<10){
+					std::cerr<<"  "<<m.first<<" -> "<<m.second<<std::endl;
+					count++;
+				}
+			}
+		}
+
 		std::set<std::vector<std::string>> seen;
 		std::vector<std::vector<std::string>> result;
 
@@ -1658,8 +1671,13 @@ int main(int argc, char* argv[]){
 				cell=normalized;
 
 				// Apply location mapping (fuzzy matching result)
-				if(j==0 && !cell.empty() && locationMapping.count(cell)){
-					cell=locationMapping[cell];
+				if(j==0 && !cell.empty()){
+					if(locationMapping.count(cell)){
+						std::cerr<<"DEBUG: Mapping "<<cell<<" -> "<<locationMapping[cell]<<std::endl;
+						cell=locationMapping[cell];
+					}else{
+						std::cerr<<"DEBUG: No mapping found for '"<<cell<<"'"<<std::endl;
+					}
 				}
 
 				// Then apply the requested case conversion
