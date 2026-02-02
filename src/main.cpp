@@ -1622,17 +1622,19 @@ int main(int argc, char* argv[]){
 		}
 
 		// Debug: log mapping size
-		std::cerr<<"DEBUG: locationMapping size = "<<locationMapping.size()<<std::endl;
+		std::ofstream debugLog2("debug.log", std::ios::app);
+		debugLog2<<"DEBUG: locationMapping size = "<<locationMapping.size()<<std::endl;
 		if(locationMapping.size()>0){
-			std::cerr<<"DEBUG: Sample mappings:"<<std::endl;
+			debugLog2<<"DEBUG: Sample mappings:"<<std::endl;
 			int count=0;
 			for(auto& m : locationMapping){
 				if(count<10){
-					std::cerr<<"  "<<m.first<<" -> "<<m.second<<std::endl;
+					debugLog2<<"  "<<m.first<<" -> "<<m.second<<std::endl;
 					count++;
 				}
 			}
 		}
+		debugLog2.close();
 
 		std::set<std::vector<std::string>> seen;
 		std::vector<std::vector<std::string>> result;
