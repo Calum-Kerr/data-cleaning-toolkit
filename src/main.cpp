@@ -1576,6 +1576,14 @@ int main(int argc, char* argv[]){
 			}
 		}
 
+		// Debug: log which column was detected
+		std::ofstream debugLogColumn("debug.log", std::ios::app);
+		debugLogColumn<<"DEBUG: Detected text column index = "<<textColumnIndex<<std::endl;
+		if(!parsed.empty() && !parsed[0].empty() && textColumnIndex<(int)parsed[0].size()){
+			debugLogColumn<<"DEBUG: Column header = "<<parsed[0][textColumnIndex]<<std::endl;
+		}
+		debugLogColumn.close();
+
 		// PASS 1: Collect all unique locations and their counts (with normalization)
 		std::map<std::string, int> locationCounts;
 		for(size_t i=1;i<parsed.size();++i){
