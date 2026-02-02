@@ -1544,9 +1544,61 @@ int main(int argc, char* argv[]){
 		auto parsed=cleaner.parseCSV(csvData);
 		int originalRows=(int)parsed.size();
 
+		// PASS 1: Collect all unique locations and their counts
+		std::map<std::string, int> locationCounts;
+		for(size_t i=1;i<parsed.size();++i){
+			if(!parsed[i].empty()){
+				std::string location=parsed[i][0];
+				// Trim whitespace
+				size_t start=location.find_first_not_of(" \t\r\n");
+				size_t end=location.find_last_not_of(" \t\r\n");
+				if(start!=std::string::npos){location=location.substr(start,end-start+1);}
+				// Standardize nulls
+				if(location.empty()||location=="N/A"||location=="n/a"||location=="NA"||location=="null"||location=="NULL"||location=="None"||location=="NONE"||location=="-"||location=="?"){
+					location="";
+				}
+				if(!location.empty()){
+					locationCounts[location]++;
+				}
+			}
+		}
+
+		// PASS 2: Build fuzzy matching map
+		std::map<std::string, std::string> locationMapping;
+		std::set<std::string> processed;
+		for(auto& entry : locationCounts){
+			std::string location=entry.first;
+			if(processed.count(location)) continue;
+
+			std::string canonical=location;
+			int maxCount=entry.second;
+			std::vector<std::string> group;
+			group.push_back(location);
+
+			// Find all similar locations
+			for(auto& other : locationCounts){
+				if(processed.count(other.first) || other.first==location) continue;
+				int dist=levenshteinDistance(location, other.first);
+				int maxLen=std::max(location.length(), other.first.length());
+				int similarity=100-(dist*100/maxLen);
+				if(similarity>=50){
+					group.push_back(other.first);
+					if(other.second>maxCount){
+						canonical=other.first;
+						maxCount=other.second;
+					}
+				}
+			}
+
+			// Map all similar locations to the canonical one
+			for(auto& loc : group){
+				locationMapping[loc]=canonical;
+				processed.insert(loc);
+			}
+		}
+
 		std::set<std::vector<std::string>> seen;
 		std::vector<std::vector<std::string>> result;
-		std::map<std::string, std::string> locationMapping;
 
 		for(size_t i=0;i<parsed.size();++i){
 			auto row=parsed[i];
