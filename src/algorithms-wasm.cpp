@@ -829,7 +829,6 @@ extern "C"{
         std::string lineEnding="\n";
         if(data.find("\r\n")!=std::string::npos){lineEnding="\r\n";}
         std::stringstream output;
-        output.reserve(data.length());
         for(size_t i=0;i<result.size();++i){
             for(size_t j=0;j<result[i].size();++j){
                 if(j>0)output<<",";
