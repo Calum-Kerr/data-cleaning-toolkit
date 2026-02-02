@@ -101,7 +101,7 @@
                 </div>
                 <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)" style="display: none;">
             </div>
-            <textarea id="csvInput" placeholder="Paste your CSV data here..." onchange="uploadCSV=document.getElementById('csvInput').value;if(uploadCSV) beginProfiling()"></textarea>
+            <textarea id="csvInput" placeholder="Paste your CSV data here..." onchange="uploadCSV=document.getElementById('csvInput').value;console.log('uploadCSV updated, length: '+uploadCSV.length);if(uploadCSV) beginProfiling()"></textarea>
         </div>
         <div id="cleaningSection" style="display:none;">
             <h2 class="section-title">Choose Cleaning Method</h2>
