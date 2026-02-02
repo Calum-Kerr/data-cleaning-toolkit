@@ -1888,6 +1888,7 @@ var _testStandardize = Module['_testStandardize'] = makeInvalidEarlyAccess('_tes
 var _removeEmptyRowsString = Module['_removeEmptyRowsString'] = makeInvalidEarlyAccess('_removeEmptyRowsString');
 var _removeAllDuplicatesString = Module['_removeAllDuplicatesString'] = makeInvalidEarlyAccess('_removeAllDuplicatesString');
 var _removeAllDuplicatesStringStreaming = Module['_removeAllDuplicatesStringStreaming'] = makeInvalidEarlyAccess('_removeAllDuplicatesStringStreaming');
+var _extractFirstTokenString = Module['_extractFirstTokenString'] = makeInvalidEarlyAccess('_extractFirstTokenString');
 var _quickCleanAllStreaming = Module['_quickCleanAllStreaming'] = makeInvalidEarlyAccess('_quickCleanAllStreaming');
 var _fflush = makeInvalidEarlyAccess('_fflush');
 var _emscripten_stack_get_end = makeInvalidEarlyAccess('_emscripten_stack_get_end');
@@ -1957,6 +1958,8 @@ function assignWasmExports(wasmExports) {
   _removeAllDuplicatesString = Module['_removeAllDuplicatesString'] = createExportWrapper('removeAllDuplicatesString', 1);
   assert(typeof wasmExports['removeAllDuplicatesStringStreaming'] != 'undefined', 'missing Wasm export: removeAllDuplicatesStringStreaming');
   _removeAllDuplicatesStringStreaming = Module['_removeAllDuplicatesStringStreaming'] = createExportWrapper('removeAllDuplicatesStringStreaming', 1);
+  assert(typeof wasmExports['extractFirstTokenString'] != 'undefined', 'missing Wasm export: extractFirstTokenString');
+  _extractFirstTokenString = Module['_extractFirstTokenString'] = createExportWrapper('extractFirstTokenString', 1);
   assert(typeof wasmExports['quickCleanAllStreaming'] != 'undefined', 'missing Wasm export: quickCleanAllStreaming');
   _quickCleanAllStreaming = Module['_quickCleanAllStreaming'] = createExportWrapper('quickCleanAllStreaming', 2);
   assert(typeof wasmExports['fflush'] != 'undefined', 'missing Wasm export: fflush');
