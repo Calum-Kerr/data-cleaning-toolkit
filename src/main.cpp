@@ -1517,8 +1517,26 @@ int main(int argc, char* argv[]){
 		return crow::response(resp);
 	});
 
+	// Helper function to calculate Levenshtein distance
+	auto levenshteinDistance=[](const std::string& s1, const std::string& s2)->int{
+		size_t len1=s1.length(), len2=s2.length();
+		std::vector<std::vector<int>> dp(len1+1, std::vector<int>(len2+1, 0));
+		for(size_t i=0;i<=len1;++i) dp[i][0]=i;
+		for(size_t j=0;j<=len2;++j) dp[0][j]=j;
+		for(size_t i=1;i<=len1;++i){
+			for(size_t j=1;j<=len2;++j){
+				if(s1[i-1]==s2[j-1]){
+					dp[i][j]=dp[i-1][j-1];
+				}else{
+					dp[i][j]=1+std::min({dp[i-1][j], dp[i][j-1], dp[i-1][j-1]});
+				}
+			}
+		}
+		return dp[len1][len2];
+	};
+
 	CROW_ROUTE(app,"/api/quick-clean").methods("POST"_method)
-	([&cleaner, &auditLog](const crow::request& req){
+	([&cleaner, &auditLog, levenshteinDistance](const crow::request& req){
 		auto body=crow::json::load(req.body);
 		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
 		std::string csvData=body["csvData"].s();
@@ -1528,6 +1546,7 @@ int main(int argc, char* argv[]){
 
 		std::set<std::vector<std::string>> seen;
 		std::vector<std::vector<std::string>> result;
+		std::map<std::string, std::string> locationMapping;
 
 		for(size_t i=0;i<parsed.size();++i){
 			auto row=parsed[i];
