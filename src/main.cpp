@@ -1712,7 +1712,7 @@ int main(int argc, char* argv[]){
 				cell=normalized;
 
 				// Apply location mapping (fuzzy matching result)
-				if(j==0 && !cell.empty()){
+				if(j==textColumnIndex && !cell.empty()){
 					std::ofstream debugLog3("debug.log", std::ios::app);
 					if(locationMapping.count(cell)){
 						debugLog3<<"DEBUG: Mapping "<<cell<<" -> "<<locationMapping[cell]<<std::endl;
