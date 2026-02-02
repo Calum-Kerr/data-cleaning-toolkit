@@ -1705,8 +1705,9 @@ int main(int argc, char* argv[]){
 					debugLog3<<"DEBUG PASS3: Comparing "<<loc1<<" vs "<<loc2<<", distance="<<distance<<", maxLen="<<maxLen<<", similarity="<<similarity<<"%"<<std::endl;
 				}
 
-				// If similarity > 85%, consider them the same (typo/spelling mistake)
-				if(similarity>85){
+				// If similarity > 75%, consider them the same (typo/spelling mistake)
+				// 75% catches most typos: BROOKLYN vs BROOKYLN (75%), NEWYORK vs NEW YORK (87%)
+				if(similarity>75){
 					debugLog3<<"DEBUG PASS3: Fuzzy match found: "<<loc1<<" (count="<<locationCounts[loc1]<<") <-> "<<loc2<<" (count="<<locationCounts[loc2]<<"), similarity="<<similarity<<"%"<<std::endl;
 					fuzzyMatches.push_back(loc2);
 					// Use the more common one as canonical (compare against the canonical form)
