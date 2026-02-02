@@ -1686,8 +1686,8 @@ int main(int argc, char* argv[]){
 					cell="";
 				}
 
-				// Skip row only if the first column (location) is empty
-				if(j==0 && cell.empty()){
+				// Skip row only if the text column is empty
+				if(j==textColumnIndex && cell.empty()){
 					skipRow=true;
 					break;
 				}
