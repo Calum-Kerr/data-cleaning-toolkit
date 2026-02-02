@@ -951,6 +951,64 @@ extern "C"{
     }
 
     EMSCRIPTEN_KEEPALIVE
+    const char* extractNTokensString(const char* csvData, int numTokens){
+        std::string data(csvData);
+        std::stringstream ss(data);
+        std::string line;
+        std::stringstream output;
+        bool isHeader=true;
+        std::string lineEnding="\n";
+        if(data.find("\r\n")!=std::string::npos){lineEnding="\r\n";}
+
+        while(std::getline(ss,line)){
+            if(!line.empty()&&line.back()=='\r'){line.pop_back();}
+            std::vector<std::string> row=parseCSVLine(line);
+            if(!row.empty()){
+                if(isHeader){
+                    for(size_t i=0;i<row.size();++i){
+                        if(i>0)output<<",";
+                        output<<row[i];
+                    }
+                    output<<lineEnding;
+                    isHeader=false;
+                }else{
+                    for(size_t i=0;i<row.size();++i){
+                        std::string cell=row[i];
+                        std::stringstream tokens;
+                        int count=0;
+                        std::string token;
+                        for(size_t j=0;j<cell.length();++j){
+                            if(cell[j]==' '){
+                                if(!token.empty()){
+                                    if(count>0)tokens<<" ";
+                                    tokens<<token;
+                                    count++;
+                                    if(count>=numTokens)break;
+                                    token="";
+                                }
+                            }else{
+                                token+=cell[j];
+                            }
+                        }
+                        if(!token.empty()&&count<numTokens){
+                            if(count>0)tokens<<" ";
+                            tokens<<token;
+                        }
+                        if(i>0)output<<",";
+                        output<<tokens.str();
+                    }
+                    output<<lineEnding;
+                }
+            }
+        }
+
+        std::string outputStr=output.str();
+        char* cstr=new char[outputStr.length()+1];
+        std::strcpy(cstr,outputStr.c_str());
+        return cstr;
+    }
+
+    EMSCRIPTEN_KEEPALIVE
     const char* fuzzyMatchAndMergeString(const char* csvData, double threshold){
         std::string data(csvData);
         auto parsed=parseCSVInternal(data);

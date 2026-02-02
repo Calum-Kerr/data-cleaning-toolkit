@@ -1420,6 +1420,53 @@ int main(int argc, char* argv[]){
 		return crow::response(resp);
 	});
 
+	CROW_ROUTE(app,"/api/extract-n-tokens").methods("POST"_method)
+	([&cleaner, &auditLog](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+		std::string csvData=body["csvData"].s();
+		int numTokens=body["numTokens"].i();
+		if(numTokens<1)numTokens=1;
+		auto parsed=cleaner.parseCSV(csvData);
+		std::stringstream output;
+		for(size_t i=0;i<parsed.size();++i){
+			for(size_t j=0;j<parsed[i].size();++j){
+				std::string cell=parsed[i][j];
+				std::stringstream tokens;
+				int count=0;
+				std::string token;
+				for(size_t k=0;k<cell.length();++k){
+					if(cell[k]==' '){
+						if(!token.empty()){
+							if(count>0)tokens<<" ";
+							tokens<<token;
+							count++;
+							if(count>=numTokens)break;
+							token="";
+						}
+					}else{
+						token+=cell[k];
+					}
+				}
+				if(!token.empty()&&count<numTokens){
+					if(count>0)tokens<<" ";
+					tokens<<token;
+				}
+				if(j>0)output<<",";
+				output<<tokens.str();
+			}
+			output<<"\n";
+		}
+		auditLog.addEntry("Extract N Tokens", 0, (int)parsed.size(), numTokens);
+		crow::json::wvalue resp;
+		resp["csvData"]=output.str();
+		resp["originalRows"]=(int)parsed.size();
+		resp["numTokens"]=numTokens;
+		resp["message"]="n tokens extracted successfully";
+		resp["mode"]="api";
+		return crow::response(resp);
+	});
+
 	CROW_ROUTE(app,"/api/fuzzy-match").methods("POST"_method)
 	([&cleaner, &auditLog](const crow::request& req){
 		auto body=crow::json::load(req.body);
