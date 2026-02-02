@@ -1603,17 +1603,17 @@ int main(int argc, char* argv[]){
 				// Fuzzy matching: find similar location names and merge them
 				if(j==0 && !cell.empty()){
 					std::string bestMatch=cell;
-					int bestDistance=0;
+					int bestDistance=INT_MAX;
 					for(auto& mapping : locationMapping){
 						int dist=levenshteinDistance(cell, mapping.first);
 						int maxLen=std::max(cell.length(), mapping.first.length());
 						int similarity=100-(dist*100/maxLen);
-						if(similarity>=85 && dist<bestDistance+1){
+						if(similarity>=60 && dist<bestDistance){
 							bestMatch=mapping.second;
 							bestDistance=dist;
 						}
 					}
-					if(bestDistance>0){
+					if(bestDistance<INT_MAX){
 						cell=bestMatch;
 					}else if(locationMapping.find(cell)==locationMapping.end()){
 						locationMapping[cell]=cell;
