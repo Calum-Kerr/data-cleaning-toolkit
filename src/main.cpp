@@ -1672,6 +1672,51 @@ int main(int argc, char* argv[]){
 			processed.insert(loc1);
 		}
 
+		// PASS 3: Fuzzy matching for spelling mistakes (85%+ similarity)
+		// This catches typos like "BROOKYLN" -> "BROOKLYN"
+		std::set<std::string> fuzzyProcessed;
+		for(auto& loc1 : locations){
+			if(fuzzyProcessed.count(loc1)) continue;
+
+			// Skip if already merged in Pass 1
+			if(locationMapping[loc1]!=loc1) continue;
+
+			std::string canonical=loc1;
+			int maxCount=locationCounts[loc1];
+			std::vector<std::string> fuzzyMatches;
+			fuzzyMatches.push_back(loc1);
+
+			// Find all fuzzy matches (85%+ similarity)
+			for(auto& loc2 : locations){
+				if(loc1==loc2 || fuzzyProcessed.count(loc2)) continue;
+
+				// Skip if already merged in Pass 1
+				if(locationMapping[loc2]!=loc2) continue;
+
+				int distance=levenshteinDistance(loc1, loc2);
+				int maxLen=std::max(loc1.length(), loc2.length());
+				int similarity=(maxLen>0) ? (100*(maxLen-distance)/maxLen) : 0;
+
+				// If similarity > 85%, consider them the same (typo/spelling mistake)
+				if(similarity>85){
+					fuzzyMatches.push_back(loc2);
+					// Use the more common one as canonical
+					if(locationCounts[loc2]>maxCount){
+						canonical=loc2;
+						maxCount=locationCounts[loc2];
+					}
+					fuzzyProcessed.insert(loc2);
+				}
+			}
+
+			// Map all fuzzy matches to the canonical one
+			for(auto& loc : fuzzyMatches){
+				locationMapping[loc]=canonical;
+			}
+
+			fuzzyProcessed.insert(loc1);
+		}
+
 		// Debug: log mapping size
 		std::ofstream debugLog2("debug.log", std::ios::app);
 		debugLog2<<"DEBUG: locationMapping size = "<<locationMapping.size()<<std::endl;
