@@ -1617,19 +1617,6 @@ int main(int argc, char* argv[]){
 					cell="";
 				}
 
-				// Extract first token (word) from cell to merge similar location names
-				// But only if there are 3+ words (keep 1-2 word locations intact)
-				int wordCount=0;
-				for(size_t k=0;k<cell.length();++k){
-					if(cell[k]==' '){wordCount++;}
-				}
-				if(wordCount>=2){
-					size_t spacePos=cell.find(' ');
-					if(spacePos!=std::string::npos){
-						cell=cell.substr(0,spacePos);
-					}
-				}
-
 				if(caseType=="upper" || caseType=="uppercase"){
 					std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
 				}else if(caseType=="lower" || caseType=="lowercase"){
@@ -1652,24 +1639,9 @@ int main(int argc, char* argv[]){
 				while(!normalized.empty()&&normalized.back()==' '){normalized.pop_back();}
 				cell=normalized;
 
-				// Fuzzy matching: find similar location names and merge them
-				if(j==0 && !cell.empty()){
-					std::string bestMatch=cell;
-					int bestDistance=INT_MAX;
-					for(auto& mapping : locationMapping){
-						int dist=levenshteinDistance(cell, mapping.first);
-						int maxLen=std::max(cell.length(), mapping.first.length());
-						int similarity=100-(dist*100/maxLen);
-						if(similarity>=60 && dist<bestDistance){
-							bestMatch=mapping.second;
-							bestDistance=dist;
-						}
-					}
-					if(bestDistance<INT_MAX){
-						cell=bestMatch;
-					}else if(locationMapping.find(cell)==locationMapping.end()){
-						locationMapping[cell]=cell;
-					}
+				// Apply location mapping (fuzzy matching result)
+				if(j==0 && !cell.empty() && locationMapping.count(cell)){
+					cell=locationMapping[cell];
 				}
 			}
 
