@@ -422,7 +422,7 @@
                     current=data.csvData;
                     console.log('API returned cleaned data');
                 }else{
-                    console.log('Calling WASM quickCleanAllStreaming');
+                    console.log('Calling WASM quickCleanAllStreaming with caseType: '+caseType);
                     current=wasmModule.ccall('quickCleanAllStreaming','string',['string','string'],[current,caseType]);
                 }
                 uploadCSV=current;
