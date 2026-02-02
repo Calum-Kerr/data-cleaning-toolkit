@@ -1700,11 +1700,6 @@ int main(int argc, char* argv[]){
 				int maxLen=std::max(loc1.length(), loc2.length());
 				int similarity=(maxLen>0) ? (100*(maxLen-distance)/maxLen) : 0;
 
-				// Debug: log all comparisons for BROOKYLN
-				if(loc1=="BROOKYLN" || loc2=="BROOKYLN"){
-					debugLog3<<"DEBUG PASS3: Comparing "<<loc1<<" vs "<<loc2<<", distance="<<distance<<", maxLen="<<maxLen<<", similarity="<<similarity<<"%"<<std::endl;
-				}
-
 				// If similarity > 75%, consider them the same (typo/spelling mistake)
 				// 75% catches most typos: BROOKLYN vs BROOKYLN (75%), NEWYORK vs NEW YORK (87%)
 				if(similarity>75){
