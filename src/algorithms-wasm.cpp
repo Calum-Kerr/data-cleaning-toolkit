@@ -215,6 +215,13 @@ int levenshteinDistance(const std::string& s1,const std::string& s2){
     return dp[m][n];
 }
 
+double calculateSimilarity(const std::string& s1, const std::string& s2){
+    int distance=levenshteinDistance(s1,s2);
+    int maxLen=std::max(s1.length(),s2.length());
+    if(maxLen==0)return 1.0;
+    return 1.0-(double)distance/maxLen;
+}
+
 std::vector<std::string> parseCSVLine(const std::string& line){
     std::vector<std::string> row;
     std::string cell;
