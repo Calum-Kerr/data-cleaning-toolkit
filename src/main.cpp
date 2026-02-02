@@ -1681,12 +1681,14 @@ int main(int argc, char* argv[]){
 
 				// Apply location mapping (fuzzy matching result)
 				if(j==0 && !cell.empty()){
+					std::ofstream debugLog3("debug.log", std::ios::app);
 					if(locationMapping.count(cell)){
-						std::cerr<<"DEBUG: Mapping "<<cell<<" -> "<<locationMapping[cell]<<std::endl;
+						debugLog3<<"DEBUG: Mapping "<<cell<<" -> "<<locationMapping[cell]<<std::endl;
 						cell=locationMapping[cell];
 					}else{
-						std::cerr<<"DEBUG: No mapping found for '"<<cell<<"'"<<std::endl;
+						debugLog3<<"DEBUG: No mapping found for '"<<cell<<"'"<<std::endl;
 					}
+					debugLog3.close();
 				}
 
 				// Then apply the requested case conversion
