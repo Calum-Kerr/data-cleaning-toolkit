@@ -1580,7 +1580,9 @@ int main(int argc, char* argv[]){
 				}
 			}
 		}
-		std::cerr<<"DEBUG: locationCounts size = "<<locationCounts.size()<<std::endl;
+		std::ofstream debugLog("debug.log", std::ios::app);
+		debugLog<<"DEBUG: locationCounts size = "<<locationCounts.size()<<std::endl;
+		debugLog.close();
 
 		// PASS 2: Build mapping by grouping locations with the same first word
 		std::map<std::string, std::string> locationMapping;
