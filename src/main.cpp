@@ -1599,6 +1599,26 @@ int main(int argc, char* argv[]){
 				}
 				while(!normalized.empty()&&normalized.back()==' '){normalized.pop_back();}
 				cell=normalized;
+
+				// Fuzzy matching: find similar location names and merge them
+				if(j==0 && !cell.empty()){
+					std::string bestMatch=cell;
+					int bestDistance=0;
+					for(auto& mapping : locationMapping){
+						int dist=levenshteinDistance(cell, mapping.first);
+						int maxLen=std::max(cell.length(), mapping.first.length());
+						int similarity=100-(dist*100/maxLen);
+						if(similarity>=85 && dist<bestDistance+1){
+							bestMatch=mapping.second;
+							bestDistance=dist;
+						}
+					}
+					if(bestDistance>0){
+						cell=bestMatch;
+					}else if(locationMapping.find(cell)==locationMapping.end()){
+						locationMapping[cell]=cell;
+					}
+				}
 			}
 
 			if(!skipRow){
