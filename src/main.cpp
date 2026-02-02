@@ -1546,6 +1546,12 @@ int main(int argc, char* argv[]){
 					cell="";
 				}
 
+				// Extract first token (word) from cell to merge similar location names
+				size_t spacePos=cell.find(' ');
+				if(spacePos!=std::string::npos){
+					cell=cell.substr(0,spacePos);
+				}
+
 				if(caseType=="upper" || caseType=="uppercase"){
 					std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
 				}else if(caseType=="lower" || caseType=="lowercase"){
