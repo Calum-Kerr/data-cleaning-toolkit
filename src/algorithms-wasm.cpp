@@ -215,6 +215,25 @@ int levenshteinDistance(const std::string& s1,const std::string& s2){
     return dp[m][n];
 }
 
+std::vector<std::string> parseCSVLine(const std::string& line){
+    std::vector<std::string> row;
+    std::string cell;
+    bool inQuotes=false;
+    for(size_t i=0;i<line.length();++i){
+        char c=line[i];
+        if(c=='"'){
+            inQuotes=!inQuotes;
+        }else if(c==',' && !inQuotes){
+            row.push_back(cell);
+            cell="";
+        }else{
+            cell+=c;
+        }
+    }
+    row.push_back(cell);
+    return row;
+}
+
 std::vector<std::vector<std::string>> parseCSVInternal(const std::string& data){
     std::vector<std::vector<std::string>> result;
     result.reserve(1000);
@@ -222,14 +241,7 @@ std::vector<std::vector<std::string>> parseCSVInternal(const std::string& data){
     std::string line;
     while(std::getline(ss,line)){
         if(!line.empty()&&line.back()=='\r'){line.pop_back();}
-        std::vector<std::string> row;
-        row.reserve(50);
-        std::stringstream lineStream(line);
-        std::string cell;
-        while(std::getline(lineStream,cell,',')){
-            if(!cell.empty()&&cell.back()=='\r'){cell.pop_back();}
-            row.push_back(cell);
-        }
+        std::vector<std::string> row=parseCSVLine(line);
         if(!row.empty()){result.push_back(row);}
     }
     return result;
@@ -904,14 +916,7 @@ extern "C"{
         while(std::getline(ss,line)){
             if(!line.empty()&&line.back()=='\r'){line.pop_back();}
 
-            std::vector<std::string> row;
-            row.reserve(50);
-            std::stringstream lineStream(line);
-            std::string cell;
-            while(std::getline(lineStream,cell,',')){
-                if(!cell.empty()&&cell.back()=='\r'){cell.pop_back();}
-                row.push_back(cell);
-            }
+            std::vector<std::string> row=parseCSVLine(line);
 
             if(!row.empty()){
                 if(isHeader){
