@@ -936,9 +936,9 @@ extern "C"{
                             cell="";
                         }
 
-                        if(caseStr=="uppercase"){
+                        if(caseStr=="upper" || caseStr=="uppercase"){
                             std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
-                        }else if(caseStr=="lowercase"){
+                        }else if(caseStr=="lower" || caseStr=="lowercase"){
                             std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
                         }
                     }
