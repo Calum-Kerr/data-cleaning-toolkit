@@ -1544,7 +1544,7 @@ int main(int argc, char* argv[]){
 		auto parsed=cleaner.parseCSV(csvData);
 		int originalRows=(int)parsed.size();
 
-		// PASS 1: Collect all unique locations and their counts
+		// PASS 1: Collect all unique locations and their counts (with normalization)
 		std::map<std::string, int> locationCounts;
 		for(size_t i=1;i<parsed.size();++i){
 			if(!parsed[i].empty()){
@@ -1558,6 +1558,24 @@ int main(int argc, char* argv[]){
 					location="";
 				}
 				if(!location.empty()){
+					// Convert to uppercase
+					std::transform(location.begin(),location.end(),location.begin(),::toupper);
+					// Normalize punctuation
+					std::string normalized;
+					for(size_t k=0;k<location.length();++k){
+						char c=location[k];
+						if(c==','||c==';'||c=='-'||c=='/'||c=='|'){
+							normalized+=' ';
+						}else if(c==' '||c=='\t'){
+							if(normalized.empty()||normalized.back()!=' '){
+								normalized+=' ';
+							}
+						}else{
+							normalized+=c;
+						}
+					}
+					while(!normalized.empty()&&normalized.back()==' '){normalized.pop_back();}
+					location=normalized;
 					locationCounts[location]++;
 				}
 			}
