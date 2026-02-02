@@ -1624,41 +1624,55 @@ int main(int argc, char* argv[]){
 		debugLog<<"DEBUG: locationCounts size = "<<locationCounts.size()<<std::endl;
 		debugLog.close();
 
-		// PASS 2: Build mapping by grouping locations with the same first word
+		// PASS 2: Build mapping using fuzzy matching with high threshold
 		std::map<std::string, std::string> locationMapping;
-		std::map<std::string, std::vector<std::pair<std::string, int>>> firstWordGroups;
-
-		// Group locations by first word
+		std::vector<std::string> locations;
 		for(auto& entry : locationCounts){
-			std::string location=entry.first;
-			std::string firstWord=location;
-
-			// Extract first word
-			size_t spacePos=location.find(' ');
-			if(spacePos!=std::string::npos){
-				firstWord=location.substr(0, spacePos);
-			}
-
-			firstWordGroups[firstWord].push_back({location, entry.second});
+			locations.push_back(entry.first);
 		}
 
-		// For each group, find the most common variant as canonical
-		for(auto& group : firstWordGroups){
-			std::string canonical=group.first;
-			int maxCount=0;
+		// For each location, find similar locations and merge them
+		std::set<std::string> processed;
+		for(auto& loc1 : locations){
+			if(processed.count(loc1)) continue;
 
-			// Find the most common variant in this group
-			for(auto& variant : group.second){
-				if(variant.second>maxCount){
-					canonical=variant.first;
-					maxCount=variant.second;
+			std::string canonical=loc1;
+			int maxCount=locationCounts[loc1];
+
+			// Find all similar locations (similarity > 75%)
+			for(auto& loc2 : locations){
+				if(loc1==loc2 || processed.count(loc2)) continue;
+
+				int distance=levenshteinDistance(loc1, loc2);
+				int maxLen=std::max(loc1.length(), loc2.length());
+				int similarity=(maxLen>0) ? (100*(maxLen-distance)/maxLen) : 0;
+
+				// If similarity > 75%, consider them the same
+				if(similarity>75){
+					// Use the more common one as canonical
+					if(locationCounts[loc2]>maxCount){
+						canonical=loc2;
+						maxCount=locationCounts[loc2];
+					}
+					processed.insert(loc2);
 				}
 			}
 
-			// Map all variants to the canonical one
-			for(auto& variant : group.second){
-				locationMapping[variant.first]=canonical;
+			// Map all similar locations to the canonical one
+			for(auto& loc2 : locations){
+				if(processed.count(loc2) || loc2==canonical) continue;
+
+				int distance=levenshteinDistance(loc1, loc2);
+				int maxLen=std::max(loc1.length(), loc2.length());
+				int similarity=(maxLen>0) ? (100*(maxLen-distance)/maxLen) : 0;
+
+				if(similarity>75){
+					locationMapping[loc2]=canonical;
+				}
 			}
+
+			locationMapping[loc1]=canonical;
+			processed.insert(loc1);
 		}
 
 		// Debug: log mapping size
