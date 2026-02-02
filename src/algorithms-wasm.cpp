@@ -941,6 +941,22 @@ extern "C"{
                         }else if(caseStr=="lower" || caseStr=="lowercase"){
                             std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
                         }
+
+                        std::string normalized;
+                        for(size_t j=0;j<cell.length();++j){
+                            char c=cell[j];
+                            if(c==','||c==';'||c=='-'||c=='/'||c=='|'){
+                                normalized+=' ';
+                            }else if(c==' '||c=='\t'){
+                                if(normalized.empty()||normalized.back()!=' '){
+                                    normalized+=' ';
+                                }
+                            }else{
+                                normalized+=c;
+                            }
+                        }
+                        while(!normalized.empty()&&normalized.back()==' '){normalized.pop_back();}
+                        cell=normalized;
                     }
 
                     if(!skipRow){
