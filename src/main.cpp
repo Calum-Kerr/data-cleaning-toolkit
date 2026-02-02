@@ -1547,9 +1547,16 @@ int main(int argc, char* argv[]){
 				}
 
 				// Extract first token (word) from cell to merge similar location names
-				size_t spacePos=cell.find(' ');
-				if(spacePos!=std::string::npos){
-					cell=cell.substr(0,spacePos);
+				// But only if there are 3+ words (keep 1-2 word locations intact)
+				int wordCount=0;
+				for(size_t k=0;k<cell.length();++k){
+					if(cell[k]==' '){wordCount++;}
+				}
+				if(wordCount>=2){
+					size_t spacePos=cell.find(' ');
+					if(spacePos!=std::string::npos){
+						cell=cell.substr(0,spacePos);
+					}
 				}
 
 				if(caseType=="upper" || caseType=="uppercase"){
