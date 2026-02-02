@@ -1420,6 +1420,56 @@ int main(int argc, char* argv[]){
 		return crow::response(resp);
 	});
 
+	CROW_ROUTE(app,"/api/fuzzy-match").methods("POST"_method)
+	([&cleaner, &auditLog](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+		std::string csvData=body["csvData"].s();
+		double threshold=body["threshold"].d();
+		if(threshold<0.0)threshold=0.85;
+		auto parsed=cleaner.parseCSV(csvData);
+		std::map<std::string,std::vector<std::string>> groups;
+		std::vector<std::string> uniqueValues;
+
+		for(size_t i=1;i<parsed.size();++i){
+			if(!parsed[i].empty()){
+				std::string cellValue=parsed[i][0];
+				bool foundGroup=false;
+
+				for(const auto& uniqueVal:uniqueValues){
+					double similarity=calculateSimilarity(cellValue,uniqueVal);
+					if(similarity>=threshold){
+						groups[uniqueVal].push_back(cellValue);
+						foundGroup=true;
+						break;
+					}
+				}
+
+				if(!foundGroup){
+					uniqueValues.push_back(cellValue);
+					groups[cellValue].push_back(cellValue);
+				}
+			}
+		}
+
+		std::stringstream output;
+		output<<"original,merged\n";
+		for(const auto& pair:groups){
+			for(const auto& val:pair.second){
+				output<<val<<","<<pair.first<<"\n";
+			}
+		}
+
+		auditLog.addEntry("Fuzzy Match", 0, (int)parsed.size(), (int)groups.size());
+		crow::json::wvalue resp;
+		resp["csvData"]=output.str();
+		resp["originalGroups"]=(int)parsed.size()-1;
+		resp["mergedGroups"]=(int)groups.size();
+		resp["message"]="fuzzy matching completed";
+		resp["mode"]="api";
+		return crow::response(resp);
+	});
+
 	CROW_ROUTE(app,"/api/quick-clean").methods("POST"_method)
 	([&cleaner, &auditLog](const crow::request& req){
 		auto body=crow::json::load(req.body);
