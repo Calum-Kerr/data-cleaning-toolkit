@@ -408,12 +408,17 @@
             try{
                 updateProgress('Cleaning data...');
                 const fileSizeInMB=new Blob([current]).size/(1024*1024);
-                const useAPI=fileSizeInMB>2||!wasmReady;
+                console.log('File size: '+fileSizeInMB+'MB, wasmReady: '+wasmReady);
+                const useAPI=fileSizeInMB>1.5;
+                console.log('Using API: '+useAPI);
                 if(useAPI){
+                    console.log('Calling API endpoint /api/quick-clean');
                     const res=await fetch(API_URL+'/api/quick-clean',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current,caseType:caseType})});
                     const data=await res.json();
                     current=data.csvData;
+                    console.log('API returned cleaned data');
                 }else{
+                    console.log('Calling WASM quickCleanAllStreaming');
                     current=wasmModule.ccall('quickCleanAllStreaming','string',['string','string'],[current,caseType]);
                 }
                 uploadCSV=current;
