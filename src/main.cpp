@@ -1536,7 +1536,7 @@ int main(int argc, char* argv[]){
 	};
 
 	CROW_ROUTE(app,"/api/quick-clean").methods("POST"_method)
-	([&cleaner, &auditLog, levenshteinDistance](const crow::request& req){
+	([&cleaner, &auditLog, &levenshteinDistance](const crow::request& req){
 		auto body=crow::json::load(req.body);
 		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
 		std::string csvData=body["csvData"].s();
