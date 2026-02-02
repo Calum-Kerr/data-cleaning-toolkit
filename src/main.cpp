@@ -1544,11 +1544,43 @@ int main(int argc, char* argv[]){
 		auto parsed=cleaner.parseCSV(csvData);
 		int originalRows=(int)parsed.size();
 
+		// Find the first text column (skip numeric columns)
+		int textColumnIndex=0;
+		if(!parsed.empty() && !parsed[0].empty()){
+			for(size_t j=0;j<parsed[0].size();++j){
+				bool isNumeric=true;
+				// Check if this column contains mostly numbers
+				int numericCount=0;
+				for(size_t i=1;i<std::min((size_t)100, parsed.size());++i){
+					if(j<parsed[i].size()){
+						std::string cell=parsed[i][j];
+						// Trim whitespace
+						size_t start=cell.find_first_not_of(" \t\r\n");
+						size_t end=cell.find_last_not_of(" \t\r\n");
+						if(start!=std::string::npos){cell=cell.substr(start,end-start+1);}
+						// Check if it's a number
+						if(!cell.empty()){
+							char* endptr;
+							strtod(cell.c_str(), &endptr);
+							if(*endptr=='\0'){
+								numericCount++;
+							}
+						}
+					}
+				}
+				// If less than 80% numeric, treat as text column
+				if(numericCount<80){
+					textColumnIndex=j;
+					break;
+				}
+			}
+		}
+
 		// PASS 1: Collect all unique locations and their counts (with normalization)
 		std::map<std::string, int> locationCounts;
 		for(size_t i=1;i<parsed.size();++i){
-			if(!parsed[i].empty()){
-				std::string location=parsed[i][0];
+			if(!parsed[i].empty() && textColumnIndex<(int)parsed[i].size()){
+				std::string location=parsed[i][textColumnIndex];
 				// Trim whitespace
 				size_t start=location.find_first_not_of(" \t\r\n");
 				size_t end=location.find_last_not_of(" \t\r\n");
