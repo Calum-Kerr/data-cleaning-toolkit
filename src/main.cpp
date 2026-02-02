@@ -1638,11 +1638,8 @@ int main(int argc, char* argv[]){
 					cell="";
 				}
 
-				if(caseType=="upper" || caseType=="uppercase"){
-					std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
-				}else if(caseType=="lower" || caseType=="lowercase"){
-					std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
-				}
+				// First convert to uppercase for normalization and mapping lookup
+				std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
 
 				std::string normalized;
 				for(size_t k=0;k<cell.length();++k){
@@ -1663,6 +1660,11 @@ int main(int argc, char* argv[]){
 				// Apply location mapping (fuzzy matching result)
 				if(j==0 && !cell.empty() && locationMapping.count(cell)){
 					cell=locationMapping[cell];
+				}
+
+				// Then apply the requested case conversion
+				if(caseType=="lower" || caseType=="lowercase"){
+					std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
 				}
 			}
 
