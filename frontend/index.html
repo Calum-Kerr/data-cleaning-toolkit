@@ -303,6 +303,7 @@
         function showCleaningComplete(){
             document.getElementById('progressSection').style.display='none';
             document.getElementById('completeSection').style.display='block';
+            document.getElementById('cleanedDataDisplay').textContent=cleanedCSV;
             triggerDownload();
         }
         function triggerDownload(){
