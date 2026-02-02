@@ -423,6 +423,8 @@
                 }
                 uploadCSV=current;
                 cleanedCSV=current;
+                console.log('cleanedCSV set, length: '+cleanedCSV.length);
+                console.log('cleanedCSV first 100 chars: '+cleanedCSV.substring(0,100));
                 showCleaningComplete();
             }catch(err){
                 console.error('Error during quick clean:',err);
