@@ -12,7 +12,7 @@ emsdk/upstream/emscripten/emcc src/algorithms-wasm.cpp\
     -D_FORTIFY_SOURCE=2 \
     -Wformat -Wformat-security \
     -fPIE \
-    -s INITIAL_MEMORY=268435456 \
+    -s INITIAL_MEMORY=536870912 \
+    -s MAXIMUM_MEMORY=2147483648 \
     -s ALLOW_MEMORY_GROWTH=1 \
-    -s MAXIMUM_MEMORY=2GB \
     -s ABORTING_MALLOC=1
