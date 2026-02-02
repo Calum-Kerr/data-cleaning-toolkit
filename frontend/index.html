@@ -413,7 +413,7 @@
                 updateProgress('Cleaning data...');
                 const fileSizeInMB=new Blob([current]).size/(1024*1024);
                 console.log('File size: '+fileSizeInMB+'MB, wasmReady: '+wasmReady);
-                const useAPI=fileSizeInMB>1.5;
+                const useAPI=fileSizeInMB>0.1;
                 console.log('Using API: '+useAPI);
                 if(useAPI){
                     console.log('Calling API endpoint /api/quick-clean');
