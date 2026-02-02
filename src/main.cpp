@@ -1399,6 +1399,22 @@ int main(int argc, char* argv[]){
 				}else if(caseType=="lower" || caseType=="lowercase"){
 					std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
 				}
+
+				std::string normalized;
+				for(size_t k=0;k<cell.length();++k){
+					char c=cell[k];
+					if(c==','||c==';'||c=='-'||c=='/'||c=='|'){
+						normalized+=' ';
+					}else if(c==' '||c=='\t'){
+						if(normalized.empty()||normalized.back()!=' '){
+							normalized+=' ';
+						}
+					}else{
+						normalized+=c;
+					}
+				}
+				while(!normalized.empty()&&normalized.back()==' '){normalized.pop_back();}
+				cell=normalized;
 			}
 
 			if(!skipRow){
