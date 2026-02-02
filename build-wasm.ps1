@@ -5,8 +5,8 @@
 emcc src/algorithms-wasm.cpp `
     -o frontend/algorithms.js `
     -s WASM=1 `
-    -s INITIAL_MEMORY=536870912 `
-    -s MAXIMUM_MEMORY=2147483648 `
+    -s INITIAL_MEMORY=2147483648 `
+    -s MAXIMUM_MEMORY=4294967296 `
     -s ALLOW_MEMORY_GROWTH=1 `
     -s EXPORTED_FUNCTIONS='["_parseCSV","_detectMissing","_detectDuplicates","_cleanData","_cleanDataString","_detectWhitespace","_trimWhitespaceString","_toUpperCaseString","_toLowerCaseString","_detectNullValues","_standardiseNullValueString","_detectOutliers","_removeOutliersString","_detectInconsistentValues","_standardiseValuesString","_detectDataTypes","_standardiseDateColumnString","_standardiseNumberColumnString","_detectFileEncoding","_detectPatterns","_autoDetectAll","_measurePerformance","_extractFirstTokenString","_fuzzyMatchAndMergeString","_extractNTokensString"]' `
     -s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' `
