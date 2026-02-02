@@ -975,7 +975,7 @@ extern "C"{
         output<<"original,merged\n";
         for(const auto& pair:groups){
             for(const auto& val:pair.second){
-                output<<val<<\",\"<<pair.first<<\"\\n\";
+                output<<val<<","<<pair.first<<"\n";
             }
         }
 
