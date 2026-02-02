@@ -1889,6 +1889,7 @@ var _removeEmptyRowsString = Module['_removeEmptyRowsString'] = makeInvalidEarly
 var _removeAllDuplicatesString = Module['_removeAllDuplicatesString'] = makeInvalidEarlyAccess('_removeAllDuplicatesString');
 var _removeAllDuplicatesStringStreaming = Module['_removeAllDuplicatesStringStreaming'] = makeInvalidEarlyAccess('_removeAllDuplicatesStringStreaming');
 var _extractFirstTokenString = Module['_extractFirstTokenString'] = makeInvalidEarlyAccess('_extractFirstTokenString');
+var _extractNTokensString = Module['_extractNTokensString'] = makeInvalidEarlyAccess('_extractNTokensString');
 var _fuzzyMatchAndMergeString = Module['_fuzzyMatchAndMergeString'] = makeInvalidEarlyAccess('_fuzzyMatchAndMergeString');
 var _quickCleanAllStreaming = Module['_quickCleanAllStreaming'] = makeInvalidEarlyAccess('_quickCleanAllStreaming');
 var _fflush = makeInvalidEarlyAccess('_fflush');
@@ -1961,6 +1962,8 @@ function assignWasmExports(wasmExports) {
   _removeAllDuplicatesStringStreaming = Module['_removeAllDuplicatesStringStreaming'] = createExportWrapper('removeAllDuplicatesStringStreaming', 1);
   assert(typeof wasmExports['extractFirstTokenString'] != 'undefined', 'missing Wasm export: extractFirstTokenString');
   _extractFirstTokenString = Module['_extractFirstTokenString'] = createExportWrapper('extractFirstTokenString', 1);
+  assert(typeof wasmExports['extractNTokensString'] != 'undefined', 'missing Wasm export: extractNTokensString');
+  _extractNTokensString = Module['_extractNTokensString'] = createExportWrapper('extractNTokensString', 2);
   assert(typeof wasmExports['fuzzyMatchAndMergeString'] != 'undefined', 'missing Wasm export: fuzzyMatchAndMergeString');
   _fuzzyMatchAndMergeString = Module['_fuzzyMatchAndMergeString'] = createExportWrapper('fuzzyMatchAndMergeString', 2);
   assert(typeof wasmExports['quickCleanAllStreaming'] != 'undefined', 'missing Wasm export: quickCleanAllStreaming');
