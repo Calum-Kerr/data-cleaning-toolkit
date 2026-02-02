@@ -1625,43 +1625,51 @@ int main(int argc, char* argv[]){
 		debugLog.close();
 
 		// PASS 2: Build mapping using substring matching
-		// Strategy: group locations by their first word, then merge within groups
+		// Strategy: if one location is a substring of another, merge them
 		std::map<std::string, std::string> locationMapping;
 		std::vector<std::string> locations;
 		for(auto& entry : locationCounts){
 			locations.push_back(entry.first);
 		}
 
-		// Group locations by first word
-		std::map<std::string, std::vector<std::string>> firstWordGroups;
-		for(auto& loc : locations){
-			std::string firstWord=loc;
-			size_t spacePos=loc.find(' ');
-			if(spacePos!=std::string::npos){
-				firstWord=loc.substr(0, spacePos);
-			}
-			firstWordGroups[firstWord].push_back(loc);
-		}
-
-		// For each group, find the most common location as canonical
+		// For each location, find similar locations and merge them
 		std::set<std::string> processed;
-		for(auto& group : firstWordGroups){
-			std::string canonical="";
-			int maxCount=0;
+		for(auto& loc1 : locations){
+			if(processed.count(loc1)) continue;
 
-			// Find the most common location in this group
-			for(auto& loc : group.second){
-				if(locationCounts[loc]>maxCount){
-					canonical=loc;
-					maxCount=locationCounts[loc];
+			std::string canonical=loc1;
+			int maxCount=locationCounts[loc1];
+			std::vector<std::string> similar;
+			similar.push_back(loc1);
+
+			// Find all similar locations
+			for(auto& loc2 : locations){
+				if(loc1==loc2 || processed.count(loc2)) continue;
+
+				bool isSimilar=false;
+
+				// Check if one is a substring of the other
+				if(loc1.find(loc2)!=std::string::npos || loc2.find(loc1)!=std::string::npos){
+					isSimilar=true;
+				}
+
+				if(isSimilar){
+					similar.push_back(loc2);
+					// Use the more common one as canonical
+					if(locationCounts[loc2]>maxCount){
+						canonical=loc2;
+						maxCount=locationCounts[loc2];
+					}
+					processed.insert(loc2);
 				}
 			}
 
-			// Map all locations in this group to the canonical one
-			for(auto& loc : group.second){
+			// Map all similar locations to the canonical one
+			for(auto& loc : similar){
 				locationMapping[loc]=canonical;
-				processed.insert(loc);
 			}
+
+			processed.insert(loc1);
 		}
 
 		// Debug: log mapping size
