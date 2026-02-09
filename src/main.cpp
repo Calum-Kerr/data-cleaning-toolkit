@@ -2533,6 +2533,71 @@ int main(int argc, char* argv[]){
 		result["message"]="fairness analysis completed";return crow::response(result);
 	});
 
+	CROW_ROUTE(app,"/api/generate-report").methods("POST"_method)
+	([&cleaner, &auditLog](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+		std::string originalCSV=body["originalCSV"].s();
+		std::string cleanedCSV=body["cleanedCSV"].s();
+		auto startTime=std::chrono::high_resolution_clock::now();
+		auto originalParsed=cleaner.parseCSV(originalCSV);
+		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
+		auto missingMatrix=cleaner.detectMissingValues(originalParsed);
+		auto dupVector=cleaner.detectDuplicates(originalParsed);
+		auto endTime=std::chrono::high_resolution_clock::now();
+		auto duration=std::chrono::duration_cast<std::chrono::microseconds>(endTime-startTime);
+		double executionTimeMs=duration.count()/1000.0;
+		int originalRows=(int)originalParsed.size();
+		int cleanedRows=(int)cleanedParsed.size();
+		int cols=originalParsed.empty()?0:(int)originalParsed[0].size();
+		int totalCells=originalRows*cols;
+		double cellsPerSecond=executionTimeMs>0?(totalCells*1000.0/executionTimeMs):0;
+		int missingCount=0;for(const auto& row:missingMatrix){for(bool b:row){if(b)missingCount++;}}
+		int dupCount=0;for(bool b:dupVector){if(b)dupCount++;}
+		int rowsRemoved=originalRows-cleanedRows;
+		int cellsModified=0;
+		if(originalParsed.size()==cleanedParsed.size()){
+			for(size_t i=0;i<originalParsed.size();i++){
+				for(size_t j=0;j<originalParsed[i].size()&&j<cleanedParsed[i].size();j++){
+					if(originalParsed[i][j]!=cleanedParsed[i][j])cellsModified++;
+				}
+			}
+		}
+		crow::json::wvalue result;
+		result["report"]=crow::json::wvalue::object();
+		result["report"]["timestamp"]=std::to_string(std::time(nullptr));
+		result["report"]["datasetMetrics"]=crow::json::wvalue::object();
+		result["report"]["datasetMetrics"]["originalRows"]=originalRows;
+		result["report"]["datasetMetrics"]["cleanedRows"]=cleanedRows;
+		result["report"]["datasetMetrics"]["rowsRemoved"]=rowsRemoved;
+		result["report"]["datasetMetrics"]["columns"]=cols;
+		result["report"]["datasetMetrics"]["totalCells"]=totalCells;
+		result["report"]["datasetMetrics"]["cellsModified"]=cellsModified;
+		result["report"]["performanceMetrics"]=crow::json::wvalue::object();
+		result["report"]["performanceMetrics"]["executionTimeMs"]=executionTimeMs;
+		result["report"]["performanceMetrics"]["cellsPerSecond"]=(int)cellsPerSecond;
+		result["report"]["dataQualityMetrics"]=crow::json::wvalue::object();
+		result["report"]["dataQualityMetrics"]["missingValues"]=missingCount;
+		result["report"]["dataQualityMetrics"]["duplicateRows"]=dupCount;
+		double completeness=totalCells>0?((totalCells-missingCount)*100.0/totalCells):100.0;
+		double uniqueness=originalRows>0?((originalRows-dupCount)*100.0/originalRows):100.0;
+		result["report"]["dataQualityMetrics"]["completeness"]=(int)completeness;
+		result["report"]["dataQualityMetrics"]["uniqueness"]=(int)uniqueness;
+		result["report"]["auditLog"]=crow::json::wvalue::list();
+		int opIdx=0;
+		for(const auto& entry:auditLog.entries){
+			result["report"]["auditLog"][opIdx]["operationName"]=entry.operationName;
+			result["report"]["auditLog"][opIdx]["cellsAffected"]=entry.cellsAffected;
+			result["report"]["auditLog"][opIdx]["rowsBefore"]=entry.rowsBefore;
+			result["report"]["auditLog"][opIdx]["rowsAfter"]=entry.rowsAfter;
+			result["report"]["auditLog"][opIdx]["timestamp"]=entry.timestamp;
+			opIdx++;
+		}
+		result["message"]="comprehensive report generated";
+		result["mode"]="api";
+		return crow::response(result);
+	});
+
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
 	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
 	try{
