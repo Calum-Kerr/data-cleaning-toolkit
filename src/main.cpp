@@ -2313,12 +2313,12 @@ int main(int argc, char* argv[]){
 		}catch(const std::exception& e){
 			crow::json::wvalue resp;
 			resp["message"]=std::string("error: ") + e.what();
-			resp["originalRows"]=originalRows;
+			std::cerr << "ERROR: " << e.what() << std::endl;
 			return crow::response(500, resp);
 		}catch(...){
 			crow::json::wvalue resp;
 			resp["message"]="unknown error during universal text cleaning";
-			resp["originalRows"]=originalRows;
+			std::cerr << "ERROR: unknown exception" << std::endl;
 			return crow::response(500, resp);
 		}
 	});
