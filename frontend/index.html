@@ -319,9 +319,9 @@
                 const res=await fetch(API_URL+'/api/get-audit-log');
                 const data=await res.json();
                 if(data.operations&&data.operations.length>0){
-                    let html='<strong>Operation History:</strong><br>';
+                    let html='<strong>Operation History</strong><br><br>';
                     for(const op of data.operations){
-                        html+='<div style="margin: 8px 0; padding: 8px; background: white; border-left: 3px solid #ff9800;">'+op.operationName+': '+op.cellsAffected+' cells affected ('+op.rowsBefore+' → '+op.rowsAfter+' rows)</div>';
+                        html+=op.operationName+': '+op.cellsAffected+' cells affected ('+op.rowsBefore+' → '+op.rowsAfter+' rows)<br>';
                     }
                     document.getElementById('auditLogSection').innerHTML=html;
                 }
