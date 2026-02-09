@@ -330,6 +330,9 @@ static std::map<std::string, std::string> createFuzzyMatchingMapping(
 	std::map<std::string, std::string> mapping;
 
 	for(const auto& pair : groups){
+		// Map canonical value to itself
+		mapping[pair.first]=pair.first;
+		// Map all matched values to canonical
 		for(const auto& val : pair.second){
 			mapping[val]=pair.first;
 		}
