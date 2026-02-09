@@ -142,34 +142,50 @@ static std::vector<int> detectTextColumns(const std::vector<std::vector<std::str
 
 // Build fuzzy matching groups for a single column
 // Returns a map: canonical value -> list of original values that map to it
+// OPTIMIZED: Only compares unique values, not all rows
 static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
 	const std::vector<std::string>& columnValues,
 	double threshold=0.75){
 
 	std::map<std::string, std::vector<std::string>> groups;
-	std::vector<std::string> uniqueValues;
 	std::map<std::string, int> valueCounts;
 
-	// Count occurrences of each value
+	// Step 1: Extract unique values and count occurrences
+	std::set<std::string> uniqueSet;
 	for(const auto& val : columnValues){
 		if(!val.empty()){
+			uniqueSet.insert(val);
 			valueCounts[val]++;
 		}
 	}
 
-	// Build groups using fuzzy matching
+	// Convert to vector for easier iteration
+	std::vector<std::string> uniqueValues(uniqueSet.begin(), uniqueSet.end());
+
+	// Step 2: Build groups using fuzzy matching on unique values only
 	std::set<std::string> processed;
-	for(const auto& val1 : columnValues){
-		if(val1.empty() || processed.count(val1)) continue;
+	for(size_t i=0; i<uniqueValues.size(); ++i){
+		const auto& val1=uniqueValues[i];
+		if(processed.count(val1)) continue;
 
 		std::string canonical=val1;
 		int maxCount=valueCounts[val1];
 		std::vector<std::string> matches;
 		matches.push_back(val1);
 
-		// Find all similar values
-		for(const auto& val2 : columnValues){
-			if(val1==val2 || val2.empty() || processed.count(val2)) continue;
+		// Find all similar values - only compare with unprocessed values
+		for(size_t j=i+1; j<uniqueValues.size(); ++j){
+			const auto& val2=uniqueValues[j];
+			if(processed.count(val2)) continue;
+
+			// Length-based filtering: skip if lengths differ by more than 50%
+			int len1=val1.length();
+			int len2=val2.length();
+			int maxLen=std::max(len1, len2);
+			int minLen=std::min(len1, len2);
+			if(minLen > 0 && (maxLen - minLen) > (maxLen * 0.5)){
+				continue; // Skip very different lengths
+			}
 
 			double similarity=calculateSimilarity(val1, val2);
 			if(similarity >= threshold){
