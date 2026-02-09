@@ -71,6 +71,7 @@ static std::string normalizeWhitespace(const std::string& text){
 }
 
 // Normalize punctuation: standardize dashes, commas, periods, apostrophes
+// Also removes periods from abbreviations (e.g., "D.C." -> "DC")
 static std::string normalizePunctuation(const std::string& text){
 	std::string result;
 	for(size_t i=0; i<text.length(); ++i){
@@ -82,6 +83,11 @@ static std::string normalizePunctuation(const std::string& text){
 		// Convert various quotes to standard apostrophe
 		else if(c=='\u2018' || c=='\u2019' || c=='\u201C' || c=='\u201D'){
 			result+='\'';
+		}
+		// Remove periods (handles abbreviations like "D.C." -> "DC")
+		else if(c=='.'){
+			// Skip the period - don't add it to result
+			continue;
 		}
 		// Keep standard punctuation
 		else{
