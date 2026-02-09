@@ -2199,11 +2199,6 @@ int main(int argc, char* argv[]){
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
 	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
 	try{
-		// Increase payload size limit to 50MB for large CSV files
-		app.get_middleware<crow::CORSHandler>().global()
-			.methods("POST"_method, "GET"_method, "OPTIONS"_method)
-			.headers("Content-Type", "Accept");
-
 		app.port(port).concurrency((unsigned int)webConcurrency).run();
 	}catch(const std::exception& e){
 		std::cerr << "fatal: server failed to start: " << e.what() << std::endl;
