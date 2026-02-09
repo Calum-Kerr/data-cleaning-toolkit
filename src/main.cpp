@@ -383,7 +383,10 @@ static UniversalCleaningResult universalTextCleaning(
 		std::vector<std::string> columnValues;
 		for(size_t row=1; row<parsed.size(); ++row){
 			if(col < (int)parsed[row].size()){
-				columnValues.push_back(parsed[row][col]);
+				std::string val=parsed[row][col];
+				// Normalize case to uppercase for fuzzy matching
+				std::transform(val.begin(), val.end(), val.begin(), ::toupper);
+				columnValues.push_back(val);
 			}
 		}
 
@@ -439,10 +442,13 @@ static UniversalCleaningResult universalTextCleaning(
 				if(!cell.empty()){
 					cell=normalizePunctuation(cell);
 					cell=normalizeWhitespace(cell);
+					// Normalize case to uppercase for fuzzy matching lookup
+					std::string cellUpper=cell;
+					std::transform(cellUpper.begin(), cellUpper.end(), cellUpper.begin(), ::toupper);
 
 					// Apply fuzzy matching mapping if available
-					if(result.columnMappings[j].count(cell)){
-						cell=result.columnMappings[j][cell];
+					if(result.columnMappings[j].count(cellUpper)){
+						cell=result.columnMappings[j][cellUpper];
 					}
 				}
 			}
