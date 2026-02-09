@@ -305,6 +305,20 @@ static std::map<std::string, std::string> createFuzzyMatchingMapping(
 	auto groups=buildFuzzyMatchingGroups(columnValues, threshold);
 	std::map<std::string, std::string> mapping;
 
+	// First, ensure all unique values are in the mapping
+	std::set<std::string> allUnique;
+	for(const auto& val : columnValues){
+		if(!val.empty()){
+			allUnique.insert(val);
+		}
+	}
+
+	// Map all unique values to themselves by default
+	for(const auto& val : allUnique){
+		mapping[val]=val;
+	}
+
+	// Then, override with fuzzy matching groups
 	for(const auto& pair : groups){
 		// Map canonical value to itself
 		mapping[pair.first]=pair.first;
