@@ -332,21 +332,33 @@ static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
 			// Compare preprocessed values
 			double similarity=calculateSimilarity(prep1, prep2);
 			if(similarity >= threshold){
-				matches.push_back(val2);
-				// Use the more common value as canonical
-				if(valueCounts[val2] > maxCount){
-					canonical=val2;
-					maxCount=valueCounts[val2];
-				}
-				processed.insert(val2);
+				uf.unite(val1, val2);
+			}
+		}
+	}
+
+	// Step 3: Group values by their root in the union-find structure
+	std::map<std::string, std::vector<std::string>> rootGroups;
+	for(const auto& val : uniqueValues) {
+		std::string root = uf.find(val);
+		rootGroups[root].push_back(val);
+	}
+
+	// Step 4: Choose canonical value for each group (most common value)
+	for(auto& pair : rootGroups) {
+		std::vector<std::string>& group = pair.second;
+		std::string canonical = group[0];
+		int maxCount = valueCounts[canonical];
+
+		for(const auto& val : group) {
+			if(valueCounts[val] > maxCount) {
+				canonical = val;
+				maxCount = valueCounts[val];
 			}
 		}
 
-		// Map all matches to canonical
-		for(const auto& match : matches){
-			groups[canonical].push_back(match);
-		}
-		processed.insert(val1);
+		// Map all values in group to canonical
+		groups[canonical] = group;
 	}
 
 	return groups;
