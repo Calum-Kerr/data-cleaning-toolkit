@@ -192,7 +192,7 @@
                 const file=files[0];
                 if(file.name.endsWith('.csv')){
                     const reader=new FileReader();
-                    reader.onload=function(e){uploadCSV=e.target.result;document.getElementById('csvInput').value=uploadCSV;beginProfiling();};
+                    reader.onload=function(e){uploadCSV=e.target.result;beginProfiling();};
                     reader.readAsText(file);
                 }else{alert('Please upload a CSV file.');}
             }
