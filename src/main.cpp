@@ -2598,6 +2598,73 @@ int main(int argc, char* argv[]){
 		return crow::response(result);
 	});
 
+	CROW_ROUTE(app,"/api/evaluation-report").methods("POST"_method)
+	([&cleaner, &auditLog](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+		std::string originalCSV=body["originalCSV"].s();
+		std::string cleanedCSV=body["cleanedCSV"].s();
+		auto startTime=std::chrono::high_resolution_clock::now();
+		auto originalParsed=cleaner.parseCSV(originalCSV);
+		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
+		auto missingMatrix=cleaner.detectMissingValues(originalParsed);
+		auto dupVector=cleaner.detectDuplicates(originalParsed);
+		auto endTime=std::chrono::high_resolution_clock::now();
+		auto duration=std::chrono::duration_cast<std::chrono::microseconds>(endTime-startTime);
+		double executionTimeMs=duration.count()/1000.0;
+		int originalRows=(int)originalParsed.size();
+		int cleanedRows=(int)cleanedParsed.size();
+		int cols=originalParsed.empty()?0:(int)originalParsed[0].size();
+		int totalCells=originalRows*cols;
+		double cellsPerSecond=executionTimeMs>0?(totalCells*1000.0/executionTimeMs):0;
+		int missingCount=0;for(const auto& row:missingMatrix){for(bool b:row){if(b)missingCount++;}}
+		int dupCount=0;for(bool b:dupVector){if(b)dupCount++;}
+		int rowsRemoved=originalRows-cleanedRows;
+		int cellsModified=0;
+		if(originalParsed.size()==cleanedParsed.size()){
+			for(size_t i=0;i<originalParsed.size();i++){
+				for(size_t j=0;j<originalParsed[i].size()&&j<cleanedParsed[i].size();j++){
+					if(originalParsed[i][j]!=cleanedParsed[i][j])cellsModified++;
+				}
+			}
+		}
+		double completeness=totalCells>0?((totalCells-missingCount)*100.0/totalCells):100.0;
+		double uniqueness=originalRows>0?((originalRows-dupCount)*100.0/originalRows):100.0;
+		crow::json::wvalue result;
+		result["evaluation"]=crow::json::wvalue::object();
+		result["evaluation"]["timestamp"]=std::to_string(std::time(nullptr));
+		result["evaluation"]["summary"]=crow::json::wvalue::object();
+		result["evaluation"]["summary"]["originalRows"]=originalRows;
+		result["evaluation"]["summary"]["cleanedRows"]=cleanedRows;
+		result["evaluation"]["summary"]["rowsRemoved"]=rowsRemoved;
+		result["evaluation"]["summary"]["rowsRemovedPercent"]=(int)((rowsRemoved*100.0)/originalRows);
+		result["evaluation"]["summary"]["columns"]=cols;
+		result["evaluation"]["summary"]["totalCells"]=totalCells;
+		result["evaluation"]["summary"]["cellsModified"]=cellsModified;
+		result["evaluation"]["summary"]["cellsModifiedPercent"]=(int)((cellsModified*100.0)/totalCells);
+		result["evaluation"]["effectiveness"]=crow::json::wvalue::object();
+		result["evaluation"]["effectiveness"]["missingValuesDetected"]=missingCount;
+		result["evaluation"]["effectiveness"]["duplicateRowsDetected"]=dupCount;
+		result["evaluation"]["effectiveness"]["completenessImprovement"]=(int)completeness;
+		result["evaluation"]["effectiveness"]["uniquenessImprovement"]=(int)uniqueness;
+		result["evaluation"]["performance"]=crow::json::wvalue::object();
+		result["evaluation"]["performance"]["executionTimeMs"]=executionTimeMs;
+		result["evaluation"]["performance"]["cellsPerSecond"]=(int)cellsPerSecond;
+		result["evaluation"]["performance"]["rowsPerSecond"]=(int)(originalRows*1000.0/executionTimeMs);
+		result["evaluation"]["auditLog"]=crow::json::wvalue::list();
+		int opIdx=0;
+		for(const auto& entry:auditLog.entries){
+			result["evaluation"]["auditLog"][opIdx]["operationName"]=entry.operationName;
+			result["evaluation"]["auditLog"][opIdx]["cellsAffected"]=entry.cellsAffected;
+			result["evaluation"]["auditLog"][opIdx]["rowsBefore"]=entry.rowsBefore;
+			result["evaluation"]["auditLog"][opIdx]["rowsAfter"]=entry.rowsAfter;
+			opIdx++;
+		}
+		result["message"]="evaluation report generated";
+		result["mode"]="api";
+		return crow::response(result);
+	});
+
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
 	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
 	try{
