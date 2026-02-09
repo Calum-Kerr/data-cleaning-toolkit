@@ -2415,6 +2415,52 @@ int main(int argc, char* argv[]){
 		}
 	});
 
+	CROW_ROUTE(app,"/api/verify-reproducibility").methods("POST"_method)
+	([&cleaner](const crow::request& req){
+		try{
+			auto body=crow::json::load(req.body);
+			if(!body){
+				crow::json::wvalue result;
+				result["message"]="invalid request body";
+				return crow::response(400);
+			}
+			std::string csvData=body["csvData"].s();
+			double fuzzyThreshold=0.75;
+			if(body.has("fuzzyThreshold"))fuzzyThreshold=body["fuzzyThreshold"].d();
+			bool removeDuplicates=true;
+			if(body.has("removeDuplicates"))removeDuplicates=body["removeDuplicates"].b();
+			auto parsed1=cleaner.parseCSV(csvData);
+			auto result1=universalTextCleaning(parsed1,fuzzyThreshold,removeDuplicates);
+			std::stringstream csv1;
+			for(size_t i=0;i<result1.cleanedData.size();++i){
+				for(size_t j=0;j<result1.cleanedData[i].size();++j){
+					if(j>0)csv1<<",";
+					csv1<<result1.cleanedData[i][j];
+				}
+				csv1<<"\n";
+			}
+			auto parsed2=cleaner.parseCSV(csvData);
+			auto result2=universalTextCleaning(parsed2,fuzzyThreshold,removeDuplicates);
+			std::stringstream csv2;
+			for(size_t i=0;i<result2.cleanedData.size();++i){
+				for(size_t j=0;j<result2.cleanedData[i].size();++j){
+					if(j>0)csv2<<",";
+					csv2<<result2.cleanedData[i][j];
+				}
+				csv2<<"\n";
+			}
+			bool isReproducible=csv1.str()==csv2.str();
+			crow::json::wvalue resp;
+			resp["reproducible"]=isReproducible;
+			resp["message"]=isReproducible?"cleaning is reproducible":"cleaning is not reproducible";
+			return crow::response(resp);
+		}catch(...){
+			crow::json::wvalue resp;
+			resp["message"]="error during reproducibility verification";
+			return crow::response(500,resp);
+		}
+	});
+
 	CROW_ROUTE(app,"/api/compare").methods("POST"_method)
 	([&cleaner](const crow::request& req){
 		auto body=crow::json::load(req.body);
