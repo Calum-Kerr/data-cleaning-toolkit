@@ -1008,10 +1008,19 @@ int main(int argc, char* argv[]){
         auto cleaned=cleaner.cleanData(parsed);
         int removedRows=parsed.size()-cleaned.size();
         auditLog.addEntry("Remove Duplicates", removedRows, parsed.size(), cleaned.size());
+        std::stringstream cleanedCSV;
+        for(const auto& row:cleaned){
+            for(size_t i=0;i<row.size();++i){
+                if(i>0)cleanedCSV<<",";
+                cleanedCSV<<row[i];
+            }
+            cleanedCSV<<"\n";
+        }
         crow::json::wvalue result;
         result["originalRows"]=parsed.size();
         result["cleanedRows"]=cleaned.size();
         result["removedRows"]=removedRows;
+        result["cleaned"]=cleanedCSV.str();
         result["message"]="Data cleaned successfully";
         return crow::response(result);
     });
