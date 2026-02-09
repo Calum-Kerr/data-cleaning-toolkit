@@ -2282,21 +2282,12 @@ int main(int argc, char* argv[]){
 			auditLog.addEntry("Universal Clean", removedRows, originalRows, cleanedRows);
 
 			crow::json::wvalue resp;
-			resp["originalRows"]=std::to_string(originalRows);
-			resp["cleanedRows"]=std::to_string(cleanedRows);
-			resp["removedRows"]=std::to_string(removedRows);
-			resp["duplicateRowsRemoved"]=std::to_string(cleaningResult.duplicateRowsRemoved);
-			resp["fuzzyThreshold"]=std::to_string(fuzzyThreshold);
-			resp["operationsCount"]=std::to_string(cleaningResult.operationsLog.size());
+			resp["originalRows"]=originalRows;
+			resp["cleanedRows"]=cleanedRows;
+			resp["removedRows"]=removedRows;
+			resp["duplicateRowsRemoved"]=cleaningResult.duplicateRowsRemoved;
 			resp["message"]="universal text cleaning completed successfully";
 			resp["mode"]="api";
-
-			// Add operations log as a simple string
-			std::stringstream opsLog;
-			for(const auto& op : cleaningResult.operationsLog){
-				opsLog<<op<<"; ";
-			}
-			resp["operations"]=opsLog.str();
 
 			return crow::response(resp);
 		}catch(const std::exception& e){
