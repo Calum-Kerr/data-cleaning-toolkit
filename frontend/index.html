@@ -218,6 +218,7 @@
         AlgorithmsModule().then(module=>{wasmModule=module;wasmReady=true;});
         function showComingSoon(type){alert(`${type} data cleaning is coming soon! Please select "Structured Data" for now.`);}
         function selectStructured(){document.getElementById('welcomeSection').classList.add('hidden');document.getElementById('structuredSection').style.display='block';}
+        function loadSampleDataset(datasetName){uploadCSV=sampleDatasets[datasetName];if(uploadCSV){beginProfiling();}else{alert('Sample dataset not found.');}}
         function handleDragOver(e){e.preventDefault();document.getElementById('uploadArea').classList.add('drag-over');}
         function handleDragLeave(e){e.preventDefault();document.getElementById('uploadArea').classList.remove('drag-over');}
         function handleDrop(e){
