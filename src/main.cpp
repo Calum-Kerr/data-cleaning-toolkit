@@ -279,6 +279,14 @@ static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
 			prep2=normalizePunctuation(prep2);
 			prep2=normalizeWhitespace(prep2);
 
+			// Debug: Log preprocessing results for specific cases
+			if((val1=="MIAMI FLORIDA US" || val2=="MIAMI FLORIDA US" ||
+				val1=="WASHINGTON D.C." || val2=="WASHINGTON D.C." ||
+				val1=="NEW ORLEANS ORLEANS" || val2=="NEW ORLEANS ORLEANS" ||
+				val1=="BROOKYLN" || val2=="BROOKYLN")){
+				std::cerr << "DEBUG: '" << val1 << "' -> '" << prep1 << "' vs '" << val2 << "' -> '" << prep2 << "'" << std::endl;
+			}
+
 			// Length-based filtering: skip if lengths differ by more than 75%
 			// This allows comparisons like "MIAMI" (5) vs "MIAMI FLORIDA US" (15)
 			// where the difference is 10, which is 66% of 15 (less than 75%)
