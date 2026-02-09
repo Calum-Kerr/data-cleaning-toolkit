@@ -1233,4 +1233,142 @@ extern "C"{
         std::strcpy(cstr,outputStr.c_str());
         return cstr;
     }
+
+    // ========================================================================
+    // UNIVERSAL TEXT CLEANING FUNCTION (WASM EXPORT)
+    // Applies comprehensive text cleaning to ALL text columns automatically
+    // ========================================================================
+    EMSCRIPTEN_KEEPALIVE
+    const char* universalTextCleanString(const char* csvData, double fuzzyThreshold){
+        std::string data(csvData);
+        auto parsed=parseCSVInternal(data);
+
+        if(parsed.empty()){
+            return "";
+        }
+
+        // Detect all text columns
+        auto textColumns=detectTextColumnsWasm(parsed);
+
+        // For each text column, build fuzzy matching mappings
+        std::map<int, std::map<std::string, std::string>> columnMappings;
+        for(int col : textColumns){
+            std::vector<std::string> columnValues;
+            for(size_t row=1; row<parsed.size(); ++row){
+                if(col < (int)parsed[row].size()){
+                    columnValues.push_back(parsed[row][col]);
+                }
+            }
+
+            // Build fuzzy matching groups for this column
+            std::map<std::string, std::vector<std::string>> groups;
+            std::vector<std::string> uniqueValues;
+            std::map<std::string, int> valueCounts;
+
+            // Count occurrences
+            for(const auto& val : columnValues){
+                if(!val.empty()){
+                    valueCounts[val]++;
+                }
+            }
+
+            // Build groups
+            std::set<std::string> processed;
+            for(const auto& val1 : columnValues){
+                if(val1.empty() || processed.count(val1)) continue;
+
+                std::string canonical=val1;
+                int maxCount=valueCounts[val1];
+                std::vector<std::string> matches;
+                matches.push_back(val1);
+
+                // Find all similar values
+                for(const auto& val2 : columnValues){
+                    if(val1==val2 || val2.empty() || processed.count(val2)) continue;
+
+                    double similarity=calculateSimilarity(val1, val2);
+                    if(similarity >= fuzzyThreshold){
+                        matches.push_back(val2);
+                        if(valueCounts[val2] > maxCount){
+                            canonical=val2;
+                            maxCount=valueCounts[val2];
+                        }
+                        processed.insert(val2);
+                    }
+                }
+
+                // Map all matches to canonical
+                for(const auto& match : matches){
+                    groups[canonical].push_back(match);
+                }
+                processed.insert(val1);
+            }
+
+            // Create mapping
+            for(const auto& pair : groups){
+                for(const auto& val : pair.second){
+                    columnMappings[col][val]=pair.first;
+                }
+            }
+        }
+
+        // Clean and transform all rows
+        std::set<std::vector<std::string>> seenRows;
+        std::vector<std::vector<std::string>> cleanedData;
+
+        for(size_t i=0; i<parsed.size(); ++i){
+            auto row=parsed[i];
+
+            // Apply cleaning to each cell
+            for(size_t j=0; j<row.size(); ++j){
+                std::string cell=row[j];
+
+                // Check if this is a text column
+                bool isTextCol=false;
+                for(int col : textColumns){
+                    if(col == (int)j){
+                        isTextCol=true;
+                        break;
+                    }
+                }
+
+                if(isTextCol){
+                    // Apply cleaning operations in sequence
+                    cell=standardizeNullValuesWasm(cell);
+                    if(!cell.empty()){
+                        cell=normalizePunctuationWasm(cell);
+                        cell=normalizeWhitespaceWasm(cell);
+
+                        // Apply fuzzy matching mapping
+                        if(columnMappings[j].count(cell)){
+                            cell=columnMappings[j][cell];
+                        }
+                    }
+                }
+
+                row[j]=cell;
+            }
+
+            // Remove duplicate rows
+            if(!seenRows.count(row)){
+                seenRows.insert(row);
+                cleanedData.push_back(row);
+            }
+        }
+
+        // Build output CSV
+        std::stringstream output;
+        for(const auto& row : cleanedData){
+            for(size_t i=0; i<row.size(); ++i){
+                if(i>0) output<<",";
+                output<<row[i];
+            }
+            output<<"\n";
+        }
+
+        std::string outputStr=output.str();
+        char* cstr=new char[outputStr.length()+1];
+        std::strcpy(cstr,outputStr.c_str());
+        return cstr;
+    }
 }
