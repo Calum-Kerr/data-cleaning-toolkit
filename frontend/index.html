@@ -170,7 +170,7 @@
 	  </div>
     <script src="algorithms.js"></script>
     <script>
-        let wasmModule=null;let wasmReady=false;let uploadCSV='';let cleanedCSV='';let originalCSV='';
+        let wasmModule=null;let wasmReady=false;let uploadCSV='';let cleanedCSV='';let originalCSV='';let comparisonData=null;
         AlgorithmsModule().then(module=>{wasmModule=module;wasmReady=true;});
         function showComingSoon(type){alert(`${type} data cleaning is coming soon! Please select "Structured Data" for now.`);}
         function selectStructured(){document.getElementById('welcomeSection').classList.add('hidden');document.getElementById('structuredSection').style.display='block';}
@@ -430,8 +430,8 @@
                 try{
                     const compareRes=await fetch(API_URL+'/api/compare',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({originalCSV:originalCSV,cleanedCSV:cleanedCSV})});
                     console.log('Compare response status: '+compareRes.status);
-                    const compareData=await compareRes.json();
-                    console.log('Comparison: rows removed='+compareData.rowsRemoved+', cells modified='+compareData.cellsModified);
+                    comparisonData=await compareRes.json();
+                    console.log('Comparison: rows removed='+comparisonData.rowsRemoved+', cells modified='+comparisonData.cellsModified);
                 }catch(compareErr){
                     console.error('Error getting comparison:',compareErr);
                 }
