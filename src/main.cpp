@@ -2607,7 +2607,7 @@ int main(int argc, char* argv[]){
 		auto originalParsed=cleaner.parseCSV(originalCSV);
 		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
 		crow::json::wvalue result;
-		std::vector<crow::json::wvalue> changes;
+		result["cellAudit"]=crow::json::wvalue::list();
 		int cellsModified=0;
 		int maxRows=std::max(originalParsed.size(),cleanedParsed.size());
 		for(size_t r=0;r<maxRows;r++){
@@ -2622,13 +2622,12 @@ int main(int argc, char* argv[]){
 						change["column"]=(int)c;
 						change["originalValue"]=origVal;
 						change["cleanedValue"]=cleanVal;
-						changes.push_back(change);
+						result["cellAudit"][(int)cellsModified]=change;
 						cellsModified++;
 					}
 				}
 			}
 		}
-		result["cellAudit"]=changes;
 		result["summary"]=crow::json::wvalue::object();
 		result["summary"]["totalCellsModified"]=cellsModified;
 		result["summary"]["originalRows"]=(int)originalParsed.size();
