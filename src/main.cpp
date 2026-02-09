@@ -163,16 +163,18 @@ static std::string removeStateSuffixes(const std::string& text){
 	std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
 
 	// List of patterns to remove (generic, not hardcoded city names)
+	// NOTE: Only include state names that are NOT also city names
+	// Removed: " NEW YORK", " WASHINGTON" (these are also city names)
 	const std::vector<std::string> patterns={
 		" ALABAMA", " ALASKA", " ARIZONA", " ARKANSAS", " CALIFORNIA", " COLORADO",
 		" CONNECTICUT", " DELAWARE", " FLORIDA", " GEORGIA", " HAWAII", " IDAHO",
 		" ILLINOIS", " INDIANA", " IOWA", " KANSAS", " KENTUCKY", " LOUISIANA",
 		" MAINE", " MARYLAND", " MASSACHUSETTS", " MICHIGAN", " MINNESOTA",
 		" MISSISSIPPI", " MISSOURI", " MONTANA", " NEBRASKA", " NEVADA",
-		" NEW HAMPSHIRE", " NEW JERSEY", " NEW MEXICO", " NEW YORK", " NORTH CAROLINA",
+		" NEW HAMPSHIRE", " NEW JERSEY", " NEW MEXICO", " NORTH CAROLINA",
 		" NORTH DAKOTA", " OHIO", " OKLAHOMA", " OREGON", " PENNSYLVANIA",
 		" RHODE ISLAND", " SOUTH CAROLINA", " SOUTH DAKOTA", " TENNESSEE", " TEXAS",
-		" UTAH", " VERMONT", " VIRGINIA", " WASHINGTON", " WEST VIRGINIA",
+		" UTAH", " VERMONT", " VIRGINIA", " WEST VIRGINIA",
 		" WISCONSIN", " WYOMING",
 		" DISTRICT OF COLUMBIA", " US", " USA", " UNITED STATES"
 	};
