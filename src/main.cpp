@@ -2598,6 +2598,45 @@ int main(int argc, char* argv[]){
 		return crow::response(result);
 	});
 
+	CROW_ROUTE(app,"/api/cell-audit-report").methods("POST"_method)
+	([&cleaner](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+		std::string originalCSV=body["originalCSV"].s();
+		std::string cleanedCSV=body["cleanedCSV"].s();
+		auto originalParsed=cleaner.parseCSV(originalCSV);
+		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
+		crow::json::wvalue result;
+		result["cellAudit"]=crow::json::wvalue::list();
+		int cellsModified=0;
+		int maxRows=std::max(originalParsed.size(),cleanedParsed.size());
+		for(size_t r=0;r<maxRows;r++){
+			if(r<originalParsed.size() && r<cleanedParsed.size()){
+				size_t maxCols=std::max(originalParsed[r].size(),cleanedParsed[r].size());
+				for(size_t c=0;c<maxCols;c++){
+					std::string origVal=(c<originalParsed[r].size())?originalParsed[r][c]:"";
+					std::string cleanVal=(c<cleanedParsed[r].size())?cleanedParsed[r][c]:"";
+					if(origVal!=cleanVal){
+						crow::json::wvalue change;
+						change["row"]=(int)r;
+						change["column"]=(int)c;
+						change["originalValue"]=origVal;
+						change["cleanedValue"]=cleanVal;
+						result["cellAudit"].push_back(change);
+						cellsModified++;
+					}
+				}
+			}
+		}
+		result["summary"]=crow::json::wvalue::object();
+		result["summary"]["totalCellsModified"]=cellsModified;
+		result["summary"]["originalRows"]=(int)originalParsed.size();
+		result["summary"]["cleanedRows"]=(int)cleanedParsed.size();
+		result["summary"]["rowsRemoved"]=(int)originalParsed.size()-(int)cleanedParsed.size();
+		result["message"]="cell audit report generated";
+		return crow::response(result);
+	});
+
 	CROW_ROUTE(app,"/api/comparison-report").methods("POST"_method)
 	([&cleaner, &auditLog](const crow::request& req){
 		auto body=crow::json::load(req.body);
