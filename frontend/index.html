@@ -548,6 +548,92 @@
                 updateProgress('Error during cleaning. Please try again.');
             }
         }
+        let currentPage=1;
+        const rowsPerPage=50;
+        let tableData=[];
+        let filteredData=[];
+        function renderDataTable(){
+            if(!cleanedCSV){console.error('No cleaned CSV data');return;}
+            const lines=cleanedCSV.trim().split('\n');
+            if(lines.length===0){console.error('Empty CSV');return;}
+            const headers=lines[0].split(',');
+            tableData=[];
+            for(let i=1;i<lines.length;i++){
+                const cells=lines[i].split(',');
+                tableData.push(cells);
+            }
+            filteredData=tableData.slice();
+            currentPage=1;
+            updateColumnFilter(headers);
+            updateTableDisplay(headers);
+        }
+        function updateColumnFilter(headers){
+            const select=document.getElementById('tableColumnFilter');
+            select.innerHTML='<option value="">All columns</option>';
+            headers.forEach((header,idx)=>{
+                const opt=document.createElement('option');
+                opt.value=idx;
+                opt.textContent=header.trim();
+                select.appendChild(opt);
+            });
+        }
+        function filterTable(){
+            const searchInput=document.getElementById('tableSearchInput').value.toLowerCase();
+            const columnFilter=document.getElementById('tableColumnFilter').value;
+            const lines=cleanedCSV.trim().split('\n');
+            const headers=lines[0].split(',');
+            tableData=[];
+            for(let i=1;i<lines.length;i++){
+                const cells=lines[i].split(',');
+                tableData.push(cells);
+            }
+            filteredData=tableData.filter(row=>{
+                if(columnFilter===''){
+                    return row.some(cell=>cell.toLowerCase().includes(searchInput));
+                }else{
+                    const colIdx=parseInt(columnFilter);
+                    return row[colIdx]&&row[colIdx].toLowerCase().includes(searchInput);
+                }
+            });
+            currentPage=1;
+            updateTableDisplay(headers);
+        }
+        function updateTableDisplay(headers){
+            const start=(currentPage-1)*rowsPerPage;
+            const end=start+rowsPerPage;
+            const pageData=filteredData.slice(start,end);
+            let html='<table class=\"data-table\"><thead><tr>';
+            headers.forEach(h=>{html+='<th>'+h.trim()+'</th>';});
+            html+='</tr></thead><tbody>';
+            pageData.forEach(row=>{
+                html+='<tr>';
+                row.forEach(cell=>{html+='<td>'+cell.trim()+'</td>';});
+                html+='</tr>';
+            });
+            html+='</tbody></table>';
+            document.getElementById('dataTableContainer').innerHTML=html;
+            const totalPages=Math.ceil(filteredData.length/rowsPerPage);
+            document.getElementById('pageInfo').textContent='Page '+currentPage+' of '+totalPages;
+            document.getElementById('prevPageBtn').disabled=currentPage===1;
+            document.getElementById('nextPageBtn').disabled=currentPage===totalPages;
+        }
+        function nextPage(){
+            const totalPages=Math.ceil(filteredData.length/rowsPerPage);
+            if(currentPage<totalPages){
+                currentPage++;
+                const lines=cleanedCSV.trim().split('\n');
+                const headers=lines[0].split(',');
+                updateTableDisplay(headers);
+            }
+        }
+        function previousPage(){
+            if(currentPage>1){
+                currentPage--;
+                const lines=cleanedCSV.trim().split('\n');
+                const headers=lines[0].split(',');
+                updateTableDisplay(headers);
+            }
+        }
         if('serviceWorker'in navigator){
             navigator.serviceWorker.getRegistrations().then(registrations=>{
                 for(let reg of registrations){reg.unregister();}
