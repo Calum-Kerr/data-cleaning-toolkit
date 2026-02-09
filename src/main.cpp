@@ -225,9 +225,47 @@ static std::string removeDuplicateWords(const std::string& text){
 	return output;
 }
 
+// Union-Find data structure for grouping similar values
+class UnionFind {
+public:
+	std::map<std::string, std::string> parent;
+	std::map<std::string, int> rank;
+
+	void makeSet(const std::string& x) {
+		if (parent.find(x) == parent.end()) {
+			parent[x] = x;
+			rank[x] = 0;
+		}
+	}
+
+	std::string find(const std::string& x) {
+		if (parent[x] != x) {
+			parent[x] = find(parent[x]); // Path compression
+		}
+		return parent[x];
+	}
+
+	void unite(const std::string& x, const std::string& y) {
+		std::string px = find(x);
+		std::string py = find(y);
+		if (px == py) return;
+
+		// Union by rank
+		if (rank[px] < rank[py]) {
+			parent[px] = py;
+		} else if (rank[px] > rank[py]) {
+			parent[py] = px;
+		} else {
+			parent[py] = px;
+			rank[px]++;
+		}
+	}
+};
+
 // Build fuzzy matching groups for a single column
 // Returns a map: canonical value -> list of original values that map to it
 // OPTIMIZED: Only compares unique values, not all rows
+// FIXED: Uses union-find to properly group similar values
 static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
 	const std::vector<std::string>& columnValues,
 	double threshold=0.75){
@@ -247,21 +285,17 @@ static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
 	// Convert to vector for easier iteration
 	std::vector<std::string> uniqueValues(uniqueSet.begin(), uniqueSet.end());
 
-	// Step 2: Build groups using fuzzy matching on unique values only
-	std::set<std::string> processed;
+	// Step 2: Build union-find structure by comparing all pairs
+	UnionFind uf;
+	for(const auto& val : uniqueValues) {
+		uf.makeSet(val);
+	}
+
+	// Compare all pairs and unite similar values
 	for(size_t i=0; i<uniqueValues.size(); ++i){
 		const auto& val1=uniqueValues[i];
-		if(processed.count(val1)) continue;
-
-		std::string canonical=val1;
-		int maxCount=valueCounts[val1];
-		std::vector<std::string> matches;
-		matches.push_back(val1);
-
-		// Find all similar values - only compare with unprocessed values
 		for(size_t j=i+1; j<uniqueValues.size(); ++j){
 			const auto& val2=uniqueValues[j];
-			if(processed.count(val2)) continue;
 
 			// Apply preprocessing to both values for comparison
 			// This allows "MIAMI FLORIDA US" to match "MIAMI" after preprocessing
