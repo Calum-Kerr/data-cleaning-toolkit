@@ -2276,23 +2276,12 @@ int main(int argc, char* argv[]){
 			auto cleaningResult=universalTextCleaning(parsed, fuzzyThreshold, removeDuplicates);
 			std::cerr << "DEBUG: Universal text cleaning completed" << std::endl;
 
-			// Build output CSV
-			std::stringstream output;
-			for(const auto& row : cleaningResult.cleanedData){
-				for(size_t i=0; i<row.size(); ++i){
-					if(i>0) output<<",";
-					output<<row[i];
-				}
-				output<<"\n";
-			}
-
 			int cleanedRows=cleaningResult.cleanedData.size();
 			int removedRows=originalRows - cleanedRows;
 
 			auditLog.addEntry("Universal Clean", removedRows, originalRows, cleanedRows);
 
 			crow::json::wvalue resp;
-			resp["csvData"]=output.str();
 			resp["originalRows"]=originalRows;
 			resp["cleanedRows"]=cleanedRows;
 			resp["removedRows"]=removedRows;
