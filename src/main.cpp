@@ -2111,6 +2111,75 @@ int main(int argc, char* argv[]){
 		return crow::response(resp);
 	});
 
+	// ========================================================================
+	// UNIVERSAL TEXT CLEANING ENDPOINT
+	// Applies comprehensive text cleaning to ALL text columns automatically
+	// ========================================================================
+	CROW_ROUTE(app,"/api/universal-clean").methods("POST"_method)
+	([&cleaner, &auditLog](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		if(!body){
+			crow::json::wvalue result;
+			result["message"]="invalid request body";
+			return crow::response(400);
+		}
+
+		std::string csvData=body["csvData"].s();
+		double fuzzyThreshold=0.75; // default threshold
+		if(body.has("fuzzyThreshold")){
+			fuzzyThreshold=body["fuzzyThreshold"].d();
+			if(fuzzyThreshold<0.0 || fuzzyThreshold>1.0){
+				fuzzyThreshold=0.75;
+			}
+		}
+
+		bool removeDuplicates=true;
+		if(body.has("removeDuplicates")){
+			removeDuplicates=body["removeDuplicates"].b();
+		}
+
+		auto parsed=cleaner.parseCSV(csvData);
+		int originalRows=parsed.size();
+
+		// Apply universal text cleaning
+		auto cleaningResult=universalTextCleaning(parsed, fuzzyThreshold, removeDuplicates);
+
+		// Build output CSV
+		std::stringstream output;
+		for(const auto& row : cleaningResult.cleanedData){
+			for(size_t i=0; i<row.size(); ++i){
+				if(i>0) output<<",";
+				output<<row[i];
+			}
+			output<<"\n";
+		}
+
+		int cleanedRows=cleaningResult.cleanedData.size();
+		int removedRows=originalRows - cleanedRows;
+
+		auditLog.addEntry("Universal Clean", removedRows, originalRows, cleanedRows);
+
+		crow::json::wvalue resp;
+		resp["csvData"]=output.str();
+		resp["originalRows"]=originalRows;
+		resp["cleanedRows"]=cleanedRows;
+		resp["removedRows"]=removedRows;
+		resp["duplicateRowsRemoved"]=cleaningResult.duplicateRowsRemoved;
+		resp["fuzzyThreshold"]=fuzzyThreshold;
+		resp["operationsCount"]=(int)cleaningResult.operationsLog.size();
+		resp["message"]="universal text cleaning completed successfully";
+		resp["mode"]="api";
+
+		// Add operations log as a simple string
+		std::stringstream opsLog;
+		for(const auto& op : cleaningResult.operationsLog){
+			opsLog<<op<<"; ";
+		}
+		resp["operations"]=opsLog.str();
+
+		return crow::response(resp);
+	});
+
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
 	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
 	try{
