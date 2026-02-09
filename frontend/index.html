@@ -330,6 +330,17 @@
                 console.error('Error fetching audit log:',err);
             }
         }
+        async function fetchAndDisplayQualityMetrics(){
+            try{
+                const API_URL=window.location.origin;
+                const res=await fetch(API_URL+'/api/quality-metrics',{method:'POST',body:uploadCSV});
+                const data=await res.json();
+                const html='<strong>Data Quality Metrics</strong><br><br>Completeness: '+data.completeness+'%<br>Uniqueness: '+data.uniqueness+'%<br>Missing cells: '+data.missingCells+'<br>Duplicate rows: '+data.duplicateRows+'<br>Total rows: '+data.totalRows+'<br>Total columns: '+data.totalColumns;
+                document.getElementById('qualityMetricsSection').innerHTML=html;
+            }catch(err){
+                console.error('Error fetching quality metrics:',err);
+            }
+        }
         function triggerDownload(){
             const blob=new Blob([cleanedCSV],{type:'text/csv'});
             const url=window.URL.createObjectURL(blob);
