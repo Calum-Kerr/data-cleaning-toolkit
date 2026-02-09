@@ -2495,6 +2495,7 @@ int main(int argc, char* argv[]){
 		result["cellsModified"]=cellsModified;
 		result["originalRows"]=(int)original.size();
 		result["cleanedRows"]=(int)cleaned.size();
+		result["cleaned"]=cleanedCSV;
 		return crow::response(result);
 	});
 
