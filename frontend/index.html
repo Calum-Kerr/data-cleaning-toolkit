@@ -310,7 +310,24 @@
                 const html='<strong>Before/After Comparison:</strong><br>Original rows: '+comparisonData.originalRows+'<br>Cleaned rows: '+comparisonData.cleanedRows+'<br>Rows removed: '+comparisonData.rowsRemoved+'<br>Cells modified: '+comparisonData.cellsModified;
                 document.getElementById('comparisonSection').innerHTML=html;
             }
+            fetchAndDisplayAuditLog();
             triggerDownload();
+        }
+        async function fetchAndDisplayAuditLog(){
+            try{
+                const API_URL=window.location.origin;
+                const res=await fetch(API_URL+'/api/get-audit-log');
+                const data=await res.json();
+                if(data.operations&&data.operations.length>0){
+                    let html='<strong>Operation History:</strong><br>';
+                    for(const op of data.operations){
+                        html+='<div style="margin: 8px 0; padding: 8px; background: white; border-left: 3px solid #ff9800;">'+op.operationName+': '+op.cellsAffected+' cells affected ('+op.rowsBefore+' → '+op.rowsAfter+' rows)</div>';
+                    }
+                    document.getElementById('auditLogSection').innerHTML=html;
+                }
+            }catch(err){
+                console.error('Error fetching audit log:',err);
+            }
         }
         function triggerDownload(){
             const blob=new Blob([cleanedCSV],{type:'text/csv'});
