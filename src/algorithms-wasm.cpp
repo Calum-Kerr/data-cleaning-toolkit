@@ -222,6 +222,99 @@ double calculateSimilarity(const std::string& s1, const std::string& s2){
     return 1.0-(double)distance/maxLen;
 }
 
+// ============================================================================
+// UNIVERSAL TEXT CLEANING HELPER FUNCTIONS (WASM VERSION)
+// ============================================================================
+
+// Normalize whitespace: trim leading/trailing, collapse multiple spaces
+std::string normalizeWhitespaceWasm(const std::string& text){
+    std::string result;
+    bool inSpace=false;
+    for(char c : text){
+        if(c==' ' || c=='\t' || c=='\r' || c=='\n'){
+            if(!inSpace && !result.empty()){
+                result+=' ';
+                inSpace=true;
+            }
+        }else{
+            result+=c;
+            inSpace=false;
+        }
+    }
+    // Trim trailing space
+    while(!result.empty() && result.back()==' '){
+        result.pop_back();
+    }
+    return result;
+}
+
+// Normalize punctuation: standardize dashes, commas, periods, apostrophes
+std::string normalizePunctuationWasm(const std::string& text){
+    std::string result;
+    for(size_t i=0; i<text.length(); ++i){
+        char c=text[i];
+        // Convert various dashes to standard hyphen
+        if(c=='\u2013' || c=='\u2014' || c=='\u2010'){
+            result+='-';
+        }
+        // Convert various quotes to standard apostrophe
+        else if(c=='\u2018' || c=='\u2019' || c=='\u201C' || c=='\u201D'){
+            result+='\'';
+        }
+        // Keep standard punctuation
+        else{
+            result+=c;
+        }
+    }
+    return result;
+}
+
+// Standardize null values to empty string
+std::string standardizeNullValuesWasm(const std::string& text){
+    std::string trimmed=normalizeWhitespaceWasm(text);
+    if(trimmed.empty()) return "";
+    std::string lower=toLower(trimmed);
+    if(lower=="n/a" || lower=="na") return "";
+    if(lower=="null") return "";
+    if(lower=="none") return "";
+    if(trimmed=="-" || trimmed=="?" || trimmed=="~") return "";
+    if(lower=="empty") return "";
+    return trimmed;
+}
+
+// Check if a string is numeric
+bool isNumericColumnWasm(const std::vector<std::string>& columnValues, int sampleSize=100){
+    int numericCount=0;
+    int sampleCount=std::min((int)columnValues.size(), sampleSize);
+    for(int i=0; i<sampleCount; ++i){
+        if(isNumeric(columnValues[i])){
+            numericCount++;
+        }
+    }
+    // If less than 80% numeric, treat as text column
+    return numericCount < (sampleCount * 0.8);
+}
+
+// Detect all text columns in the CSV
+std::vector<int> detectTextColumnsWasm(const std::vector<std::vector<std::string>>& parsed){
+    std::vector<int> textColumns;
+    if(parsed.empty()) return textColumns;
+
+    int numColumns=parsed[0].size();
+    for(int col=0; col<numColumns; ++col){
+        std::vector<std::string> columnValues;
+        for(size_t row=1; row<parsed.size(); ++row){
+            if(col < (int)parsed[row].size()){
+                columnValues.push_back(parsed[row][col]);
+            }
+        }
+        if(isNumericColumnWasm(columnValues)){
+            textColumns.push_back(col);
+        }
+    }
+    return textColumns;
+}
+
 std::vector<std::string> parseCSVLine(const std::string& line){
     std::vector<std::string> row;
     std::string cell;
