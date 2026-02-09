@@ -15,3 +15,4 @@ build-output.log
 test.csv
 debug.log
 test-universal-clean.csv
+server.log
