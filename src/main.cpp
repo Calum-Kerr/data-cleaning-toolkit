@@ -1633,6 +1633,31 @@ int main(int argc, char* argv[]){
         return crow::response(result);
     });
 
+    CROW_ROUTE(app,"/api/quality-metrics").methods("POST"_method)
+    ([&cleaner](const crow::request& req){
+        std::string csvData=req.body;
+        auto parsed=cleaner.parseCSV(csvData);
+        int rows=(int)parsed.size();
+        int cols=parsed.empty()?0:(int)parsed[0].size();
+        int totalCells=rows*cols;
+        auto missingMatrix=cleaner.detectMissingValues(parsed);
+        int missingCells=0;for(const auto& row:missingMatrix){for(bool b:row){if(b)missingCells++;}}
+        auto dupVector=cleaner.detectDuplicates(parsed);
+        int duplicateRows=0;for(bool b:dupVector){if(b)duplicateRows++;}}
+        double completeness=totalCells>0?((totalCells-missingCells)*100.0/totalCells):100.0;
+        double uniqueness=rows>0?((rows-duplicateRows)*100.0/rows):100.0;
+        crow::json::wvalue result;
+        result["completeness"]=(int)completeness;
+        result["uniqueness"]=(int)uniqueness;
+        result["missingCells"]=missingCells;
+        result["duplicateRows"]=duplicateRows;
+        result["totalRows"]=rows;
+        result["totalColumns"]=cols;
+        result["totalCells"]=totalCells;
+        result["message"]="quality metrics calculated";
+        return crow::response(result);
+    });
+
     CROW_ROUTE(app,"/api/auto-detect-all").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         std::string csvData=req.body;
