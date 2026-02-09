@@ -427,7 +427,9 @@
                 uploadCSV=current;
                 cleanedCSV=current;
                 console.log('cleanedCSV set, length: '+cleanedCSV.length);
-                console.log('cleanedCSV first 100 chars: '+cleanedCSV.substring(0,100));
+                const compareRes=await fetch(API_URL+'/api/compare',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({originalCSV:originalCSV,cleanedCSV:cleanedCSV})});
+                const compareData=await compareRes.json();
+                console.log('Comparison: rows removed='+compareData.rowsRemoved+', cells modified='+compareData.cellsModified);
                 showCleaningComplete();
             }catch(err){
                 console.error('Error during universal clean:',err);
