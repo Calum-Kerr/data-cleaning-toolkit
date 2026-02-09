@@ -170,7 +170,7 @@
 	  </div>
     <script src="algorithms.js"></script>
     <script>
-        let wasmModule=null;let wasmReady=false;let uploadCSV='';let cleanedCSV='';
+        let wasmModule=null;let wasmReady=false;let uploadCSV='';let cleanedCSV='';let originalCSV='';
         AlgorithmsModule().then(module=>{wasmModule=module;wasmReady=true;});
         function showComingSoon(type){alert(`${type} data cleaning is coming soon! Please select "Structured Data" for now.`);}
         function selectStructured(){document.getElementById('welcomeSection').classList.add('hidden');document.getElementById('structuredSection').style.display='block';}
@@ -408,6 +408,7 @@
             document.getElementById('progressSection').style.display='block';
             const API_URL=window.location.origin;
             let current=uploadCSV;
+            originalCSV=uploadCSV;
             function updateProgress(message){document.getElementById('progressText').textContent=message;}
             try{
                 updateProgress('Cleaning data with fuzzy matching...');
