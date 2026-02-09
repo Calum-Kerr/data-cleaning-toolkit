@@ -261,18 +261,35 @@ static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
 			const auto& val2=uniqueValues[j];
 			if(processed.count(val2)) continue;
 
+			// Apply preprocessing to both values for comparison
+			// This allows "MIAMI FLORIDA US" to match "MIAMI" after preprocessing
+			std::string prep1=val1;
+			std::string prep2=val2;
+
+			// Apply preprocessing steps in order
+			prep1=removeStateSuffixes(prep1);
+			prep1=removeDuplicateWords(prep1);
+			prep1=normalizePunctuation(prep1);
+			prep1=normalizeWhitespace(prep1);
+
+			prep2=removeStateSuffixes(prep2);
+			prep2=removeDuplicateWords(prep2);
+			prep2=normalizePunctuation(prep2);
+			prep2=normalizeWhitespace(prep2);
+
 			// Length-based filtering: skip if lengths differ by more than 75%
 			// This allows comparisons like "MIAMI" (5) vs "MIAMI FLORIDA US" (15)
 			// where the difference is 10, which is 66% of 15 (less than 75%)
-			int len1=val1.length();
-			int len2=val2.length();
+			int len1=prep1.length();
+			int len2=prep2.length();
 			int maxLen=std::max(len1, len2);
 			int minLen=std::min(len1, len2);
 			if(minLen > 0 && (maxLen - minLen) > (maxLen * 0.75)){
 				continue; // Skip only very different lengths
 			}
 
-			double similarity=calculateSimilarity(val1, val2);
+			// Compare preprocessed values
+			double similarity=calculateSimilarity(prep1, prep2);
 			if(similarity >= threshold){
 				matches.push_back(val2);
 				// Use the more common value as canonical
