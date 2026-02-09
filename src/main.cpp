@@ -187,6 +187,36 @@ static std::string removeStateSuffixes(const std::string& text){
 	return result;
 }
 
+// Remove duplicate consecutive words (e.g., "NEW ORLEANS ORLEANS" -> "NEW ORLEANS")
+// Generic preprocessing that works for any text data
+static std::string removeDuplicateWords(const std::string& text){
+	std::vector<std::string> words;
+	std::stringstream ss(text);
+	std::string word;
+
+	// Split by spaces
+	while(ss >> word){
+		words.push_back(word);
+	}
+
+	// Remove consecutive duplicates
+	std::vector<std::string> result;
+	for(size_t i=0; i<words.size(); ++i){
+		if(i==0 || words[i] != words[i-1]){
+			result.push_back(words[i]);
+		}
+	}
+
+	// Rejoin with spaces
+	std::string output;
+	for(size_t i=0; i<result.size(); ++i){
+		if(i > 0) output+=" ";
+		output+=result[i];
+	}
+
+	return output;
+}
+
 // Build fuzzy matching groups for a single column
 // Returns a map: canonical value -> list of original values that map to it
 // OPTIMIZED: Only compares unique values, not all rows
