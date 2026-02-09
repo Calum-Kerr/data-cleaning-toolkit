@@ -634,7 +634,7 @@
                 updateTableDisplay(headers);
             }
         }
-        document.addEventListener('DOMContentLoaded',()=>{\n            const searchInput=document.getElementById('tableSearchInput');\n            const columnFilter=document.getElementById('tableColumnFilter');\n            if(searchInput){searchInput.addEventListener('input',filterTable);}\n            if(columnFilter){columnFilter.addEventListener('change',filterTable);}\n        });
+        document.addEventListener('DOMContentLoaded',()=>{const searchInput=document.getElementById('tableSearchInput');const columnFilter=document.getElementById('tableColumnFilter');if(searchInput){searchInput.addEventListener('input',filterTable);}if(columnFilter){columnFilter.addEventListener('change',filterTable);}});
         if('serviceWorker'in navigator){
             navigator.serviceWorker.getRegistrations().then(registrations=>{
                 for(let reg of registrations){reg.unregister();}
