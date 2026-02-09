@@ -1643,7 +1643,7 @@ int main(int argc, char* argv[]){
         auto missingMatrix=cleaner.detectMissingValues(parsed);
         int missingCells=0;for(const auto& row:missingMatrix){for(bool b:row){if(b)missingCells++;}}
         auto dupVector=cleaner.detectDuplicates(parsed);
-        int duplicateRows=0;for(bool b:dupVector){if(b)duplicateRows++;}}
+        int duplicateRows=0;for(bool b:dupVector){if(b)duplicateRows++;}
         double completeness=totalCells>0?((totalCells-missingCells)*100.0/totalCells):100.0;
         double uniqueness=rows>0?((rows-duplicateRows)*100.0/rows):100.0;
         crow::json::wvalue result;
