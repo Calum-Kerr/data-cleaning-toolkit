@@ -178,13 +178,15 @@ static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
 			const auto& val2=uniqueValues[j];
 			if(processed.count(val2)) continue;
 
-			// Length-based filtering: skip if lengths differ by more than 50%
+			// Length-based filtering: skip if lengths differ by more than 75%
+			// This allows comparisons like "MIAMI" (5) vs "MIAMI FLORIDA US" (15)
+			// where the difference is 10, which is 66% of 15 (less than 75%)
 			int len1=val1.length();
 			int len2=val2.length();
 			int maxLen=std::max(len1, len2);
 			int minLen=std::min(len1, len2);
-			if(minLen > 0 && (maxLen - minLen) > (maxLen * 0.5)){
-				continue; // Skip very different lengths
+			if(minLen > 0 && (maxLen - minLen) > (maxLen * 0.75)){
+				continue; // Skip only very different lengths
 			}
 
 			double similarity=calculateSimilarity(val1, val2);
