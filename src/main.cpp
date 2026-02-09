@@ -44,6 +44,102 @@ static double calculateSimilarity(const std::string& s1, const std::string& s2){
 	return 1.0-(double)distance/maxLen;
 }
 
+// ============================================================================
+// UNIVERSAL TEXT CLEANING HELPER FUNCTIONS
+// ============================================================================
+
+// Normalize whitespace: trim leading/trailing, collapse multiple spaces
+static std::string normalizeWhitespace(const std::string& text){
+	std::string result;
+	bool inSpace=false;
+	for(char c : text){
+		if(c==' ' || c=='\t' || c=='\r' || c=='\n'){
+			if(!inSpace && !result.empty()){
+				result+=' ';
+				inSpace=true;
+			}
+		}else{
+			result+=c;
+			inSpace=false;
+		}
+	}
+	// Trim trailing space
+	while(!result.empty() && result.back()==' '){
+		result.pop_back();
+	}
+	return result;
+}
+
+// Normalize punctuation: standardize dashes, commas, periods, apostrophes
+static std::string normalizePunctuation(const std::string& text){
+	std::string result;
+	for(size_t i=0; i<text.length(); ++i){
+		char c=text[i];
+		// Convert various dashes to standard hyphen
+		if(c=='\u2013' || c=='\u2014' || c=='\u2010'){
+			result+='-';
+		}
+		// Convert various quotes to standard apostrophe
+		else if(c=='\u2018' || c=='\u2019' || c=='\u201C' || c=='\u201D'){
+			result+='\'';
+		}
+		// Keep standard punctuation
+		else{
+			result+=c;
+		}
+	}
+	return result;
+}
+
+// Standardize null values to empty string
+static std::string standardizeNullValues(const std::string& text){
+	std::string trimmed=normalizeWhitespace(text);
+	if(trimmed.empty()) return "";
+	if(trimmed=="N/A" || trimmed=="n/a" || trimmed=="NA" || trimmed=="na") return "";
+	if(trimmed=="null" || trimmed=="NULL" || trimmed=="Null") return "";
+	if(trimmed=="none" || trimmed=="NONE" || trimmed=="None") return "";
+	if(trimmed=="-" || trimmed=="?" || trimmed=="~") return "";
+	if(trimmed=="(empty)" || trimmed=="EMPTY") return "";
+	return trimmed;
+}
+
+// Check if a string is numeric
+static bool isNumericColumn(const std::vector<std::string>& columnValues, int sampleSize=100){
+	int numericCount=0;
+	int sampleCount=std::min((int)columnValues.size(), sampleSize);
+	for(int i=0; i<sampleCount; ++i){
+		std::string cell=columnValues[i];
+		if(cell.empty()) continue;
+		char* endptr;
+		strtod(cell.c_str(), &endptr);
+		if(*endptr=='\0'){
+			numericCount++;
+		}
+	}
+	// If less than 80% numeric, treat as text column
+	return numericCount < (sampleCount * 0.8);
+}
+
+// Detect all text columns in the CSV
+static std::vector<int> detectTextColumns(const std::vector<std::vector<std::string>>& parsed){
+	std::vector<int> textColumns;
+	if(parsed.empty()) return textColumns;
+
+	int numColumns=parsed[0].size();
+	for(int col=0; col<numColumns; ++col){
+		std::vector<std::string> columnValues;
+		for(size_t row=1; row<parsed.size(); ++row){
+			if(col < (int)parsed[row].size()){
+				columnValues.push_back(parsed[row][col]);
+			}
+		}
+		if(isNumericColumn(columnValues)){
+			textColumns.push_back(col);
+		}
+	}
+	return textColumns;
+}
+
 static std::optional<fs::path> g_frontendDir;
 static std::string g_frontendDiag;
 
