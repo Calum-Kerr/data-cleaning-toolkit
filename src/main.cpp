@@ -495,6 +495,9 @@ static UniversalCleaningResult universalTextCleaning(
 					// Apply fuzzy matching mapping if available
 					if(result.columnMappings[j].count(cellUpper)){
 						cell=result.columnMappings[j][cellUpper];
+					}else{
+						// If no mapping found, still convert to uppercase
+						cell=cellUpper;
 					}
 				}
 			}
