@@ -208,7 +208,7 @@
         async function pasteFromClipboard(){
             try{
                 const text=await navigator.clipboard.readText();
-                if(text){uploadCSV=text;document.getElementById('csvInput').value=uploadCSV;beginProfiling();}
+                if(text){uploadCSV=text;beginProfiling();}
             }catch(err){
                 console.error('Failed to read clipboard contents: ',err);
                 alert('Could not access clipboard. Please paste directly into the text area.');
