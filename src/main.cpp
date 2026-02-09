@@ -2246,28 +2246,28 @@ int main(int argc, char* argv[]){
 	// ========================================================================
 	CROW_ROUTE(app,"/api/universal-clean").methods("POST"_method)
 	([&cleaner, &auditLog](const crow::request& req){
-		auto body=crow::json::load(req.body);
-		if(!body){
-			crow::json::wvalue result;
-			result["message"]="invalid request body";
-			return crow::response(400);
-		}
-
-		std::string csvData=body["csvData"].s();
-		double fuzzyThreshold=0.75; // default threshold
-		if(body.has("fuzzyThreshold")){
-			fuzzyThreshold=body["fuzzyThreshold"].d();
-			if(fuzzyThreshold<0.0 || fuzzyThreshold>1.0){
-				fuzzyThreshold=0.75;
-			}
-		}
-
-		bool removeDuplicates=true;
-		if(body.has("removeDuplicates")){
-			removeDuplicates=body["removeDuplicates"].b();
-		}
-
 		try{
+			auto body=crow::json::load(req.body);
+			if(!body){
+				crow::json::wvalue result;
+				result["message"]="invalid request body";
+				return crow::response(400);
+			}
+
+			std::string csvData=body["csvData"].s();
+			double fuzzyThreshold=0.75; // default threshold
+			if(body.has("fuzzyThreshold")){
+				fuzzyThreshold=body["fuzzyThreshold"].d();
+				if(fuzzyThreshold<0.0 || fuzzyThreshold>1.0){
+					fuzzyThreshold=0.75;
+				}
+			}
+
+			bool removeDuplicates=true;
+			if(body.has("removeDuplicates")){
+				removeDuplicates=body["removeDuplicates"].b();
+			}
+
 			auto parsed=cleaner.parseCSV(csvData);
 			int originalRows=parsed.size();
 
