@@ -2287,7 +2287,9 @@ int main(int argc, char* argv[]){
 
 		try{
 			// Apply universal text cleaning
+			std::cerr << "DEBUG: Starting universal text cleaning with " << parsed.size() << " rows" << std::endl;
 			auto cleaningResult=universalTextCleaning(parsed, fuzzyThreshold, removeDuplicates);
+			std::cerr << "DEBUG: Universal text cleaning completed" << std::endl;
 
 			// Build output CSV
 			std::stringstream output;
