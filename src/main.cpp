@@ -287,6 +287,11 @@ static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
 				std::cerr << "DEBUG: '" << val1 << "' -> '" << prep1 << "' vs '" << val2 << "' -> '" << prep2 << "'" << std::endl;
 			}
 
+			// Skip if either preprocessed value is empty
+			if(prep1.empty() || prep2.empty()){
+				continue;
+			}
+
 			// Length-based filtering: skip if lengths differ by more than 75%
 			// This allows comparisons like "MIAMI" (5) vs "MIAMI FLORIDA US" (15)
 			// where the difference is 10, which is 66% of 15 (less than 75%)
