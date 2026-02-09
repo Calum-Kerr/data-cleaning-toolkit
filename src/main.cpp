@@ -2607,27 +2607,24 @@ int main(int argc, char* argv[]){
 		auto originalParsed=cleaner.parseCSV(originalCSV);
 		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
 		crow::json::wvalue result;
-		result["cellAudit"]=crow::json::wvalue::list();
 		int cellsModified=0;
+		std::string changesStr="";
 		int maxRows=std::max(originalParsed.size(),cleanedParsed.size());
-		for(size_t r=0;r<maxRows;r++){
+		for(size_t r=0;r<maxRows && cellsModified<50;r++){
 			if(r<originalParsed.size() && r<cleanedParsed.size()){
 				size_t maxCols=std::max(originalParsed[r].size(),cleanedParsed[r].size());
-				for(size_t c=0;c<maxCols;c++){
+				for(size_t c=0;c<maxCols && cellsModified<50;c++){
 					std::string origVal=(c<originalParsed[r].size())?originalParsed[r][c]:"";
 					std::string cleanVal=(c<cleanedParsed[r].size())?cleanedParsed[r][c]:"";
 					if(origVal!=cleanVal){
-						crow::json::wvalue change;
-						change["row"]=(int)r;
-						change["column"]=(int)c;
-						change["originalValue"]=origVal;
-						change["cleanedValue"]=cleanVal;
-						result["cellAudit"][(int)cellsModified]=change;
+						if(!changesStr.empty())changesStr+="||";
+						changesStr+="Row "+std::to_string(r)+", Col "+std::to_string(c)+": \""+origVal+"\" → \""+cleanVal+"\"";
 						cellsModified++;
 					}
 				}
 			}
 		}
+		result["cellAudit"]=changesStr;
 		result["summary"]=crow::json::wvalue::object();
 		result["summary"]["totalCellsModified"]=cellsModified;
 		result["summary"]["originalRows"]=(int)originalParsed.size();
