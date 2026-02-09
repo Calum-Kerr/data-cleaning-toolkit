@@ -2390,6 +2390,34 @@ int main(int argc, char* argv[]){
 		}
 	});
 
+	CROW_ROUTE(app,"/api/compare").methods("POST"_method)
+	([&cleaner](const crow::request& req){
+		auto body=crow::json::load(req.body);
+		std::string originalCSV=body["originalCSV"].s();
+		std::string cleanedCSV=body["cleanedCSV"].s();
+
+		auto original=cleaner.parseCSV(originalCSV);
+		auto cleaned=cleaner.parseCSV(cleanedCSV);
+
+		int rowsRemoved=original.size()-cleaned.size();
+		int cellsModified=0;
+
+		for(size_t i=0;i<std::min(original.size(),cleaned.size());i++){
+			for(size_t j=0;j<original[i].size()&&j<cleaned[i].size();j++){
+				if(original[i][j]!=cleaned[i][j]){
+					cellsModified++;
+				}
+			}
+		}
+
+		crow::json::wvalue result;
+		result["rowsRemoved"]=rowsRemoved;
+		result["cellsModified"]=cellsModified;
+		result["originalRows"]=(int)original.size();
+		result["cleanedRows"]=(int)cleaned.size();
+		return crow::response(result);
+	});
+
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
 	std::cerr << "startup: " << (g_frontendDiag.empty() ? "(no frontend diag)" : g_frontendDiag) << std::endl;
 	try{
