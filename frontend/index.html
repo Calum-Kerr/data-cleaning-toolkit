@@ -343,6 +343,19 @@
                 console.error('Error fetching quality metrics:',err);
             }
         }
+        async function fetchAndDisplayReproducibility(){
+            try{
+                const API_URL=window.location.origin;
+                const body={csvData:uploadCSV,fuzzyThreshold:0.75,removeDuplicates:true};
+                const res=await fetch(API_URL+'/api/verify-reproducibility',{method:'POST',body:JSON.stringify(body),headers:{'Content-Type':'application/json'}});
+                const data=await res.json();
+                const status=data.reproducible?'✓ Reproducible':'✗ Not Reproducible';
+                const html='<strong>Reproducibility Verification</strong><br><br>Status: '+status+'<br>Message: '+data.message;
+                document.getElementById('reproducibilitySection').innerHTML=html;
+            }catch(err){
+                console.error('Error verifying reproducibility:',err);
+            }
+        }
         function triggerDownload(){
             const blob=new Blob([cleanedCSV],{type:'text/csv'});
             const url=window.URL.createObjectURL(blob);
