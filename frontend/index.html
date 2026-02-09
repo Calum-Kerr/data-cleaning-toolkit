@@ -307,7 +307,7 @@
             document.getElementById('completeSection').style.display='block';
             document.getElementById('cleanedDataDisplay').textContent=cleanedCSV;
             if(comparisonData){
-                const html='<strong>Before/After Comparison:</strong><br>Original rows: '+comparisonData.originalRows+'<br>Cleaned rows: '+comparisonData.cleanedRows+'<br>Rows removed: '+comparisonData.rowsRemoved+'<br>Cells modified: '+comparisonData.cellsModified;
+                const html='<strong>Before/After Comparison</strong><br><br>Original rows: '+comparisonData.originalRows+'<br>Cleaned rows: '+comparisonData.cleanedRows+'<br>Rows removed: '+comparisonData.rowsRemoved+'<br>Cells modified: '+comparisonData.cellsModified;
                 document.getElementById('comparisonSection').innerHTML=html;
             }
             fetchAndDisplayAuditLog();
