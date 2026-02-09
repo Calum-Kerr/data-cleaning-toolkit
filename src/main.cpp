@@ -2267,10 +2267,10 @@ int main(int argc, char* argv[]){
 			removeDuplicates=body["removeDuplicates"].b();
 		}
 
-		auto parsed=cleaner.parseCSV(csvData);
-		int originalRows=parsed.size();
-
 		try{
+			auto parsed=cleaner.parseCSV(csvData);
+			int originalRows=parsed.size();
+
 			// Apply universal text cleaning
 			std::cerr << "DEBUG: Starting universal text cleaning with " << parsed.size() << " rows" << std::endl;
 			auto cleaningResult=universalTextCleaning(parsed, fuzzyThreshold, removeDuplicates);
