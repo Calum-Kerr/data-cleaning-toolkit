@@ -2302,7 +2302,18 @@ int main(int argc, char* argv[]){
 
 			auditLog.addEntry("Universal Clean", removedRows, originalRows, cleanedRows);
 
+			// Convert cleaned data to CSV string
+			std::stringstream csvOutput;
+			for(size_t i=0; i<cleaningResult.cleanedData.size(); ++i){
+				for(size_t j=0; j<cleaningResult.cleanedData[i].size(); ++j){
+					if(j>0) csvOutput<<",";
+					csvOutput<<cleaningResult.cleanedData[i][j];
+				}
+				csvOutput<<"\n";
+			}
+
 			crow::json::wvalue resp;
+			resp["csvData"]=csvOutput.str();
 			resp["originalRows"]=originalRows;
 			resp["cleanedRows"]=cleanedRows;
 			resp["removedRows"]=removedRows;
