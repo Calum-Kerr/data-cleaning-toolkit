@@ -116,6 +116,15 @@
                 </div>
                 <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)" style="display: none;">
             </div>
+            <div style="margin-top: 20px; padding: 14px; background: #fafafa; border: 1px solid #d9d9d9;">
+                <h3 style="margin: 0 0 10px 0; color: #111; font-size: 14px;">Or try a sample dataset:</h3>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="upload-option" onclick="loadSampleDataset('customer')">Customer Data</button>
+                    <button class="upload-option" onclick="loadSampleDataset('employee')">Employee Records</button>
+                    <button class="upload-option" onclick="loadSampleDataset('product')">Product Catalog</button>
+                    <button class="upload-option" onclick="loadSampleDataset('survey')">Survey Responses</button>
+                </div>
+            </div>
 
         </div>
         <div id="cleaningSection" style="display:none;">
