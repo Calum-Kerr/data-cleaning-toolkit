@@ -140,6 +140,53 @@ static std::vector<int> detectTextColumns(const std::vector<std::vector<std::str
 	return textColumns;
 }
 
+// Remove state/country suffixes: anything after comma or patterns like " STATE US"
+// Generic preprocessing that works for any text data, not just locations
+static std::string removeStateSuffixes(const std::string& text){
+	std::string result=text;
+
+	// Remove anything after the last comma (e.g., "MIAMI, FLORIDA" -> "MIAMI")
+	size_t commaPos=result.rfind(',');
+	if(commaPos != std::string::npos){
+		result=result.substr(0, commaPos);
+	}
+
+	// Remove common state/country suffix patterns (case-insensitive)
+	// Convert to uppercase for pattern matching
+	std::string upper=result;
+	std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+
+	// List of patterns to remove (generic, not hardcoded city names)
+	const std::vector<std::string> patterns={
+		" ALABAMA", " ALASKA", " ARIZONA", " ARKANSAS", " CALIFORNIA", " COLORADO",
+		" CONNECTICUT", " DELAWARE", " FLORIDA", " GEORGIA", " HAWAII", " IDAHO",
+		" ILLINOIS", " INDIANA", " IOWA", " KANSAS", " KENTUCKY", " LOUISIANA",
+		" MAINE", " MARYLAND", " MASSACHUSETTS", " MICHIGAN", " MINNESOTA",
+		" MISSISSIPPI", " MISSOURI", " MONTANA", " NEBRASKA", " NEVADA",
+		" NEW HAMPSHIRE", " NEW JERSEY", " NEW MEXICO", " NEW YORK", " NORTH CAROLINA",
+		" NORTH DAKOTA", " OHIO", " OKLAHOMA", " OREGON", " PENNSYLVANIA",
+		" RHODE ISLAND", " SOUTH CAROLINA", " SOUTH DAKOTA", " TENNESSEE", " TEXAS",
+		" UTAH", " VERMONT", " VIRGINIA", " WASHINGTON", " WEST VIRGINIA",
+		" WISCONSIN", " WYOMING",
+		" DISTRICT OF COLUMBIA", " US", " USA", " UNITED STATES"
+	};
+
+	for(const auto& pattern : patterns){
+		size_t pos=upper.rfind(pattern);
+		if(pos != std::string::npos && pos + pattern.length()==upper.length()){
+			result=result.substr(0, pos);
+			upper=upper.substr(0, pos);
+		}
+	}
+
+	// Trim trailing whitespace
+	while(!result.empty() && (result.back()==' ' || result.back()=='\t')){
+		result.pop_back();
+	}
+
+	return result;
+}
+
 // Build fuzzy matching groups for a single column
 // Returns a map: canonical value -> list of original values that map to it
 // OPTIMIZED: Only compares unique values, not all rows
