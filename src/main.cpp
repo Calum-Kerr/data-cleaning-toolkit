@@ -252,7 +252,7 @@ static UniversalCleaningResult universalTextCleaning(
 	auto textColumns=detectTextColumns(parsed);
 	result.operationsLog.push_back("Detected " + std::to_string(textColumns.size()) + " text columns");
 
-	// For each text column, build fuzzy matching mappings
+	// For each text column, build fuzzy matching mappings ONLY if not too many unique values
 	for(int col : textColumns){
 		std::vector<std::string> columnValues;
 		for(size_t row=1; row<parsed.size(); ++row){
@@ -261,23 +261,31 @@ static UniversalCleaningResult universalTextCleaning(
 			}
 		}
 
-		auto mapping=createFuzzyMatchingMapping(columnValues, fuzzyThreshold);
-		result.columnMappings[col]=mapping;
+		// Count unique values
+		std::set<std::string> uniqueSet(columnValues.begin(), columnValues.end());
 
-		// Count how many unique values were merged
-		std::set<std::string> originalUnique(columnValues.begin(), columnValues.end());
-		std::set<std::string> mergedUnique;
-		for(const auto& val : columnValues){
-			if(!val.empty()){
-				mergedUnique.insert(mapping[val]);
+		// Only do fuzzy matching if there are not too many unique values
+		if(uniqueSet.size() <= 500){
+			auto mapping=createFuzzyMatchingMapping(columnValues, fuzzyThreshold);
+			result.columnMappings[col]=mapping;
+
+			// Count how many unique values were merged
+			std::set<std::string> mergedUnique;
+			for(const auto& val : columnValues){
+				if(!val.empty()){
+					mergedUnique.insert(mapping[val]);
+				}
 			}
-		}
-		int mergedCount=originalUnique.size() - mergedUnique.size();
-		result.mergedCountPerColumn[col]=mergedCount;
+			int mergedCount=uniqueSet.size() - mergedUnique.size();
+			result.mergedCountPerColumn[col]=mergedCount;
 
-		if(mergedCount > 0){
-			result.operationsLog.push_back("Column " + std::to_string(col) + ": merged " +
-				std::to_string(mergedCount) + " values");
+			if(mergedCount > 0){
+				result.operationsLog.push_back("Column " + std::to_string(col) + ": merged " +
+					std::to_string(mergedCount) + " values");
+			}
+		}else{
+			result.operationsLog.push_back("Column " + std::to_string(col) + ": skipped fuzzy matching (too many unique values: " +
+				std::to_string(uniqueSet.size()) + ")");
 		}
 	}
 
@@ -306,7 +314,7 @@ static UniversalCleaningResult universalTextCleaning(
 					cell=normalizePunctuation(cell);
 					cell=normalizeWhitespace(cell);
 
-					// Apply fuzzy matching mapping
+					// Apply fuzzy matching mapping if available
 					if(result.columnMappings[j].count(cell)){
 						cell=result.columnMappings[j][cell];
 					}
