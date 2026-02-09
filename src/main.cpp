@@ -140,6 +140,187 @@ static std::vector<int> detectTextColumns(const std::vector<std::vector<std::str
 	return textColumns;
 }
 
+// Build fuzzy matching groups for a single column
+// Returns a map: canonical value -> list of original values that map to it
+static std::map<std::string, std::vector<std::string>> buildFuzzyMatchingGroups(
+	const std::vector<std::string>& columnValues,
+	double threshold=0.75){
+
+	std::map<std::string, std::vector<std::string>> groups;
+	std::vector<std::string> uniqueValues;
+	std::map<std::string, int> valueCounts;
+
+	// Count occurrences of each value
+	for(const auto& val : columnValues){
+		if(!val.empty()){
+			valueCounts[val]++;
+		}
+	}
+
+	// Build groups using fuzzy matching
+	std::set<std::string> processed;
+	for(const auto& val1 : columnValues){
+		if(val1.empty() || processed.count(val1)) continue;
+
+		std::string canonical=val1;
+		int maxCount=valueCounts[val1];
+		std::vector<std::string> matches;
+		matches.push_back(val1);
+
+		// Find all similar values
+		for(const auto& val2 : columnValues){
+			if(val1==val2 || val2.empty() || processed.count(val2)) continue;
+
+			double similarity=calculateSimilarity(val1, val2);
+			if(similarity >= threshold){
+				matches.push_back(val2);
+				// Use the more common value as canonical
+				if(valueCounts[val2] > maxCount){
+					canonical=val2;
+					maxCount=valueCounts[val2];
+				}
+				processed.insert(val2);
+			}
+		}
+
+		// Map all matches to canonical
+		for(const auto& match : matches){
+			groups[canonical].push_back(match);
+		}
+		processed.insert(val1);
+	}
+
+	return groups;
+}
+
+// Apply fuzzy matching to a column: returns mapping of original -> canonical
+static std::map<std::string, std::string> createFuzzyMatchingMapping(
+	const std::vector<std::string>& columnValues,
+	double threshold=0.75){
+
+	auto groups=buildFuzzyMatchingGroups(columnValues, threshold);
+	std::map<std::string, std::string> mapping;
+
+	for(const auto& pair : groups){
+		for(const auto& val : pair.second){
+			mapping[val]=pair.first;
+		}
+	}
+
+	return mapping;
+}
+
+// Universal text cleaning function
+// Applies all cleaning operations to all text columns
+struct UniversalCleaningResult {
+	std::vector<std::vector<std::string>> cleanedData;
+	std::map<int, std::map<std::string, std::string>> columnMappings; // column -> (original -> canonical)
+	std::map<int, int> mergedCountPerColumn; // column -> number of values merged
+	int duplicateRowsRemoved;
+	std::vector<std::string> operationsLog;
+};
+
+static UniversalCleaningResult universalTextCleaning(
+	const std::vector<std::vector<std::string>>& parsed,
+	double fuzzyThreshold=0.75,
+	bool removeDuplicateRows=true){
+
+	UniversalCleaningResult result;
+	result.duplicateRowsRemoved=0;
+
+	if(parsed.empty()){
+		return result;
+	}
+
+	// Detect all text columns
+	auto textColumns=detectTextColumns(parsed);
+	result.operationsLog.push_back("Detected " + std::to_string(textColumns.size()) + " text columns");
+
+	// For each text column, build fuzzy matching mappings
+	for(int col : textColumns){
+		std::vector<std::string> columnValues;
+		for(size_t row=1; row<parsed.size(); ++row){
+			if(col < (int)parsed[row].size()){
+				columnValues.push_back(parsed[row][col]);
+			}
+		}
+
+		auto mapping=createFuzzyMatchingMapping(columnValues, fuzzyThreshold);
+		result.columnMappings[col]=mapping;
+
+		// Count how many unique values were merged
+		std::set<std::string> originalUnique(columnValues.begin(), columnValues.end());
+		std::set<std::string> mergedUnique;
+		for(const auto& val : columnValues){
+			if(!val.empty()){
+				mergedUnique.insert(mapping[val]);
+			}
+		}
+		int mergedCount=originalUnique.size() - mergedUnique.size();
+		result.mergedCountPerColumn[col]=mergedCount;
+
+		if(mergedCount > 0){
+			result.operationsLog.push_back("Column " + std::to_string(col) + ": merged " +
+				std::to_string(mergedCount) + " values");
+		}
+	}
+
+	// Clean and transform all rows
+	std::set<std::vector<std::string>> seenRows;
+	for(size_t i=0; i<parsed.size(); ++i){
+		auto row=parsed[i];
+
+		// Apply cleaning to each cell
+		for(size_t j=0; j<row.size(); ++j){
+			std::string cell=row[j];
+
+			// Check if this is a text column
+			bool isTextCol=false;
+			for(int col : textColumns){
+				if(col == (int)j){
+					isTextCol=true;
+					break;
+				}
+			}
+
+			if(isTextCol){
+				// Apply cleaning operations in sequence
+				cell=standardizeNullValues(cell);
+				if(!cell.empty()){
+					cell=normalizePunctuation(cell);
+					cell=normalizeWhitespace(cell);
+
+					// Apply fuzzy matching mapping
+					if(result.columnMappings[j].count(cell)){
+						cell=result.columnMappings[j][cell];
+					}
+				}
+			}
+
+			row[j]=cell;
+		}
+
+		// Remove duplicate rows if requested
+		if(removeDuplicateRows){
+			if(!seenRows.count(row)){
+				seenRows.insert(row);
+				result.cleanedData.push_back(row);
+			}else{
+				result.duplicateRowsRemoved++;
+			}
+		}else{
+			result.cleanedData.push_back(row);
+		}
+	}
+
+	if(removeDuplicateRows && result.duplicateRowsRemoved > 0){
+		result.operationsLog.push_back("Removed " + std::to_string(result.duplicateRowsRemoved) +
+			" duplicate rows");
+	}
+
+	return result;
+}
+
 static std::optional<fs::path> g_frontendDir;
 static std::string g_frontendDiag;
 
