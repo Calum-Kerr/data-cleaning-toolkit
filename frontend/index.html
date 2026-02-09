@@ -320,6 +320,7 @@
             fetchAndDisplayAuditLog();
             fetchAndDisplayQualityMetrics();
             fetchAndDisplayReproducibility();
+            fetchAndDisplayFairnessAnalysis();
             triggerDownload();
         }
         async function fetchAndDisplayAuditLog(){
@@ -360,6 +361,32 @@
                 document.getElementById('reproducibilitySection').innerHTML=html;
             }catch(err){
                 console.error('Error verifying reproducibility:',err);
+            }
+        }
+        async function fetchAndDisplayFairnessAnalysis(){
+            try{
+                const API_URL=window.location.origin;
+                const res=await fetch(API_URL+'/api/fairness-analysis',{method:'POST',body:cleanedCSV});
+                const data=await res.json();
+                if(data.analysis&&data.analysis.length>0){
+                    let html='<strong>Fairness Analysis</strong><br><br>';
+                    for(const col of data.analysis){
+                        html+='<strong>'+col.columnName+'</strong>';
+                        if(col.isDemographic)html+=' <em style="color:#d9534f">[Demographic Data]</em>';
+                        html+='<br>';
+                        for(const item of col.distribution){
+                            let warning='';
+                            if(item.imbalanced)warning=' ⚠️ Imbalanced';
+                            html+=item.value+': '+item.count+' ('+item.percentage+'%)'+warning+'<br>';
+                        }
+                        html+='<br>';
+                    }
+                    document.getElementById('fairnessAnalysisSection').innerHTML=html;
+                }else{
+                    document.getElementById('fairnessAnalysisSection').innerHTML='<strong>Fairness Analysis</strong><br><br>No categorical columns detected for fairness analysis.';
+                }
+            }catch(err){
+                console.error('Error fetching fairness analysis:',err);
             }
         }
         function triggerDownload(){
