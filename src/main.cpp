@@ -2496,8 +2496,9 @@ int main(int argc, char* argv[]){
 		crow::json::wvalue result;
 		result["analysis"]=crow::json::wvalue::list();
 		if(parsed.size()<2){result["message"]="insufficient data for fairness analysis";return crow::response(result);}
+		auto toLower=[](const std::string& str)->std::string{std::string result=str;std::transform(result.begin(),result.end(),result.begin(),::tolower);return result;};
 		auto isNumericStr=[](const std::string& str)->bool{if(str.empty())return false;size_t start=0;if(str[0]=='-'||str[0]=='+')start=1;if(start>=str.length())return false;bool hasDecimal=false;for(size_t i=start;i<str.length();i++){if(str[i]=='.'){if(hasDecimal)return false;hasDecimal=true;}else if(str[i]<'0'||str[i]>'9')return false;}return true;};
-		auto isDemographicColumn=[](const std::string& colName)->bool{std::string lower=toLower(colName);const std::vector<std::string> keywords={"gender","sex","race","ethnicity","age","religion","disability","sexual orientation","national origin","color"};for(const auto& kw:keywords){if(lower.find(kw)!=std::string::npos)return true;}return false;};
+		auto isDemographicColumn=[&toLower](const std::string& colName)->bool{std::string lower=toLower(colName);const std::vector<std::string> keywords={"gender","sex","race","ethnicity","age","religion","disability","sexual orientation","national origin","color"};for(const auto& kw:keywords){if(lower.find(kw)!=std::string::npos)return true;}return false;};
 		int cols=parsed.empty()?0:(int)parsed[0].size();
 		int analysisIdx=0;
 		for(int col=0;col<cols;col++){
