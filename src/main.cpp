@@ -2157,43 +2157,55 @@ int main(int argc, char* argv[]){
 		auto parsed=cleaner.parseCSV(csvData);
 		int originalRows=parsed.size();
 
-		// Apply universal text cleaning
-		auto cleaningResult=universalTextCleaning(parsed, fuzzyThreshold, removeDuplicates);
+		try{
+			// Apply universal text cleaning
+			auto cleaningResult=universalTextCleaning(parsed, fuzzyThreshold, removeDuplicates);
 
-		// Build output CSV
-		std::stringstream output;
-		for(const auto& row : cleaningResult.cleanedData){
-			for(size_t i=0; i<row.size(); ++i){
-				if(i>0) output<<",";
-				output<<row[i];
+			// Build output CSV
+			std::stringstream output;
+			for(const auto& row : cleaningResult.cleanedData){
+				for(size_t i=0; i<row.size(); ++i){
+					if(i>0) output<<",";
+					output<<row[i];
+				}
+				output<<"\n";
 			}
-			output<<"\n";
+
+			int cleanedRows=cleaningResult.cleanedData.size();
+			int removedRows=originalRows - cleanedRows;
+
+			auditLog.addEntry("Universal Clean", removedRows, originalRows, cleanedRows);
+
+			crow::json::wvalue resp;
+			resp["csvData"]=output.str();
+			resp["originalRows"]=originalRows;
+			resp["cleanedRows"]=cleanedRows;
+			resp["removedRows"]=removedRows;
+			resp["duplicateRowsRemoved"]=cleaningResult.duplicateRowsRemoved;
+			resp["fuzzyThreshold"]=fuzzyThreshold;
+			resp["operationsCount"]=(int)cleaningResult.operationsLog.size();
+			resp["message"]="universal text cleaning completed successfully";
+			resp["mode"]="api";
+
+			// Add operations log as a simple string
+			std::stringstream opsLog;
+			for(const auto& op : cleaningResult.operationsLog){
+				opsLog<<op<<"; ";
+			}
+			resp["operations"]=opsLog.str();
+
+			return crow::response(resp);
+		}catch(const std::exception& e){
+			crow::json::wvalue resp;
+			resp["message"]=std::string("error: ") + e.what();
+			resp["originalRows"]=originalRows;
+			return crow::response(500, resp);
+		}catch(...){
+			crow::json::wvalue resp;
+			resp["message"]="unknown error during universal text cleaning";
+			resp["originalRows"]=originalRows;
+			return crow::response(500, resp);
 		}
-
-		int cleanedRows=cleaningResult.cleanedData.size();
-		int removedRows=originalRows - cleanedRows;
-
-		auditLog.addEntry("Universal Clean", removedRows, originalRows, cleanedRows);
-
-		crow::json::wvalue resp;
-		resp["csvData"]=output.str();
-		resp["originalRows"]=originalRows;
-		resp["cleanedRows"]=cleanedRows;
-		resp["removedRows"]=removedRows;
-		resp["duplicateRowsRemoved"]=cleaningResult.duplicateRowsRemoved;
-		resp["fuzzyThreshold"]=fuzzyThreshold;
-		resp["operationsCount"]=(int)cleaningResult.operationsLog.size();
-		resp["message"]="universal text cleaning completed successfully";
-		resp["mode"]="api";
-
-		// Add operations log as a simple string
-		std::stringstream opsLog;
-		for(const auto& op : cleaningResult.operationsLog){
-			opsLog<<op<<"; ";
-		}
-		resp["operations"]=opsLog.str();
-
-		return crow::response(resp);
 	});
 
 	std::cerr << "startup: port=" << port << " web_concurrency=" << webConcurrency << std::endl;
