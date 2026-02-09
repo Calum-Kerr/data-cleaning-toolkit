@@ -427,6 +427,7 @@
                 console.error('Error fetching fairness analysis:',err);
             }
         }
+        async function fetchAndDisplayPerformanceMetrics(){try{const API_URL=window.location.origin;const res=await fetch(API_URL+'/api/measure-performance',{method:'POST',body:uploadCSV});const data=await res.json();if(data.metrics){let html='Execution Time: '+data.metrics.executionTimeMs.toFixed(2)+'ms<br>';html+='Rows: '+data.metrics.rows+' | Columns: '+data.metrics.columns+' | Total Cells: '+data.metrics.totalCells+'<br>';html+='Processing Speed: '+data.metrics.cellsPerSecond+' cells/sec<br>';html+='Missing Values: '+data.metrics.missingValues+' | Duplicate Rows: '+data.metrics.duplicateRows+'<br>';html+='Cleaned Rows: '+data.metrics.cleanedRows;document.getElementById('performanceMetricsContent').innerHTML=html;}else{document.getElementById('performanceMetricsContent').innerHTML='No performance data available.';}}catch(err){console.error('Error fetching performance metrics:',err);}}
         function triggerDownload(){
             const blob=new Blob([cleanedCSV],{type:'text/csv'});
             const url=window.URL.createObjectURL(blob);
