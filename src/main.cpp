@@ -2499,6 +2499,7 @@ int main(int argc, char* argv[]){
 		auto isNumericStr=[](const std::string& str)->bool{if(str.empty())return false;size_t start=0;if(str[0]=='-'||str[0]=='+')start=1;if(start>=str.length())return false;bool hasDecimal=false;for(size_t i=start;i<str.length();i++){if(str[i]=='.'){if(hasDecimal)return false;hasDecimal=true;}else if(str[i]<'0'||str[i]>'9')return false;}return true;};
 		auto isDemographicColumn=[](const std::string& colName)->bool{std::string lower=toLower(colName);const std::vector<std::string> keywords={"gender","sex","race","ethnicity","age","religion","disability","sexual orientation","national origin","color"};for(const auto& kw:keywords){if(lower.find(kw)!=std::string::npos)return true;}return false;};
 		int cols=parsed.empty()?0:(int)parsed[0].size();
+		int analysisIdx=0;
 		for(int col=0;col<cols;col++){
 			std::map<std::string,int> distribution;int nonEmptyCount=0;
 			for(size_t row=1;row<parsed.size();row++){if(col<(int)parsed[row].size()&&!parsed[row][col].empty()){distribution[parsed[row][col]]++;nonEmptyCount++;}}
@@ -2508,15 +2509,15 @@ int main(int argc, char* argv[]){
 			if(distribution.size()>20)continue;
 			std::string colName=col<(int)parsed[0].size()?parsed[0][col]:"Column "+std::to_string(col);
 			bool isDemographic=isDemographicColumn(colName);
-			crow::json::wvalue colAnalysis;
-			colAnalysis["columnName"]=colName;
-			colAnalysis["isDemographic"]=isDemographic;
-			colAnalysis["uniqueValues"]=(int)distribution.size();
-			colAnalysis["distribution"]=crow::json::wvalue::list();
-			std::vector<std::pair<std::string,double>> sorted(distribution.begin(),distribution.end());
+			result["analysis"][analysisIdx]["columnName"]=colName;
+			result["analysis"][analysisIdx]["isDemographic"]=isDemographic;
+			result["analysis"][analysisIdx]["uniqueValues"]=(int)distribution.size();
+			result["analysis"][analysisIdx]["distribution"]=crow::json::wvalue::list();
+			std::vector<std::pair<std::string,int>> sorted(distribution.begin(),distribution.end());
 			std::sort(sorted.begin(),sorted.end(),[](const auto& a,const auto& b){return a.second>b.second;});
-			for(const auto& p:sorted){double pct=(p.second*100.0)/nonEmptyCount;crow::json::wvalue item;item["value"]=p.first;item["count"]=p.second;item["percentage"]=(int)pct;if(pct<10.0||pct>90.0)item["imbalanced"]=true;colAnalysis["distribution"].push_back(item);}
-			result["analysis"].push_back(colAnalysis);
+			int itemIdx=0;
+			for(const auto& p:sorted){double pct=(p.second*100.0)/nonEmptyCount;result["analysis"][analysisIdx]["distribution"][itemIdx]["value"]=p.first;result["analysis"][analysisIdx]["distribution"][itemIdx]["count"]=p.second;result["analysis"][analysisIdx]["distribution"][itemIdx]["percentage"]=(int)pct;if(pct<10.0||pct>90.0)result["analysis"][analysisIdx]["distribution"][itemIdx]["imbalanced"]=true;itemIdx++;}
+			analysisIdx++;
 		}
 		result["message"]="fairness analysis completed";return crow::response(result);
 	});
