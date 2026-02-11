@@ -82,6 +82,8 @@
         .table-pagination button:disabled{color:var(--muted);cursor:not-allowed}
         .modified-cell{background:#fff3cd;color:#856404}
 	    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
 </head>
 	<body>
 	  <div class="wrap">
@@ -140,19 +142,8 @@
             <div id="progressText" style="text-align: center; margin: 20px 0; font-size: 16px;">Starting...</div>
         </div>
         <div id="completeSection" style="display:none;">
-            <h2 class="section-title">Cleaning Complete!</h2>
-            <p style="text-align: center; margin: 20px 0;">Your data has been successfully cleaned and downloaded.</p>
-            <div id="summaryDashboard" style="background: #f4f4f4; border: 1px solid #d9d9d9; padding: 20px; margin: 14px 0; border-radius: 4px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;"></div>
-            <div class="results-grid">
-                <div id="comparisonSection" style="text-align: left; padding: 15px; background: #ffffff; border: 1px solid #d9d9d9; max-height: 200px; overflow-y: auto;"></div>
-                <div id="auditLogSection" style="text-align: left; padding: 15px; background: #ffffff; border: 1px solid #d9d9d9; max-height: 200px; overflow-y: auto;"></div>
-                <div id="qualityMetricsSection" style="text-align: left; padding: 15px; background: #ffffff; border: 1px solid #d9d9d9; max-height: 200px; overflow-y: auto;"></div>
-                <div id="reproducibilitySection" style="text-align: left; padding: 15px; background: #ffffff; border: 1px solid #d9d9d9; max-height: 200px; overflow-y: auto;"></div>
-            </div>
-            <div id="fairnessAnalysisSection" style="text-align: left; padding: 15px; background: #ffffff; border: 1px solid #d9d9d9; margin: 14px 0; max-height: 300px; overflow-y: auto;"></div>
-            <div id="performanceMetricsSection" style="text-align: left; padding: 15px; background: #ffffff; border: 1px solid #d9d9d9; margin: 14px 0;"><strong>Performance Metrics</strong><br><span id="performanceMetricsContent" style="font-size: 12px; color: #555;"></span></div>
-            <div id="evaluationReportSection" style="text-align: left; padding: 15px; background: #ffffff; border: 1px solid #d9d9d9; margin: 14px 0; display: none;"><strong>Evaluation Report</strong><br><span id="evaluationReportContent" style="font-size: 12px; color: #555;"></span></div>
-            <div id="cellAuditSection" style="text-align: left; padding: 15px; background: #ffffff; border: 1px solid #d9d9d9; margin: 14px 0; display: none;"><strong>Cell-Level Audit Report</strong><br><span id="cellAuditContent" style="font-size: 12px; color: #555; max-height: 300px; overflow-y: auto; display: block;"></span></div>
+            <h2 class="section-title">Cleaning Complete</h2>
+            <p id="cleaningSummaryLine" style="text-align: center; margin: 20px 0; font-size: 15px; color: #555;"></p>
             <div style="margin: 20px 0;">
                 <h3 style="margin: 0 0 10px 0; color: #111;">Cleaned Data</h3>
                 <div class="table-controls">
@@ -172,7 +163,7 @@
                 <button onclick="downloadAsCSV()" style="margin-right: 8px;">Download CSV</button>
                 <button onclick="downloadAsJSON()" style="margin-right: 8px;">Download JSON</button>
                 <button onclick="downloadAsTSV()" style="margin-right: 8px;">Download TSV</button>
-                <button onclick="generateAndDownloadReport()" style="margin-right: 8px;">Download Report</button>
+                <button onclick="generatePDFReport()" style="margin-right: 8px;">Download Audit Report (PDF)</button>
                 <button onclick="startNewSession()">Clean Another File</button>
             </div>
         </div>
