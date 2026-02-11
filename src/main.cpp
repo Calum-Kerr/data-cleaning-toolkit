@@ -948,6 +948,26 @@ int main(int argc, char* argv[]){
         return response;
     });
 
+    CROW_ROUTE(app,"/jspdf.umd.min.js")
+	([](){
+		auto js = readFrontendAsset("jspdf.umd.min.js", false);
+		if(!js){return crow::response(404);}
+		auto response=crow::response(*js);
+        response.add_header("Content-Type","application/javascript");
+        response.add_header("Cache-Control","public, max-age=31536000, immutable");
+        return response;
+    });
+
+    CROW_ROUTE(app,"/jspdf.plugin.autotable.min.js")
+	([](){
+		auto js = readFrontendAsset("jspdf.plugin.autotable.min.js", false);
+		if(!js){return crow::response(404);}
+		auto response=crow::response(*js);
+        response.add_header("Content-Type","application/javascript");
+        response.add_header("Cache-Control","public, max-age=31536000, immutable");
+        return response;
+    });
+
     CROW_ROUTE(app,"/api/parse").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         auto data=req.body;
@@ -1124,7 +1144,7 @@ int main(int argc, char* argv[]){
         result["mode"]="api";
         return result;
     });
-    
+
     CROW_ROUTE(app,"/favicon.ico")
 	([](){
 		auto ico = readFrontendAsset("favicon.ico", true);
