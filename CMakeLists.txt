@@ -16,7 +16,7 @@ if(NOT MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,noexecstack -Wl,-z,relro,-z,now")
 endif()
 include_directories(include)
-set(SOURCES src/main.cpp src/algorithms.cpp)
+set(SOURCES src/main.cpp src/algorithms.cpp src/csv_parser.cpp src/text_utils.cpp src/detectors.cpp src/cleaners.cpp src/fuzzy_match.cpp src/pdf_report.cpp)
 add_executable(Toolkit ${SOURCES})
 find_package(Threads REQUIRED)
 
