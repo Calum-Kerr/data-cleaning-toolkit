@@ -19,3 +19,11 @@ std::string normalizeWhitespace(const std::string& text){
   return result;
 }
 
+std::string normalizePunctuation(const std::string& text){
+  std::string result;
+  for(char c : text){
+    if(c!='.') result+=c;
+  }
+  return result;
+}
+
