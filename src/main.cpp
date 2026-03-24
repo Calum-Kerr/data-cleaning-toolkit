@@ -569,31 +569,21 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/trim-whitespace").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
-        std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
-        int count=0;
-        std::stringstream cleaned;
-        for(const auto& row:parsed){
-            for(size_t i=0;i<row.size();++i){
-                std::string cell=row[i];
-                size_t start=cell.find_first_not_of(" \t");
-                size_t end=cell.find_last_not_of(" \t");
-                if(start!=std::string::npos){
-                    cell=cell.substr(start,end-start+1);
-                    count++;
-                }else{
-                    cell="";
-                }
-                if(i>0)cleaned<<",";
-                cleaned<<cell;
-            }
-            cleaned<<"\n";
+        auto parsed=parseCSV(req.body);
+        auto cleaned=trimWhitespace(parsed);
+        std::stringstream output;
+        for(const auto& row:cleaned){
+          for(size_t i=0;i<row.size();++i){
+            if(i>0)output<<",";
+            output<<row[i];
+          }
+          output<<"\n";
         }
-        auditLog.addEntry("Trim Whitespace", count, parsed.size(), parsed.size());
+        auditLog.addEntry("Trim Whitespace", 0, parsed.size(), parsed.size());
         crow::json::wvalue result;
         result["message"]="whitespace trimmed";
-        result["cellsTrimmed"]=count;
-        result["cleaned"]=cleaned.str();
+        result["cellsTrimmed"]=0;
+        result["cleaned"]=output.str();
         result["mode"]="api";
         return result;
     });
@@ -753,24 +743,21 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/standardise-null-values").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
-        std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
-        int count=0;
-        std::stringstream cleaned;
-        for(const auto& row:parsed){
-            for(size_t i=0;i<row.size();++i){
-                std::string cell=row[i];
-                if(cell.empty()||cell=="N/A"||cell=="n/a"||cell=="NA"||cell=="null"||cell=="NULL"||cell=="None"||cell=="NONE"||cell=="-"||cell=="?"){cell="";count++;}
-                if(i>0)cleaned<<",";
-                cleaned<<cell;
-            }
-            cleaned<<"\n";
+        auto parsed=parseCSV(req.body);
+        auto cleaned=standardizeNullValuesInData(parsed);
+        std::stringstream output;
+        for(const auto& row:cleaned){
+          for(size_t i=0;i<row.size();++i){
+            if(i>0)output<<",";
+            output<<row[i];
+          }
+          output<<"\n";
         }
-        auditLog.addEntry("Standardise Null Values", count, parsed.size(), parsed.size());
+        auditLog.addEntry("Standardise Null Values", 0, parsed.size(), parsed.size());
         crow::json::wvalue result;
         result["message"]="null values standardised";
-        result["cellsStandardised"]=count;
-        result["cleaned"]=cleaned.str();
+        result["cellsStandardised"]=0;
+        result["cleaned"]=output.str();
         result["mode"]="api";
         return result;
     });
