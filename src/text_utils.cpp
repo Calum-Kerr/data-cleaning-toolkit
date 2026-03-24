@@ -25,9 +25,7 @@ std::string normalizePunctuation(const std::string& text){
   std::string result;
   for(size_t i=0; i<text.length(); ++i){
     char c=text[i];
-    if(c=='\u2013' || c=='\u2014' || c=='\u2010') result+='-';
-    else if(c=='\u2018' || c=='\u2019' || c=='\u201C' || c=='\u201D') result+='\'';
-    else if(c!='.') result+=c;
+    if(c!='.') result+=c;
   }
   return result;
 }
