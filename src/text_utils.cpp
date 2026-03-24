@@ -1,4 +1,21 @@
 #include "text_utils.h"
+#include <algorithm>
 
-// Text utilities implementation
+std::string normalizeWhitespace(const std::string& text){
+  std::string result;
+  bool inSpace=false;
+  for(char c : text){
+    if(c==' ' || c=='\t' || c=='\r' || c=='\n'){
+      if(!inSpace && !result.empty()){
+        result+=' ';
+        inSpace=true;
+      }
+    }else{
+      result+=c;
+      inSpace=false;
+    }
+  }
+  while(!result.empty() && result.back()==' ') result.pop_back();
+  return result;
+}
 
