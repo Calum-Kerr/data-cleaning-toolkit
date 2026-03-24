@@ -773,51 +773,20 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/detect-outliers").methods("POST"_method)
     ([&cleaner](const crow::request& req){
-        std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
-        if(parsed.size()<2){crow::json::wvalue result; result["outliers"]=0;result["rowsWithOutliers"]=0;result["message"]="insufficient data for outlier detection";return crow::response(result);}
-        auto isNumericStr=[](const std::string& str)->bool{
-            if(str.empty())return false;
-            size_t start=0;
-            if(str[0]=='-'||str[0]=='+')start=1;
-            if(start>=str.length())return false;
-            bool hasDecimal=false;
-            for(size_t i=start;i<str.length();i++){if(str[i]=='.'){if(hasDecimal)return false;hasDecimal=true;}else if(str[i]<'0'||str[i]>'9')return false;}
-            return true;
-        };
-        int outlierCount=0;
-        std::set<int> outlierRows;
-        size_t numCols=parsed[0].size();
-        struct OutlierDetail{int row;int col;double val;double lower;double upper;};
-        std::vector<OutlierDetail> outlierDetails;
-        for(size_t col=0;col<numCols;col++){
-            std::vector<double> values;
-            std::vector<int> rowIndices;
-            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&isNumericStr(parsed[row][col])){double val=std::stod(parsed[row][col]);values.push_back(val);rowIndices.push_back(row);}}
-            if(values.size()<4)continue;
-            std::vector<double> sortedValues=values;
-            std::sort(sortedValues.begin(),sortedValues.end());
-            size_t n=sortedValues.size();
-            double q1=sortedValues[n/4];
-            double q3=sortedValues[3*n/4];
-            double iqr=q3-q1;
-            double lower=q1-1.5*iqr;
-            double upper=q3+1.5*iqr;
-            for(size_t i=0;i<values.size();i++){if(values[i]<lower||values[i]>upper){outlierCount++;outlierRows.insert(rowIndices[i]);outlierDetails.push_back({rowIndices[i],(int)col,values[i],lower,upper});}}
+        auto parsed=parseCSV(req.body);
+        if(parsed.size()<2){
+          crow::json::wvalue result;
+          result["outliers"]=0;
+          result["rowsWithOutliers"]=0;
+          result["message"]="insufficient data for outlier detection";
+          return crow::response(result);
         }
+        auto outlierRows=detectOutliers(parsed);
         crow::json::wvalue result;
-        result["outliers"]=outlierCount;
+        result["outliers"]=outlierRows.size();
         result["rowsWithOutliers"]=(int)outlierRows.size();
         result["message"]="outlier detection completed";
         result["mode"]="api";
-        result["details"]=crow::json::wvalue::list();
-        for(size_t i=0;i<outlierDetails.size();i++){
-            result["details"][i]["row"]=outlierDetails[i].row;
-            result["details"][i]["column"]=outlierDetails[i].col;
-            result["details"][i]["value"]=outlierDetails[i].val;
-            result["details"][i]["lower"]=outlierDetails[i].lower;
-            result["details"][i]["upper"]=outlierDetails[i].upper;
-        }
         return crow::response(result);
     });
 
@@ -855,62 +824,36 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/detect-inconsistent-values").methods("POST"_method)
     ([&cleaner](const crow::request& req){
-        std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
-        if(parsed.size()<2){crow::json::wvalue result; result["inconsistentCount"]=0;result["message"]="insufficient data for inconsistency detection";return crow::response(result);}
-        auto levenshteinDist=[](const std::string& s1,const std::string& s2)->int{
-            size_t m=s1.length();
-            size_t n=s2.length();
-            std::vector<std::vector<int>> dp(m+1,std::vector<int>(n+1,0));
-            for(size_t i=0;i<=m;i++)dp[i][0]=i;
-            for(size_t j=0;j<=n;j++)dp[0][j]=j;
-            for(size_t i=1;i<=m;i++){for(size_t j=1;j<=n;j++){if(s1[i-1]==s2[j-1]){dp[i][j]=dp[i-1][j-1];}else{dp[i][j]=1+std::min({dp[i-1][j],dp[i][j-1],dp[i-1][j-1]});}}}
-            return dp[m][n];
-        };
-        auto toLower=[](const std::string& str)->std::string{std::string result=str;std::transform(result.begin(),result.end(),result.begin(),::tolower);return result;};
-        auto isNameColumn=[&toLower](const std::string& colName)->bool{std::string lower=toLower(colName);const std::vector<std::string> nameKeywords={"player","name","first name","last name","full name","employee","customer","person","author","contact","user","username","email","phone","address","street","city","country","state","zip","postal"};for(const auto& keyword:nameKeywords){if(lower.find(keyword)!=std::string::npos){return true;}}return false;};
+        auto parsed=parseCSV(req.body);
+        if(parsed.size()<2){
+          crow::json::wvalue result;
+          result["inconsistentCount"]=0;
+          result["message"]="insufficient data for inconsistency detection";
+          return crow::response(result);
+        }
+        auto inconsistencies=detectInconsistentValues(parsed);
         int inconsistentCount=0;
-        std::vector<std::string> skippedNameColumns;
-        std::map<std::string,std::map<std::string,std::vector<std::string>>> suggestedMappings;
-        size_t numCols=parsed[0].size();
-        for(size_t col=0;col<numCols;col++){
-            std::string colName=parsed[0][col];
-            if(isNameColumn(colName)){skippedNameColumns.push_back(colName);continue;}
-            std::vector<std::string> colValues;
-            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&!parsed[row][col].empty()){colValues.push_back(parsed[row][col]);}}
-            if(colValues.size()<2)continue;
-            std::set<std::string> processedValues;
-            for(size_t i=0;i<colValues.size();i++){
-                if(processedValues.count(colValues[i]))continue;
-                processedValues.insert(colValues[i]);
-                for(size_t j=i+1;j<colValues.size();j++){
-                    if(processedValues.count(colValues[j]))continue;
-                    int distance=levenshteinDist(colValues[i],colValues[j]);
-                    if(distance<=2){
-                        inconsistentCount++;
-                        if(suggestedMappings[colName].find(colValues[i])==suggestedMappings[colName].end()){suggestedMappings[colName][colValues[i]]=std::vector<std::string>();}
-                        suggestedMappings[colName][colValues[i]].push_back(colValues[j]);
-                    }
-                }
-            }
+        for(const auto& pair:inconsistencies){
+          inconsistentCount+=pair.second.size();
         }
         crow::json::wvalue result;
         result["inconsistentCount"]=inconsistentCount;
         result["message"]="inconsistency detection completed";
         result["mode"]="api";
-        result["suggestedMappings"]=crow::json::wvalue::object();
-        for(auto& colEntry:suggestedMappings){result["suggestedMappings"][colEntry.first]=crow::json::wvalue::object();for(auto& valEntry:colEntry.second){result["suggestedMappings"][colEntry.first][valEntry.first]=valEntry.second[0];}}
-        if(!skippedNameColumns.empty()){result["warning"]="name columns excluded from detection to protect data integrity";std::string colsJson="[";for(size_t i=0;i<skippedNameColumns.size();i++){if(i>0)colsJson+=",";colsJson+="\""+skippedNameColumns[i]+"\"";}colsJson+="]";result["skippedColumns"]=crow::json::load(colsJson);}
         return crow::response(result);
     });
 
     CROW_ROUTE(app,"/api/standardise-values").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
         auto body=crow::json::load(req.body);
-        if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+        if(!body){
+          crow::json::wvalue result;
+          result["message"]="invalid request body";
+          return crow::response(400);
+        }
         std::string csvData=body["csvData"].s();
         std::string mappingsJson=body["mappings"].s();
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         if(parsed.size()<2){crow::json::wvalue result; result["originalRows"]=parsed.size();result["cleanedRows"]=parsed.size();result["valuesStandardised"]=0;result["message"]="insufficient data for standardisation";return crow::response(result);}
         std::map<std::string,std::map<std::string,std::string>> columnMappings;
         size_t pos=0;
