@@ -488,16 +488,13 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/detect-missing").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
-        auto data=req.body;
-        auto parsed=cleaner.parseCSV(data);
-        auto missing=cleaner.detectMissingValues(parsed);
+        auto parsed=parseCSV(req.body);
+        auto missing=detectMissingValues(parsed);
         int missingCount=0;
         for(const auto& row:missing){
-            for(bool isMissing:row){
-                if(isMissing){
-                    ++missingCount;
-                }
-            }
+          for(bool isMissing:row){
+            if(isMissing) ++missingCount;
+          }
         }
         auditLog.addEntry("Detect Missing", missingCount, parsed.size(), parsed.size());
         crow::json::wvalue result;
@@ -508,14 +505,11 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
-        auto data=req.body;
-        auto parsed=cleaner.parseCSV(data);
-        auto duplicates=cleaner.detectDuplicates(parsed);
+        auto parsed=parseCSV(req.body);
+        auto duplicates=detectDuplicates(parsed);
         int duplicateCount=0;
         for(bool isDup:duplicates){
-            if(isDup){
-                ++duplicateCount;
-            }
+          if(isDup) ++duplicateCount;
         }
         auditLog.addEntry("Detect Duplicates", duplicateCount, parsed.size(), parsed.size());
         crow::json::wvalue result;
@@ -526,24 +520,23 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/clean").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
-        auto data=req.body;
-        auto parsed=cleaner.parseCSV(data);
-        auto cleaned=cleaner.cleanData(parsed);
+        auto parsed=parseCSV(req.body);
+        auto cleaned=removeDuplicates(parsed);
         int removedRows=parsed.size()-cleaned.size();
         auditLog.addEntry("Remove Duplicates", removedRows, parsed.size(), cleaned.size());
-        std::stringstream cleanedCSV;
+        std::stringstream output;
         for(const auto& row:cleaned){
-            for(size_t i=0;i<row.size();++i){
-                if(i>0)cleanedCSV<<",";
-                cleanedCSV<<row[i];
-            }
-            cleanedCSV<<"\n";
+          for(size_t i=0;i<row.size();++i){
+            if(i>0)output<<",";
+            output<<row[i];
+          }
+          output<<"\n";
         }
         crow::json::wvalue result;
         result["originalRows"]=parsed.size();
         result["cleanedRows"]=cleaned.size();
         result["removedRows"]=removedRows;
-        result["cleaned"]=cleanedCSV.str();
+        result["cleaned"]=output.str();
         result["message"]="Data cleaned successfully";
         return crow::response(result);
     });
