@@ -27,3 +27,13 @@ std::string normalizePunctuation(const std::string& text){
   return result;
 }
 
+std::string standardizeNullValues(const std::string& text){
+  std::string trimmed=normalizeWhitespace(text);
+  if(trimmed.empty()) return "";
+  if(trimmed=="N/A" || trimmed=="n/a" || trimmed=="NA") return "";
+  if(trimmed=="null" || trimmed=="NULL" || trimmed=="Null") return "";
+  if(trimmed=="none" || trimmed=="NONE" || trimmed=="None") return "";
+  if(trimmed=="-" || trimmed=="?" || trimmed=="~") return "";
+  return trimmed;
+}
+
