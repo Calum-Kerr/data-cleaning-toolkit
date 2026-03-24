@@ -229,7 +229,6 @@ int main(int argc, char* argv[]){
 	});
 
     crow::SimpleApp app;
-    DataCleaner cleaner;
     AuditLog auditLog;
 
 	fs::path argv0;
@@ -1947,8 +1946,8 @@ int main(int argc, char* argv[]){
 		auto startTime=std::chrono::high_resolution_clock::now();
 		auto originalParsed=parseCSV(originalCSV);
 		auto cleanedParsed=parseCSV(cleanedCSV);
-		auto missingMatrix=cleaner.detectMissingValues(originalParsed);
-		auto dupVector=cleaner.detectDuplicates(originalParsed);
+		auto missingMatrix=detectMissingValues(originalParsed);
+		auto dupVector=detectDuplicates(originalParsed);
 		auto endTime=std::chrono::high_resolution_clock::now();
 		auto duration=std::chrono::duration_cast<std::chrono::microseconds>(endTime-startTime);
 		double executionTimeMs=duration.count()/1000.0;
@@ -2090,8 +2089,8 @@ int main(int argc, char* argv[]){
 		auto startTime=std::chrono::high_resolution_clock::now();
 		auto originalParsed=parseCSV(originalCSV);
 		auto cleanedParsed=parseCSV(cleanedCSV);
-		auto missingMatrix=cleaner.detectMissingValues(originalParsed);
-		auto dupVector=cleaner.detectDuplicates(originalParsed);
+		auto missingMatrix=detectMissingValues(originalParsed);
+		auto dupVector=detectDuplicates(originalParsed);
 		auto endTime=std::chrono::high_resolution_clock::now();
 		auto duration=std::chrono::duration_cast<std::chrono::microseconds>(endTime-startTime);
 		double executionTimeMs=duration.count()/1000.0;
