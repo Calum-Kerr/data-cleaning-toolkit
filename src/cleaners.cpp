@@ -47,3 +47,24 @@ std::vector<std::vector<std::string>> standardizeCase(
   return result;
 }
 
+std::vector<std::vector<std::string>> standardizeNullValuesInData(
+  const std::vector<std::vector<std::string>>& data){
+  std::vector<std::vector<std::string>> result;
+  for(const auto& row:data){
+    std::vector<std::string> newRow;
+    for(const auto& cell:row) newRow.push_back(standardizeNullValues(cell));
+    result.push_back(newRow);
+  }
+  return result;
+}
+
+std::vector<std::vector<std::string>> removeOutliers(const std::vector<std::vector<std::string>>& data){
+  std::vector<int> outlierRows=detectOutliers(data);
+  std::set<int> outlierSet(outlierRows.begin(),outlierRows.end());
+  std::vector<std::vector<std::string>> result;
+  for(size_t i=0;i<data.size();i++){
+    if(outlierSet.find(i)==outlierSet.end()) result.push_back(data[i]);
+  }
+  return result;
+}
+
