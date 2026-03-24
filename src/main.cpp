@@ -1118,15 +1118,18 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/quality-metrics").methods("POST"_method)
     ([&cleaner](const crow::request& req){
-        std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(req.body);
         int rows=(int)parsed.size();
         int cols=parsed.empty()?0:(int)parsed[0].size();
         int totalCells=rows*cols;
-        auto missingMatrix=cleaner.detectMissingValues(parsed);
-        int missingCells=0;for(const auto& row:missingMatrix){for(bool b:row){if(b)missingCells++;}}
-        auto dupVector=cleaner.detectDuplicates(parsed);
-        int duplicateRows=0;for(bool b:dupVector){if(b)duplicateRows++;}
+        auto missingMatrix=detectMissingValues(parsed);
+        int missingCells=0;
+        for(const auto& row:missingMatrix){
+          for(bool b:row){if(b)missingCells++;}
+        }
+        auto dupVector=detectDuplicates(parsed);
+        int duplicateRows=0;
+        for(bool b:dupVector){if(b)duplicateRows++;}
         double completeness=totalCells>0?((totalCells-missingCells)*100.0/totalCells):100.0;
         double uniqueness=rows>0?((rows-duplicateRows)*100.0/rows):100.0;
         crow::json::wvalue result;
@@ -1143,48 +1146,26 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/auto-detect-all").methods("POST"_method)
     ([&cleaner](const crow::request& req){
-        std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(req.body);
         int totalRows=(int)parsed.size();
         int totalColumns=parsed.empty()?0:(int)parsed[0].size();
-        auto missingMatrix=cleaner.detectMissingValues(parsed);
+        auto missingMatrix=detectMissingValues(parsed);
         int missingValues=0;
-        for(const auto& row:missingMatrix){for(bool b:row){if(b)missingValues++;}}
-        auto dupVector=cleaner.detectDuplicates(parsed);
+        for(const auto& row:missingMatrix){
+          for(bool b:row){if(b)missingValues++;}
+        }
+        auto dupVector=detectDuplicates(parsed);
         int duplicateRows=0;
         for(bool b:dupVector){if(b)duplicateRows++;}
-        int whitespaceIssues=0;
-        int nullValueIssues=0;
-        int outliers=0;
-        int inconsistentValues=0;
-        auto isWhitespace=[](const std::string& str)->bool{if(str.empty())return false;return str[0]==' '||str[0]=='\t'||str.back()==' '||str.back()=='\t';};
-        auto isNullValue=[](const std::string& str)->bool{std::string lower=str;std::transform(lower.begin(),lower.end(),lower.begin(),::tolower);return lower=="null"||lower=="na"||lower=="n/a"||lower=="none"||lower=="-"||lower=="--"||lower=="nil"||lower=="nan";};
-        for(size_t row=1;row<parsed.size();row++){
-            for(size_t col=0;col<parsed[row].size();col++){
-                if(isWhitespace(parsed[row][col]))whitespaceIssues++;
-                if(isNullValue(parsed[row][col]))nullValueIssues++;
-            }
-        }
-        auto isNumericStr=[](const std::string& str)->bool{if(str.empty())return false;size_t start=0;if(str[0]=='-'||str[0]=='+')start=1;if(start>=str.length())return false;bool hasDecimal=false;for(size_t i=start;i<str.length();i++){if(str[i]=='.'){if(hasDecimal)return false;hasDecimal=true;}else if(str[i]<'0'||str[i]>'9')return false;}return true;};
-        for(size_t col=0;col<(size_t)totalColumns;col++){
-            std::vector<double> values;
-            for(size_t row=1;row<parsed.size();row++){if(col<parsed[row].size()&&isNumericStr(parsed[row][col])){values.push_back(std::stod(parsed[row][col]));}}
-            if(values.size()<4)continue;
-            std::vector<double> sorted=values;std::sort(sorted.begin(),sorted.end());
-            double q1=sorted[sorted.size()/4];double q3=sorted[3*sorted.size()/4];double iqr=q3-q1;
-            double lower=q1-1.5*iqr;double upper=q3+1.5*iqr;
-            for(double v:values){if(v<lower||v>upper)outliers++;}
-        }
+        auto outlierRows=detectOutliers(parsed);
+        int outliers=outlierRows.size();
         crow::json::wvalue result;
         result["summary"]=crow::json::wvalue::object();
         result["summary"]["totalRows"]=totalRows;
         result["summary"]["totalColumns"]=totalColumns;
         result["summary"]["missingValues"]=missingValues;
         result["summary"]["duplicateRows"]=duplicateRows;
-        result["summary"]["whitespaceIssues"]=whitespaceIssues;
-        result["summary"]["nullValueIssues"]=nullValueIssues;
         result["summary"]["outliers"]=outliers;
-        result["summary"]["inconsistentValues"]=inconsistentValues;
         result["message"]="auto detection completed";
         result["mode"]="api";
         return crow::response(result);
