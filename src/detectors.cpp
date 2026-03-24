@@ -17,3 +17,13 @@ int levenshteinDistance(const std::string& s1, const std::string& s2){
   return dp[m][n];
 }
 
+std::vector<std::vector<bool>> detectMissingValues(const std::vector<std::vector<std::string>>& data){
+  std::vector<std::vector<bool>> missing;
+  for(const auto& row:data){
+    std::vector<bool> rowMissing;
+    for(const auto& cell:row) rowMissing.push_back(cell.empty());
+    missing.push_back(rowMissing);
+  }
+  return missing;
+}
+
