@@ -1029,12 +1029,11 @@ int main(int argc, char* argv[]){
 
     CROW_ROUTE(app,"/api/measure-performance").methods("POST"_method)
     ([&cleaner](const crow::request& req){
-        std::string csvData=req.body;
         auto startTime=std::chrono::high_resolution_clock::now();
-        auto parsed=parseCSV(csvData);
-        auto missingMatrix=cleaner.detectMissingValues(parsed);
-        auto dupVector=cleaner.detectDuplicates(parsed);
-        auto cleaned=cleaner.cleanData(parsed);
+        auto parsed=parseCSV(req.body);
+        auto missingMatrix=detectMissingValues(parsed);
+        auto dupVector=detectDuplicates(parsed);
+        auto cleaned=removeDuplicates(parsed);
         auto endTime=std::chrono::high_resolution_clock::now();
         auto duration=std::chrono::duration_cast<std::chrono::microseconds>(endTime-startTime);
         double executionTimeMs=duration.count()/1000.0;
@@ -1042,8 +1041,12 @@ int main(int argc, char* argv[]){
         int cols=parsed.empty()?0:(int)parsed[0].size();
         int totalCells=rows*cols;
         double cellsPerSecond=executionTimeMs>0?(totalCells*1000.0/executionTimeMs):0;
-        int missingCount=0;for(const auto& row:missingMatrix){for(bool b:row){if(b)missingCount++;}}
-        int dupCount=0;for(bool b:dupVector){if(b)dupCount++;}
+        int missingCount=0;
+        for(const auto& row:missingMatrix){
+          for(bool b:row){if(b)missingCount++;}
+        }
+        int dupCount=0;
+        for(bool b:dupVector){if(b)dupCount++;}
         crow::json::wvalue result;
         result["metrics"]=crow::json::wvalue::object();
         result["metrics"]["rows"]=rows;
@@ -1246,11 +1249,16 @@ int main(int argc, char* argv[]){
             result["values"]=crow::json::wvalue::object();
             return crow::response(result);
         }
-        auto profile=cleaner.profileColumn(parsed, (size_t)colIndex);
+        std::map<std::string,int> profile;
+        for(size_t row=1;row<parsed.size();row++){
+          if((size_t)colIndex<parsed[row].size()){
+            profile[parsed[row][colIndex]]++;
+          }
+        }
         crow::json::wvalue result;
         result["values"]=crow::json::wvalue::object();
         for(const auto& pair:profile){
-            result["values"][pair.first]=(int)pair.second;
+          result["values"][pair.first]=(int)pair.second;
         }
         result["columnIndex"]=colIndex;
         result["uniqueValues"]=(int)profile.size();
@@ -1275,7 +1283,17 @@ int main(int argc, char* argv[]){
 			result["mode"]="api";
 			return crow::response(result);
 		}
-		auto standardized=cleaner.standardizeColumnCase(parsed, (size_t)colIndex, caseType);
+		auto standardized=parsed;
+		for(auto& row:standardized){
+			if((size_t)colIndex<row.size()){
+				std::string& cell=row[colIndex];
+				if(caseType=="upper"){
+					std::transform(cell.begin(),cell.end(),cell.begin(),::toupper);
+				}else if(caseType=="lower"){
+					std::transform(cell.begin(),cell.end(),cell.begin(),::tolower);
+				}
+			}
+		}
 		std::string output;
 		for(size_t i=0;i<standardized.size();++i){
 			for(size_t j=0;j<standardized[i].size();++j){
