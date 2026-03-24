@@ -1174,44 +1174,29 @@ int main(int argc, char* argv[]){
     CROW_ROUTE(app,"/api/auto-clean-all").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
         auto body=crow::json::load(req.body);
-        if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+        if(!body){
+          crow::json::wvalue result;
+          result["message"]="invalid request body";
+          return crow::response(400);
+        }
         std::string csvData=body["csvData"].s();
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         int originalRows=(int)parsed.size();
-        int operationsPerformed=0;
-        auto trimStr=[](std::string& str){size_t start=str.find_first_not_of(" \t\r\n");size_t end=str.find_last_not_of(" \t\r\n");if(start==std::string::npos){str="";}else{str=str.substr(start,end-start+1);}};
-        auto isNullValue=[](const std::string& str)->bool{std::string lower=str;std::transform(lower.begin(),lower.end(),lower.begin(),::tolower);return lower=="null"||lower=="na"||lower=="n/a"||lower=="none"||lower=="-"||lower=="--"||lower=="nil"||lower=="nan";};
-        int trimmed=0,nullsFixed=0;
-        for(size_t row=0;row<parsed.size();row++){
-            for(size_t col=0;col<parsed[row].size();col++){
-                std::string original=parsed[row][col];
-                trimStr(parsed[row][col]);
-                if(original!=parsed[row][col])trimmed++;
-                if(row>0&&isNullValue(parsed[row][col])){parsed[row][col]="";nullsFixed++;}
-            }
+        auto result_data=universalTextCleaning(parsed,0.75,true);
+        std::stringstream output;
+        for(const auto& row:result_data.cleanedData){
+          for(size_t i=0;i<row.size();i++){
+            if(i>0)output<<",";
+            output<<row[i];
+          }
+          output<<"\n";
         }
-        if(trimmed>0)operationsPerformed++;
-        if(nullsFixed>0)operationsPerformed++;
-        auto cleaned=cleaner.cleanData(parsed);
-        int duplicatesRemoved=originalRows-(int)cleaned.size();
-        if(duplicatesRemoved>0)operationsPerformed++;
-        std::stringstream cleanedCSV;
-        for(const auto& row:cleaned){
-            for(size_t i=0;i<row.size();i++){
-                if(i>0)cleanedCSV<<",";
-                cleanedCSV<<row[i];
-            }
-            cleanedCSV<<"\n";
-        }
-        auditLog.addEntry("Auto Clean All", duplicatesRemoved+trimmed+nullsFixed, originalRows, (int)cleaned.size());
+        auditLog.addEntry("Auto Clean All", result_data.duplicateRowsRemoved, originalRows, (int)result_data.cleanedData.size());
         crow::json::wvalue result;
-        result["cleaned"]=cleanedCSV.str();
+        result["cleaned"]=output.str();
         result["originalRows"]=originalRows;
-        result["cleanedRows"]=(int)cleaned.size();
-        result["duplicatesRemoved"]=duplicatesRemoved;
-        result["cellsTrimmed"]=trimmed;
-        result["nullsStandardised"]=nullsFixed;
-        result["operationsPerformed"]=operationsPerformed;
+        result["cleanedRows"]=(int)result_data.cleanedData.size();
+        result["duplicatesRemoved"]=result_data.duplicateRowsRemoved;
         result["message"]="auto cleaning completed";
         result["mode"]="api";
         return crow::response(result);
@@ -1220,11 +1205,15 @@ int main(int argc, char* argv[]){
     CROW_ROUTE(app,"/api/standardise-date-column").methods("POST"_method)
     ([&cleaner, &auditLog](const crow::request& req){
         auto body=crow::json::load(req.body);
-        if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
+        if(!body){
+          crow::json::wvalue result;
+          result["message"]="invalid request body";
+          return crow::response(400);
+        }
         std::string csvData=body["csvData"].s();
         int colIndex=0;
         if(body.has("colIndex"))colIndex=(int)body["colIndex"].i();
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         int datesStandardised=0;
         auto parseDate=[](const std::string& str,int& day,int& month,int& year)->bool{
             std::vector<int> nums;std::string current;
