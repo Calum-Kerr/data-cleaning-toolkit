@@ -1,4 +1,5 @@
 #include "csv_parser.h"
+#include <sstream>
 
 std::vector<std::string> parseCSVLine(const std::string& line){
   std::vector<std::string> row;
@@ -17,6 +18,12 @@ std::vector<std::string> parseCSVLine(const std::string& line){
 }
 
 std::vector<std::vector<std::string>> parseCSV(const std::string& data){
-  return {};
+  std::vector<std::vector<std::string>> result;
+  std::stringstream ss(data);
+  std::string line;
+  while(std::getline(ss,line)){
+    if(!line.empty()) result.push_back(parseCSVLine(line));
+  }
+  return result;
 }
 
