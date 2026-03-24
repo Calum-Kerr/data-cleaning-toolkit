@@ -27,3 +27,13 @@ std::vector<std::vector<bool>> detectMissingValues(const std::vector<std::vector
   return missing;
 }
 
+std::vector<bool> detectDuplicates(const std::vector<std::vector<std::string>>& data){
+  std::vector<bool> isDuplicate(data.size(),false);
+  std::set<std::vector<std::string>> seen;
+  for(size_t i=0;i<data.size();++i){
+    if(seen.count(data[i])) isDuplicate[i]=true;
+    else seen.insert(data[i]);
+  }
+  return isDuplicate;
+}
+
