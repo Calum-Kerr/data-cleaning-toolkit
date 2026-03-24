@@ -1,4 +1,6 @@
 #include "csv_parser.h"
 
-// CSV parser implementation
+std::vector<std::string> parseCSVLine(const std::string& line){
+  return {};
+}
 
