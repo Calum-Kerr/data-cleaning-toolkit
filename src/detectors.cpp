@@ -37,3 +37,10 @@ std::vector<bool> detectDuplicates(const std::vector<std::vector<std::string>>& 
   return isDuplicate;
 }
 
+double calculateSimilarity(const std::string& s1, const std::string& s2){
+  int distance=levenshteinDistance(s1,s2);
+  int maxLen=std::max(s1.length(),s2.length());
+  if(maxLen==0) return 1.0;
+  return 1.0-(double)distance/maxLen;
+}
+
