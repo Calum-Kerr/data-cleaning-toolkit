@@ -15,6 +15,16 @@ int main(){
     .headers("Content-Type","Accept")
     .methods("GET"_method,"POST"_method)
     .origin("*");
+  CROW_ROUTE(app,"/api/clean").methods("POST"_method)
+  ([&auditLog](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    auto cleaned=removeDuplicates(parsed);
+    crow::json::wvalue result;
+    result["originalRows"]=parsed.size();
+    result["cleanedRows"]=cleaned.size();
+    result["message"]="Data cleaned successfully";
+    return crow::response(result);
+  });
   app.port(8080).multithreaded().run();
 }
 
