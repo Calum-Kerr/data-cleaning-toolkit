@@ -474,7 +474,7 @@ int main(int argc, char* argv[]){
     CROW_ROUTE(app,"/api/parse").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         auto data=req.body;
-        auto parsed=cleaner.parseCSV(data);
+        auto parsed=parseCSV(data);
         crow::json::wvalue result;
         result["rows"]=parsed.size();
         result["message"]="CSV parsed successfully";
@@ -544,7 +544,7 @@ int main(int argc, char* argv[]){
     CROW_ROUTE(app,"/api/detect-whitespace").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         int count=0;
         for(const auto& row:parsed){
             for(const auto& cell:row){
@@ -720,7 +720,7 @@ int main(int argc, char* argv[]){
     CROW_ROUTE(app,"/api/detect-null-values").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         int count=0;
         for(const auto& row:parsed){
             for(const auto& cell:row){
@@ -915,7 +915,7 @@ int main(int argc, char* argv[]){
     CROW_ROUTE(app,"/api/detect-data-types").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         crow::json::wvalue result;
         result["types"]=crow::json::wvalue::object();
         if(parsed.size()<2){result["message"]="insufficient data for type detection";result["mode"]="api";return crow::response(result);}
@@ -993,7 +993,7 @@ int main(int argc, char* argv[]){
     CROW_ROUTE(app,"/api/detect-patterns").methods("POST"_method)
     ([&cleaner](const crow::request& req){
         std::string csvData=req.body;
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         crow::json::wvalue result;
         result["patterns"]=crow::json::wvalue::list();
         if(parsed.size()<2){result["message"]="insufficient data for pattern detection";result["mode"]="api";return crow::response(result);}
@@ -1031,7 +1031,7 @@ int main(int argc, char* argv[]){
     ([&cleaner](const crow::request& req){
         std::string csvData=req.body;
         auto startTime=std::chrono::high_resolution_clock::now();
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         auto missingMatrix=cleaner.detectMissingValues(parsed);
         auto dupVector=cleaner.detectDuplicates(parsed);
         auto cleaned=cleaner.cleanData(parsed);
@@ -1199,7 +1199,7 @@ int main(int argc, char* argv[]){
         std::string csvData=body["csvData"].s();
         int colIndex=0;
         if(body.has("colIndex"))colIndex=(int)body["colIndex"].i();
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         int numbersStandardised=0;
         auto parseNumber=[](const std::string& str,double& result)->bool{
             std::string cleaned;
@@ -1239,7 +1239,7 @@ int main(int argc, char* argv[]){
         std::string csvData=body["csvData"].s();
         int colIndex=0;
         if(body.has("colIndex"))colIndex=(int)body["colIndex"].i();
-        auto parsed=cleaner.parseCSV(csvData);
+        auto parsed=parseCSV(csvData);
         if(parsed.empty()||colIndex<0||(size_t)colIndex>=parsed[0].size()){
             crow::json::wvalue result;
             result["message"]="invalid column index";
@@ -1268,7 +1268,7 @@ int main(int argc, char* argv[]){
 		std::string caseType="upper";
 		if(body.has("colIndex"))colIndex=(int)body["colIndex"].i();
 		if(body.has("caseType"))caseType=body["caseType"].s();
-		auto parsed=cleaner.parseCSV(csvData);
+		auto parsed=parseCSV(csvData);
 		if(parsed.empty()||colIndex<0||(size_t)colIndex>=parsed[0].size()){
 			crow::json::wvalue result;
 			result["message"]="invalid column index";
@@ -1298,7 +1298,7 @@ int main(int argc, char* argv[]){
 		auto body=crow::json::load(req.body);
 		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
 		std::string csvData=body["csvData"].s();
-		auto parsed=cleaner.parseCSV(csvData);
+		auto parsed=parseCSV(csvData);
 		int originalRows=(int)parsed.size();
 		std::stringstream output;
 		for(size_t i=0;i<parsed.size();++i){
@@ -1330,7 +1330,7 @@ int main(int argc, char* argv[]){
 		std::string csvData=body["csvData"].s();
 		int numTokens=body["numTokens"].i();
 		if(numTokens<1)numTokens=1;
-		auto parsed=cleaner.parseCSV(csvData);
+		auto parsed=parseCSV(csvData);
 		std::stringstream output;
 		for(size_t i=0;i<parsed.size();++i){
 			for(size_t j=0;j<parsed[i].size();++j){
@@ -1377,7 +1377,7 @@ int main(int argc, char* argv[]){
 		std::string csvData=body["csvData"].s();
 		double threshold=body["threshold"].d();
 		if(threshold<0.0)threshold=0.85;
-		auto parsed=cleaner.parseCSV(csvData);
+		auto parsed=parseCSV(csvData);
 		std::map<std::string,std::vector<std::string>> groups;
 		std::vector<std::string> uniqueValues;
 
@@ -1444,7 +1444,7 @@ int main(int argc, char* argv[]){
 		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
 		std::string csvData=body["csvData"].s();
 		std::string caseType=body["caseType"].s();
-		auto parsed=cleaner.parseCSV(csvData);
+		auto parsed=parseCSV(csvData);
 		int originalRows=(int)parsed.size();
 
 		// Find the first text column (skip numeric columns)
@@ -1765,7 +1765,7 @@ int main(int argc, char* argv[]){
 				removeDuplicates=body["removeDuplicates"].b();
 			}
 
-			auto parsed=cleaner.parseCSV(csvData);
+			auto parsed=parseCSV(csvData);
 			int originalRows=parsed.size();
 
 			// Apply universal text cleaning
@@ -1825,7 +1825,7 @@ int main(int argc, char* argv[]){
 			if(body.has("fuzzyThreshold"))fuzzyThreshold=body["fuzzyThreshold"].d();
 			bool removeDuplicates=true;
 			if(body.has("removeDuplicates"))removeDuplicates=body["removeDuplicates"].b();
-			auto parsed1=cleaner.parseCSV(csvData);
+			auto parsed1=parseCSV(csvData);
 			auto result1=universalTextCleaning(parsed1,fuzzyThreshold,removeDuplicates);
 			std::stringstream csv1;
 			for(size_t i=0;i<result1.cleanedData.size();++i){
@@ -1835,7 +1835,7 @@ int main(int argc, char* argv[]){
 				}
 				csv1<<"\n";
 			}
-			auto parsed2=cleaner.parseCSV(csvData);
+			auto parsed2=parseCSV(csvData);
 			auto result2=universalTextCleaning(parsed2,fuzzyThreshold,removeDuplicates);
 			std::stringstream csv2;
 			for(size_t i=0;i<result2.cleanedData.size();++i){
@@ -1863,8 +1863,8 @@ int main(int argc, char* argv[]){
 		std::string originalCSV=body["originalCSV"].s();
 		std::string cleanedCSV=body["cleanedCSV"].s();
 
-		auto original=cleaner.parseCSV(originalCSV);
-		auto cleaned=cleaner.parseCSV(cleanedCSV);
+		auto original=parseCSV(originalCSV);
+		auto cleaned=parseCSV(cleanedCSV);
 
 		int rowsRemoved=original.size()-cleaned.size();
 		int cellsModified=0;
@@ -1889,7 +1889,7 @@ int main(int argc, char* argv[]){
 	CROW_ROUTE(app,"/api/fairness-analysis").methods("POST"_method)
 	([&cleaner](const crow::request& req){
 		std::string csvData=req.body;
-		auto parsed=cleaner.parseCSV(csvData);
+		auto parsed=parseCSV(csvData);
 		crow::json::wvalue result;
 		result["analysis"]=crow::json::wvalue::list();
 		if(parsed.size()<2){result["message"]="insufficient data for fairness analysis";return crow::response(result);}
@@ -1927,8 +1927,8 @@ int main(int argc, char* argv[]){
 		std::string originalCSV=body["originalCSV"].s();
 		std::string cleanedCSV=body["cleanedCSV"].s();
 		auto startTime=std::chrono::high_resolution_clock::now();
-		auto originalParsed=cleaner.parseCSV(originalCSV);
-		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
+		auto originalParsed=parseCSV(originalCSV);
+		auto cleanedParsed=parseCSV(cleanedCSV);
 		auto missingMatrix=cleaner.detectMissingValues(originalParsed);
 		auto dupVector=cleaner.detectDuplicates(originalParsed);
 		auto endTime=std::chrono::high_resolution_clock::now();
@@ -1991,8 +1991,8 @@ int main(int argc, char* argv[]){
 		if(!body){crow::json::wvalue result; result["message"]="invalid request body";return crow::response(400);}
 		std::string originalCSV=body["originalCSV"].s();
 		std::string cleanedCSV=body["cleanedCSV"].s();
-		auto originalParsed=cleaner.parseCSV(originalCSV);
-		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
+		auto originalParsed=parseCSV(originalCSV);
+		auto cleanedParsed=parseCSV(cleanedCSV);
 		crow::json::wvalue result;
 		int cellsModified=0;
 		std::string changesStr="";
@@ -2028,8 +2028,8 @@ int main(int argc, char* argv[]){
 		std::string originalCSV=body["originalCSV"].s();
 		std::string cleanedCSV=body["cleanedCSV"].s();
 		auto startTime=std::chrono::high_resolution_clock::now();
-		auto originalParsed=cleaner.parseCSV(originalCSV);
-		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
+		auto originalParsed=parseCSV(originalCSV);
+		auto cleanedParsed=parseCSV(cleanedCSV);
 		auto endTime=std::chrono::high_resolution_clock::now();
 		auto duration=std::chrono::duration_cast<std::chrono::microseconds>(endTime-startTime);
 		double executionTimeMs=duration.count()/1000.0;
@@ -2070,8 +2070,8 @@ int main(int argc, char* argv[]){
 		std::string originalCSV=body["originalCSV"].s();
 		std::string cleanedCSV=body["cleanedCSV"].s();
 		auto startTime=std::chrono::high_resolution_clock::now();
-		auto originalParsed=cleaner.parseCSV(originalCSV);
-		auto cleanedParsed=cleaner.parseCSV(cleanedCSV);
+		auto originalParsed=parseCSV(originalCSV);
+		auto cleanedParsed=parseCSV(cleanedCSV);
 		auto missingMatrix=cleaner.detectMissingValues(originalParsed);
 		auto dupVector=cleaner.detectDuplicates(originalParsed);
 		auto endTime=std::chrono::high_resolution_clock::now();
