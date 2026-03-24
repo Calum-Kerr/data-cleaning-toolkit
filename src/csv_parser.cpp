@@ -16,3 +16,7 @@ std::vector<std::string> parseCSVLine(const std::string& line){
   return row;
 }
 
+std::vector<std::vector<std::string>> parseCSV(const std::string& data){
+  return {};
+}
+
