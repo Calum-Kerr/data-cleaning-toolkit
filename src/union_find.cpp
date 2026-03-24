@@ -1,5 +1,9 @@
 #include "cleaners.h"
+#include "text_utils.h"
+#include "detectors.h"
 #include <map>
+#include <set>
+#include <algorithm>
 
 class UnionFind {
 public:
