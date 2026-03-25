@@ -45,14 +45,6 @@ int main(){
     for(bool d:dups) if(d) result["duplicateCount"]++;
     return crow::response(result);
   });
-  CROW_ROUTE(app,"/api/standardize-nulls").methods("POST"_method)
-  ([](const crow::request& req){
-    auto parsed=parseCSV(req.body);
-    auto cleaned=standardizeNullValuesInData(parsed);
-    crow::json::wvalue result;
-    result["message"]="Null values standardized";
-    return crow::response(result);
-  });
   registerAdditionalRoutes(app);
   app.port(8080).multithreaded().run();
 }
