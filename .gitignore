@@ -26,3 +26,5 @@ include/asio/
 *.log
 stress-test-100x10.csv
 include/asio.hpp
+not-needed/
+
