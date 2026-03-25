@@ -60,6 +60,14 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     return res;
   });
 
+  // Features route
+  CROW_ROUTE(app, "/features").methods("GET"_method)
+  ([]() {
+    std::string content = readFile("frontend/features.html");
+    if (content.empty()) {
+      return crow::response(404, "Not Found");
+
+
 
 
 
