@@ -9,9 +9,10 @@ std::string toUpperCase(const std::string& text){
 }
 
 std::string normalizeWhitespace(const std::string& text){
+  std::string upper=toUpperCase(text);
   std::string result;
   bool inSpace=false;
-  for(char c : text){
+  for(char c : upper){
     if(c==' ' || c=='\t' || c=='\r' || c=='\n'){
       if(!inSpace && !result.empty()){
         result+=' ';
