@@ -92,7 +92,7 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
       return crow::response(403, "Forbidden");
     }
 
-    std::string filepath = "frontend/" + path;
+    std::string filepath = "../frontend/" + path;
     std::string content = readFile(filepath);
 
     if (content.empty()) {
