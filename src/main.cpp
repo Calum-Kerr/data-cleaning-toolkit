@@ -8,6 +8,7 @@
 #include <iostream>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
+void registerTextRoutes(crow::SimpleApp& app);
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
 
