@@ -17,6 +17,13 @@ int main(){
     .origin("*");
   CROW_ROUTE(app,"/api/health").methods("GET"_method)
   ([](){ crow::json::wvalue result; result["status"]="ok"; return crow::response(result); });
+  CROW_ROUTE(app,"/api/parse").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    crow::json::wvalue result;
+    result["rows"]=parsed.size();
+    return crow::response(result);
+  });
   CROW_ROUTE(app,"/api/clean").methods("POST"_method)
   ([&auditLog](const crow::request& req){
     auto parsed=parseCSV(req.body);
