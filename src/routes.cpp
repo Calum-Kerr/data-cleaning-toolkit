@@ -31,5 +31,13 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     resp["message"]="Duplicate words removed";
     return crow::response(resp);
   });
+  CROW_ROUTE(app,"/api/detect-outliers").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    auto outliers=detectOutliers(parsed);
+    crow::json::wvalue resp;
+    resp["outlierCount"]=outliers.size();
+    return crow::response(resp);
+  });
 }
 
