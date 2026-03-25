@@ -7,6 +7,8 @@
 #include "pdf_report.h"
 #include <iostream>
 
+void registerAdditionalRoutes(crow::SimpleApp& app);
+
 int main(){
   crow::SimpleApp app;
   AuditLog auditLog;
@@ -87,6 +89,7 @@ int main(){
     result["message"]="Null values standardized";
     return crow::response(result);
   });
+  registerAdditionalRoutes(app);
   app.port(8080).multithreaded().run();
 }
 
