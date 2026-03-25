@@ -35,6 +35,14 @@ std::string getContentType(const std::string& filepath) {
   return "application/octet-stream";
 }
 
+void registerFrontendRoutes(crow::SimpleApp& app) {
+  // Root route - serve home.html
+  CROW_ROUTE(app, "/").methods("GET"_method)
+  ([]() {
+    std::string content = readFile("frontend/home.html");
+    if (content.empty()) {
+
+
 
 
 
