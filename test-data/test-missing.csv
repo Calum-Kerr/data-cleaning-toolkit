@@ -1,0 +1,5 @@
+id,name,email,city
+1,John Doe,,New York
+2,,jane@example.com,Los Angeles
+3,Bob Johnson,bob@example.com,
+4,Alice Williams,alice@example.com,Boston
