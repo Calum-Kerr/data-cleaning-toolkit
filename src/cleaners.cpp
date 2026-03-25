@@ -38,9 +38,7 @@ std::vector<std::vector<std::string>> standardizeCase(
   for(const auto& row:data){
     std::vector<std::string> newRow;
     for(const auto& cell:row){
-      std::string newCell=cell;
-      if(caseType=="upper") std::transform(newCell.begin(),newCell.end(),newCell.begin(),::toupper);
-      else if(caseType=="lower") std::transform(newCell.begin(),newCell.end(),newCell.begin(),::tolower);
+      std::string newCell=toUpperCase(cell);
       newRow.push_back(newCell);
     }
     result.push_back(newRow);
