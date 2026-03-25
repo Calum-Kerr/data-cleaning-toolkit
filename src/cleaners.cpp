@@ -21,9 +21,10 @@ std::vector<std::vector<std::string>> trimWhitespace(const std::vector<std::vect
   for(const auto& row:data){
     std::vector<std::string> newRow;
     for(const auto& cell:row){
-      size_t start=cell.find_first_not_of(" \t");
-      size_t end=cell.find_last_not_of(" \t");
-      if(start!=std::string::npos) newRow.push_back(cell.substr(start,end-start+1));
+      std::string upper=toUpperCase(cell);
+      size_t start=upper.find_first_not_of(" \t");
+      size_t end=upper.find_last_not_of(" \t");
+      if(start!=std::string::npos) newRow.push_back(upper.substr(start,end-start+1));
       else newRow.push_back("");
     }
     result.push_back(newRow);
