@@ -93,6 +93,17 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     }
 
     std::string filepath = "../frontend/" + path;
+
+    // Check file exists before reading
+    if (!fs::exists(filepath)) {
+      return crow::response(404, "Not Found");
+    }
+
+    // Limit file size to prevent memory exhaustion (10MB max)
+    if (fs::file_size(filepath) > 10 * 1024 * 1024) {
+      return crow::response(413, "Payload Too Large");
+    }
+
     std::string content = readFile(filepath);
 
     if (content.empty()) {
@@ -101,6 +112,7 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
 
     auto res = crow::response(content);
     res.set_header("Content-Type", getContentType(filepath));
+    res.set_header("Content-Length", std::to_string(content.length()));
     return res;
   });
 }
