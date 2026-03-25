@@ -48,6 +48,6 @@ int main(){
   registerTextRoutes(app);
   registerCleaningRoutes(app);
   registerFrontendRoutes(app);
-  app.port(8080).multithreaded().run();
+  app.port(8080).concurrency(2).run();
 }
 

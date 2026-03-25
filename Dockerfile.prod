@@ -17,11 +17,11 @@ COPY . .
 COPY vcpkg.json .
 RUN git clone https://github.com/Microsoft/vcpkg.git
 RUN cd vcpkg && ./bootstrap-vcpkg.sh
-RUN cd vcpkg && ./vcpkg install
+RUN cd vcpkg && ./vcpkg install --max-concurrency=1
 RUN mkdir build && \
     cd build && \
     cmake .. -DCMAKE_TOOLCHAIN_FILE="../vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release && \
-    make
+    make -j1
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Etc/UTC
