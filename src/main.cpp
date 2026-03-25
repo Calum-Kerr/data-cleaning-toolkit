@@ -14,18 +14,13 @@ void registerCleaningRoutes(crow::SimpleApp& app);
 int main(){
   crow::SimpleApp app;
   AuditLog auditLog;
-  app.get_middleware<crow::CORSHandler>()
-    .global()
-    .headers("Content-Type","Accept")
-    .methods("GET"_method,"POST"_method)
-    .origin("*");
   CROW_ROUTE(app,"/api/health").methods("GET"_method)
   ([](){ crow::json::wvalue result; result["status"]="ok"; return crow::response(result); });
   CROW_ROUTE(app,"/api/parse").methods("POST"_method)
   ([](const crow::request& req){
     auto parsed=parseCSV(req.body);
     crow::json::wvalue result;
-    result["rows"]=parsed.size();
+    result["rows"]=(int)parsed.size();
     return crow::response(result);
   });
   CROW_ROUTE(app,"/api/clean").methods("POST"_method)
@@ -33,8 +28,8 @@ int main(){
     auto parsed=parseCSV(req.body);
     auto cleaned=removeDuplicates(parsed);
     crow::json::wvalue result;
-    result["originalRows"]=parsed.size();
-    result["cleanedRows"]=cleaned.size();
+    result["originalRows"]=(int)parsed.size();
+    result["cleanedRows"]=(int)cleaned.size();
     result["message"]="Data cleaned successfully";
     return crow::response(result);
   });
@@ -42,9 +37,10 @@ int main(){
   ([](const crow::request& req){
     auto parsed=parseCSV(req.body);
     auto dups=detectDuplicates(parsed);
+    int count=0;
+    for(bool d:dups) if(d) count++;
     crow::json::wvalue result;
-    result["duplicateCount"]=0;
-    for(bool d:dups) if(d) result["duplicateCount"]++;
+    result["duplicateCount"]=count;
     return crow::response(result);
   });
   registerAdditionalRoutes(app);

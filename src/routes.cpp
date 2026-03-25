@@ -10,17 +10,18 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     auto parsed=parseCSV(req.body);
     auto outliers=detectOutliers(parsed);
     crow::json::wvalue resp;
-    resp["outlierCount"]=outliers.size();
+    resp["outlierCount"]=(int)outliers.size();
     return crow::response(resp);
   });
   CROW_ROUTE(app,"/api/detect-missing").methods("POST"_method)
   ([](const crow::request& req){
     auto parsed=parseCSV(req.body);
     auto missing=detectMissingValues(parsed);
-    crow::json::wvalue result;
-    result["missingCount"]=0;
+    int count=0;
     for(const auto& row:missing)
-      for(bool m:row) if(m) result["missingCount"]++;
+      for(bool m:row) if(m) count++;
+    crow::json::wvalue result;
+    result["missingCount"]=count;
     return crow::response(result);
   });
   CROW_ROUTE(app,"/api/normalize-whitespace").methods("POST"_method)
@@ -29,7 +30,7 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     auto normalized=trimWhitespace(parsed);
     crow::json::wvalue result;
     result["message"]="Whitespace normalized";
-    result["rows"]=normalized.size();
+    result["rows"]=(int)normalized.size();
     return crow::response(result);
   });
   CROW_ROUTE(app,"/api/standardize-case").methods("POST"_method)
@@ -45,9 +46,9 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     auto parsed=parseCSV(req.body);
     auto cleaned=removeOutliers(parsed);
     crow::json::wvalue result;
-    result["originalRows"]=parsed.size();
-    result["cleanedRows"]=cleaned.size();
-    result["outliersRemoved"]=parsed.size()-cleaned.size();
+    result["originalRows"]=(int)parsed.size();
+    result["cleanedRows"]=(int)cleaned.size();
+    result["outliersRemoved"]=(int)(parsed.size()-cleaned.size());
     return crow::response(result);
   });
 }

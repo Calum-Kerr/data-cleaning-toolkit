@@ -38,7 +38,7 @@ void registerTextRoutes(crow::SimpleApp& app){
     auto sorted=naturalSort(parsed,colIndex);
     crow::json::wvalue result;
     result["message"]="Data sorted naturally";
-    result["rows"]=sorted.size();
+    result["rows"]=(int)sorted.size();
     return crow::response(result);
   });
 }
