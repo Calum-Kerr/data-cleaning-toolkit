@@ -6,6 +6,8 @@
 
 int levenshteinDistance(const std::string& s1, const std::string& s2);
 double calculateSimilarity(const std::string& s1, const std::string& s2);
+double calculateRowSimilarity(const std::vector<std::string>& r1,
+  const std::vector<std::string>& r2);
 std::vector<std::vector<bool>> detectMissingValues(const std::vector<std::vector<std::string>>& data);
 std::vector<bool> detectDuplicates(const std::vector<std::vector<std::string>>& data);
 std::vector<int> detectOutliers(const std::vector<std::vector<std::string>>& data);
