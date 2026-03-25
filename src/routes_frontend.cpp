@@ -97,6 +97,14 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
 
     if (content.empty()) {
       return crow::response(404, "Not Found");
+    }
+
+    auto res = crow::response(content);
+    res.set_header("Content-Type", getContentType(filepath));
+    return res;
+  });
+}
+
 
 
 
