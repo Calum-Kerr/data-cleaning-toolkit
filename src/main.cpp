@@ -52,6 +52,14 @@ int main(){
     result["rows"]=normalized.size();
     return crow::response(result);
   });
+  CROW_ROUTE(app,"/api/standardize-case").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    auto standardized=standardizeCase(parsed,"lower");
+    crow::json::wvalue result;
+    result["message"]="Case standardized to lowercase";
+    return crow::response(result);
+  });
   app.port(8080).multithreaded().run();
 }
 
