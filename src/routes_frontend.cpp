@@ -41,6 +41,13 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
   ([]() {
     std::string content = readFile("frontend/home.html");
     if (content.empty()) {
+      return crow::response(404, "Not Found");
+    }
+    auto res = crow::response(content);
+    res.set_header("Content-Type", "text/html; charset=utf-8");
+    return res;
+  });
+
 
 
 
