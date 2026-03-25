@@ -21,5 +21,8 @@ test_data.csv
 asio_temp/
 include/asio/
 *.sh
+*.md
+*.txt
+*.log
 stress-test-100x10.csv
 include/asio.hpp
