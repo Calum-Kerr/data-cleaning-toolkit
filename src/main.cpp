@@ -9,6 +9,8 @@
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
 
+void registerAdditionalRoutes(crow::SimpleApp& app);
+
 int main(){
   crow::SimpleApp app;
   AuditLog auditLog;
