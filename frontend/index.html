@@ -258,33 +258,23 @@
         async function performProfiling(){
             const API_URL=window.location.origin;
             let results={};
-            if(wasmReady){
-                results.rows=wasmModule.ccall('parseCSV','number',['string'],[uploadCSV]);
-                results.missing=wasmModule.ccall('detectMissing','number',['string'],[uploadCSV]);
-                results.duplicates=wasmModule.ccall('detectDuplicates','number',['string'],[uploadCSV]);
-                results.whitespace=wasmModule.ccall('detectWhitespace','number',['string'],[uploadCSV]);
-                try{results.nulls=wasmModule.ccall('detectNullValues','number',['string'],[uploadCSV]);}
-                catch(e){
-                    const nullRes=await fetch(API_URL+'/api/detect-null-values',{method:'POST',headers:{'Content-Type':'text/plain'},body:uploadCSV});
-                    const nullData=await nullRes.json();
-                    results.nulls=nullData.cellsWithNullValues||0;
-                }
-            }else{
+            try{
                 const parseRes=await fetch(API_URL+'/api/parse',{method:'POST',body:uploadCSV});
                 const parseData=await parseRes.json();
-                results.rows=parseData.rows;
+                results.rows=parseData.rows||0;
                 const missingRes=await fetch(API_URL+'/api/detect-missing',{method:'POST',body:uploadCSV});
                 const missingData=await missingRes.json();
-                results.missing=missingData.missing;
+                results.missing=missingData.missingCount||0;
                 const dupRes=await fetch(API_URL+'/api/detect-duplicates',{method:'POST',body:uploadCSV});
                 const dupData=await dupRes.json();
-                results.duplicates=dupData.duplicates;
-                const wsRes=await fetch(API_URL+'/api/detect-whitespace',{method:'POST',body:uploadCSV});
-                const wsData=await wsRes.json();
-                results.whitespace=wsData.cellsWithWhitespace||0;
-                const nullRes=await fetch(API_URL+'/api/detect-null-values',{method:'POST',body:uploadCSV});
-                const nullData=await nullRes.json();
-                results.nulls=nullData.cellsWithNullValues||0;
+                results.duplicates=dupData.duplicateCount||0;
+                const outlierRes=await fetch(API_URL+'/api/detect-outliers',{method:'POST',body:uploadCSV});
+                const outlierData=await outlierRes.json();
+                results.outliers=outlierData.outlierCount||0;
+            }catch(err){
+                console.error('Error during profiling:',err);
+                alert('Error analyzing data. Please try again.');
+                return;
             }
             displayProfileDetails(results);
         }
