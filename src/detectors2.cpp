@@ -48,3 +48,13 @@ std::vector<int> detectOutliers(const std::vector<std::vector<std::string>>& dat
   return outlierRows;
 }
 
+double calculateRowSimilarity(const std::vector<std::string>& r1,
+  const std::vector<std::string>& r2){
+  if(r1.empty() || r2.empty()) return 0.0;
+  double totalSim=0.0;
+  size_t minSize=std::min(r1.size(),r2.size());
+  for(size_t i=0;i<minSize;i++){
+    totalSim+=calculateSimilarity(r1[i],r2[i]);
+  }
+  return totalSim/minSize;
+}
