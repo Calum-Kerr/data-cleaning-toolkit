@@ -49,6 +49,7 @@ int main(){
   });
   registerAdditionalRoutes(app);
   registerTextRoutes(app);
+  registerCleaningRoutes(app);
   app.port(8080).multithreaded().run();
 }
 
