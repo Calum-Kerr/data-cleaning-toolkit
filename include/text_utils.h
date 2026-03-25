@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+std::string toUpperCase(const std::string& text);
 std::string normalizeWhitespace(const std::string& text);
 std::string normalizePunctuation(const std::string& text);
 std::string standardizeNullValues(const std::string& text);
