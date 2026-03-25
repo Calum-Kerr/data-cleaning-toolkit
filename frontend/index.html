@@ -279,18 +279,19 @@
             displayProfileDetails(results);
         }
         function displayProfileDetails(results){
-            const profileDiv=document.getElementById('profileDetails');
-            const issuesDiv=document.getElementById('issuesList');
-            profileDiv.innerHTML=`<h3>Data Summary</h3><p><strong>Total Rows:</strong> ${results.rows||0}</p><p><strong>Total Columns:</strong> ${getColumnCount(uploadCSV)}</p><p><strong>File Size:</strong> ${(new Blob([uploadCSV]).size/1024).toFixed(2)} KB</p>`;
             let issuesHtml='<h3>Detected Issues</h3><ul>';
             let issueCount=0;
             if(results.missing>0){issuesHtml+=`<li>Missing values: ${results.missing} cells</li>`;issueCount++;}
             if(results.duplicates>0){issuesHtml+=`<li>Duplicate rows: ${results.duplicates} rows</li>`;issueCount++;}
-            if(results.whitespace>0){issuesHtml+=`<li>Whitespace issues: ${results.whitespace} cells</li>`;issueCount++;}
-            if(results.nulls>0){issuesHtml+=`<li>Null/empty values: ${results.nulls} cells</li>`;issueCount++;}
+            if(results.outliers>0){issuesHtml+=`<li>Outliers detected: ${results.outliers} rows</li>`;issueCount++;}
             if(issueCount===0){issuesHtml+='<li>No issues detected - your data looks clean!</li>';}
             issuesHtml+='</ul>';
-            issuesDiv.innerHTML=issuesHtml;
+            const cols=getColumnCount(uploadCSV);
+            const summary=`<h3>Data Summary</h3><p><strong>Total Rows:</strong> ${results.rows||0}</p><p><strong>Total Columns:</strong> ${cols}</p><p><strong>File Size:</strong> ${(new Blob([uploadCSV]).size/1024).toFixed(2)} KB</p>`;
+            document.getElementById('uploadSection').style.display='none';
+            document.getElementById('cleaningSection').style.display='block';
+            const cleaningDiv=document.querySelector('#cleaningSection .settings-section');
+            if(cleaningDiv) cleaningDiv.innerHTML=summary+issuesHtml;
         }
         function getColumnCount(csv){if(!csv)return 0;const firstLine=csv.split('\n')[0];if(!firstLine)return 0;return firstLine.split(',').length;}
         function startQuickClean(){
