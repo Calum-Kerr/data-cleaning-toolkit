@@ -38,9 +38,9 @@ std::string normalizePunctuation(const std::string& text){
 std::string standardizeNullValues(const std::string& text){
   std::string trimmed=normalizeWhitespace(text);
   if(trimmed.empty()) return "";
-  if(trimmed=="N/A" || trimmed=="n/a" || trimmed=="NA") return "";
-  if(trimmed=="null" || trimmed=="NULL" || trimmed=="Null") return "";
-  if(trimmed=="none" || trimmed=="NONE" || trimmed=="None") return "";
+  if(trimmed=="N/A" || trimmed=="NA") return "";
+  if(trimmed=="NULL") return "";
+  if(trimmed=="NONE") return "";
   if(trimmed=="-" || trimmed=="?" || trimmed=="~") return "";
   return trimmed;
 }
