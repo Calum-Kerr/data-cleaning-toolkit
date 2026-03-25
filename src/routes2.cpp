@@ -32,10 +32,10 @@ void registerTextRoutes(crow::SimpleApp& app){
     resp["message"]="Duplicate words removed";
     return crow::response(resp);
   });
-  CROW_ROUTE(app,"/api/natural-sort").methods("POST"_method)
-  ([](const crow::request& req){
+  CROW_ROUTE(app,"/api/natural-sort/<int>").methods("POST"_method)
+  ([](const crow::request& req, int colIndex){
     auto parsed=parseCSV(req.body);
-    auto sorted=naturalSort(parsed,0);
+    auto sorted=naturalSort(parsed,colIndex);
     crow::json::wvalue result;
     result["message"]="Data sorted naturally";
     result["rows"]=sorted.size();
