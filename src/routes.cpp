@@ -18,5 +18,18 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     resp["message"]="State suffixes removed";
     return crow::response(resp);
   });
+  CROW_ROUTE(app,"/api/remove-duplicate-words").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    std::vector<std::vector<std::string>> result;
+    for(const auto& row:parsed){
+      std::vector<std::string> newRow;
+      for(const auto& cell:row) newRow.push_back(removeDuplicateWords(cell));
+      result.push_back(newRow);
+    }
+    crow::json::wvalue resp;
+    resp["message"]="Duplicate words removed";
+    return crow::response(resp);
+  });
 }
 
