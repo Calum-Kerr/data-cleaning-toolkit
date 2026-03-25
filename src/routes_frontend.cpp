@@ -90,6 +90,14 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     // Prevent directory traversal attacks
     if (path.find("..") != std::string::npos) {
       return crow::response(403, "Forbidden");
+    }
+
+    std::string filepath = "frontend/" + path;
+    std::string content = readFile(filepath);
+
+    if (content.empty()) {
+      return crow::response(404, "Not Found");
+
 
 
 
