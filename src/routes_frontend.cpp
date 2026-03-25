@@ -75,7 +75,7 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
   // Honours project route
   CROW_ROUTE(app, "/honours-project").methods("GET"_method)
   ([]() {
-    std::string content = readFile("frontend/honours-project.html");
+    std::string content = readFile("../frontend/honours-project.html");
     if (content.empty()) {
       return crow::response(404, "Not Found");
     }
