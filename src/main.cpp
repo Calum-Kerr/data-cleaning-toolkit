@@ -25,6 +25,15 @@ int main(){
     result["message"]="Data cleaned successfully";
     return crow::response(result);
   });
+  CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    auto dups=detectDuplicates(parsed);
+    crow::json::wvalue result;
+    result["duplicateCount"]=0;
+    for(bool d:dups) if(d) result["duplicateCount"]++;
+    return crow::response(result);
+  });
   app.port(8080).multithreaded().run();
 }
 
