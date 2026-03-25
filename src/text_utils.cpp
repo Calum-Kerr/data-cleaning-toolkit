@@ -2,6 +2,12 @@
 #include <algorithm>
 #include <sstream>
 
+std::string toUpperCase(const std::string& text){
+  std::string result=text;
+  std::transform(result.begin(),result.end(),result.begin(),::toupper);
+  return result;
+}
+
 std::string normalizeWhitespace(const std::string& text){
   std::string result;
   bool inSpace=false;
