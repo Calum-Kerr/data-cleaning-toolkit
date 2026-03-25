@@ -66,5 +66,15 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     result["message"]="Case standardized";
     return crow::response(result);
   });
+  CROW_ROUTE(app,"/api/remove-outliers").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    auto cleaned=removeOutliers(parsed);
+    crow::json::wvalue result;
+    result["originalRows"]=parsed.size();
+    result["cleanedRows"]=cleaned.size();
+    result["outliersRemoved"]=parsed.size()-cleaned.size();
+    return crow::response(result);
+  });
 }
 
