@@ -15,6 +15,8 @@ int main(){
     .headers("Content-Type","Accept")
     .methods("GET"_method,"POST"_method)
     .origin("*");
+  CROW_ROUTE(app,"/api/health").methods("GET"_method)
+  ([](){ crow::json::wvalue result; result["status"]="ok"; return crow::response(result); });
   CROW_ROUTE(app,"/api/clean").methods("POST"_method)
   ([&auditLog](const crow::request& req){
     auto parsed=parseCSV(req.body);
