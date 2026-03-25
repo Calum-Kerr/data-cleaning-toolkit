@@ -39,5 +39,15 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     resp["outlierCount"]=outliers.size();
     return crow::response(resp);
   });
+  CROW_ROUTE(app,"/api/detect-missing").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    auto missing=detectMissingValues(parsed);
+    crow::json::wvalue result;
+    result["missingCount"]=0;
+    for(const auto& row:missing)
+      for(bool m:row) if(m) result["missingCount"]++;
+    return crow::response(result);
+  });
 }
 
