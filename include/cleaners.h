@@ -12,6 +12,8 @@ std::vector<std::vector<std::string>> standardizeNullValuesInData(
   const std::vector<std::vector<std::string>>& data);
 std::vector<std::vector<std::string>> fuzzyDeduplicateRows(
   const std::vector<std::vector<std::string>>& data, double threshold);
+std::vector<std::vector<std::string>> naturalSort(
+  const std::vector<std::vector<std::string>>& data, int colIndex);
 std::vector<std::vector<std::string>> removeOutliers(const std::vector<std::vector<std::string>>& data);
 
 struct UniversalCleaningResult {
