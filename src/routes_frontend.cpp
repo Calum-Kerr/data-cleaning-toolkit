@@ -26,6 +26,15 @@ std::string getContentType(const std::string& filepath) {
   if (endsWith(filepath, ".js")) return "application/javascript; charset=utf-8";
   if (endsWith(filepath, ".json")) return "application/json; charset=utf-8";
   if (endsWith(filepath, ".wasm")) return "application/wasm";
+  if (endsWith(filepath, ".png")) return "image/png";
+  if (endsWith(filepath, ".ico")) return "image/x-icon";
+  if (endsWith(filepath, ".svg")) return "image/svg+xml";
+  if (endsWith(filepath, ".webmanifest")) return "application/manifest+json";
+  if (endsWith(filepath, ".xml")) return "application/xml; charset=utf-8";
+  if (endsWith(filepath, ".txt")) return "text/plain; charset=utf-8";
+  return "application/octet-stream";
+}
+
 
 
 
