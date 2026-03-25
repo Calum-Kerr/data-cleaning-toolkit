@@ -45,15 +45,6 @@ int main(){
     for(bool d:dups) if(d) result["duplicateCount"]++;
     return crow::response(result);
   });
-  CROW_ROUTE(app,"/api/normalize-whitespace").methods("POST"_method)
-  ([](const crow::request& req){
-    auto parsed=parseCSV(req.body);
-    auto normalized=trimWhitespace(parsed);
-    crow::json::wvalue result;
-    result["message"]="Whitespace normalized";
-    result["rows"]=normalized.size();
-    return crow::response(result);
-  });
   CROW_ROUTE(app,"/api/standardize-case").methods("POST"_method)
   ([](const crow::request& req){
     auto parsed=parseCSV(req.body);
