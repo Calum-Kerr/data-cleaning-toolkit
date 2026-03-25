@@ -48,6 +48,14 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     return res;
   });
 
+  // App route - serve index.html
+  CROW_ROUTE(app, "/app").methods("GET"_method)
+  ([]() {
+    std::string content = readFile("frontend/index.html");
+    if (content.empty()) {
+      return crow::response(404, "Not Found");
+
+
 
 
 
