@@ -50,5 +50,15 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     result["outliersRemoved"]=parsed.size()-cleaned.size();
     return crow::response(result);
   });
+  CROW_ROUTE(app,"/api/fuzzy-deduplicate").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    auto deduped=fuzzyDeduplicateRows(parsed,0.85);
+    crow::json::wvalue result;
+    result["originalRows"]=parsed.size();
+    result["deduplicatedRows"]=deduped.size();
+    result["merged"]=parsed.size()-deduped.size();
+    return crow::response(result);
+  });
 }
 
