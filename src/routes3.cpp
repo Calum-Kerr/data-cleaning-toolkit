@@ -30,10 +30,10 @@ void registerCleaningRoutes(crow::SimpleApp& app){
     result["message"]="Null values standardized";
     return crow::response(result);
   });
-  CROW_ROUTE(app,"/api/fuzzy-deduplicate").methods("POST"_method)
-  ([](const crow::request& req){
+  CROW_ROUTE(app,"/api/fuzzy-deduplicate/<double>").methods("POST"_method)
+  ([](const crow::request& req, double threshold){
     auto parsed=parseCSV(req.body);
-    auto deduped=fuzzyDeduplicateRows(parsed,0.85);
+    auto deduped=fuzzyDeduplicateRows(parsed,threshold);
     crow::json::wvalue result;
     result["originalRows"]=parsed.size();
     result["deduplicatedRows"]=deduped.size();
