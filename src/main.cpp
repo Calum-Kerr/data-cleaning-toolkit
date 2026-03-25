@@ -10,6 +10,7 @@
 void registerAdditionalRoutes(crow::SimpleApp& app);
 void registerTextRoutes(crow::SimpleApp& app);
 void registerCleaningRoutes(crow::SimpleApp& app);
+void registerFrontendRoutes(crow::SimpleApp& app);
 
 int main(){
   crow::SimpleApp app;
@@ -46,6 +47,7 @@ int main(){
   registerAdditionalRoutes(app);
   registerTextRoutes(app);
   registerCleaningRoutes(app);
+  registerFrontendRoutes(app);
   app.port(8080).multithreaded().run();
 }
 
