@@ -49,6 +49,7 @@ int main(){
     return crow::response(result);
   });
   registerAdditionalRoutes(app);
+  registerTextRoutes(app);
   app.port(8080).multithreaded().run();
 }
 
