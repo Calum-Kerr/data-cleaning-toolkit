@@ -43,6 +43,15 @@ int main(){
     for(const auto& row:missing) for(bool m:row) if(m) result["missingCount"]++;
     return crow::response(result);
   });
+  CROW_ROUTE(app,"/api/normalize-whitespace").methods("POST"_method)
+  ([](const crow::request& req){
+    auto parsed=parseCSV(req.body);
+    auto normalized=trimWhitespace(parsed);
+    crow::json::wvalue result;
+    result["message"]="Whitespace normalized";
+    result["rows"]=normalized.size();
+    return crow::response(result);
+  });
   app.port(8080).multithreaded().run();
 }
 
