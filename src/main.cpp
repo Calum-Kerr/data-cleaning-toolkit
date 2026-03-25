@@ -45,14 +45,6 @@ int main(){
     for(bool d:dups) if(d) result["duplicateCount"]++;
     return crow::response(result);
   });
-  CROW_ROUTE(app,"/api/standardize-case").methods("POST"_method)
-  ([](const crow::request& req){
-    auto parsed=parseCSV(req.body);
-    auto standardized=standardizeCase(parsed,"lower");
-    crow::json::wvalue result;
-    result["message"]="Case standardized to lowercase";
-    return crow::response(result);
-  });
   CROW_ROUTE(app,"/api/remove-outliers").methods("POST"_method)
   ([](const crow::request& req){
     auto parsed=parseCSV(req.body);
