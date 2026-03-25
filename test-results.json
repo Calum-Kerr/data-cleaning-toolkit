@@ -1,0 +1,81 @@
+[
+  {
+    "name": "Health Check",
+    "status": "PASS",
+    "endpoint": "/api/health"
+  },
+  {
+    "name": "Parse CSV",
+    "status": "PASS",
+    "endpoint": "/api/parse",
+    "rows": 101
+  },
+  {
+    "name": "Detect Duplicates",
+    "status": "PASS",
+    "endpoint": "/api/detect-duplicates",
+    "count": 0
+  },
+  {
+    "name": "Detect Missing",
+    "status": "PASS",
+    "endpoint": "/api/detect-missing",
+    "count": 61
+  },
+  {
+    "name": "Detect Outliers",
+    "status": "PASS",
+    "endpoint": "/api/detect-outliers",
+    "count": 0
+  },
+  {
+    "name": "Clean Data",
+    "status": "PASS",
+    "endpoint": "/api/clean",
+    "original": 101,
+    "cleaned": 101
+  },
+  {
+    "name": "Normalize Whitespace",
+    "status": "PASS",
+    "endpoint": "/api/normalize-whitespace"
+  },
+  {
+    "name": "Standardize Case",
+    "status": "PASS",
+    "endpoint": "/api/standardize-case"
+  },
+  {
+    "name": "Standardize Nulls",
+    "status": "PASS",
+    "endpoint": "/api/standardize-nulls"
+  },
+  {
+    "name": "Remove Outliers",
+    "status": "PASS",
+    "endpoint": "/api/remove-outliers",
+    "removed": 0
+  },
+  {
+    "name": "Remove State Suffixes",
+    "status": "PASS",
+    "endpoint": "/api/remove-state-suffixes"
+  },
+  {
+    "name": "Remove Duplicate Words",
+    "status": "PASS",
+    "endpoint": "/api/remove-duplicate-words"
+  },
+  {
+    "name": "Fuzzy Deduplicate",
+    "status": "PASS",
+    "endpoint": "/api/fuzzy-deduplicate/0.85",
+    "merged": 0
+  },
+  {
+    "name": "Natural Sort",
+    "status": "PASS",
+    "endpoint": "/api/natural-sort/0",
+    "rows": 101
+  }
+]

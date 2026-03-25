@@ -18,3 +18,8 @@ test-universal-clean.csv
 server.log
 clean_train.csv
 test_data.csv
+asio_temp/
+include/asio/
+*.sh
+stress-test-100x10.csv
+include/asio.hpp
