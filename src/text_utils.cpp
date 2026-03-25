@@ -45,18 +45,3 @@ std::string standardizeNullValues(const std::string& text){
   return trimmed;
 }
 
-std::string removeDuplicateWords(const std::string& text){
-  std::vector<std::string> words;
-  std::stringstream ss(text);
-  std::string word;
-  while(ss >> word) words.push_back(word);
-  std::string result;
-  for(size_t i=0;i<words.size();++i){
-    if(i==0 || words[i]!=words[i-1]){
-      if(i>0) result+=" ";
-      result+=words[i];
-    }
-  }
-  return result;
-}
-
