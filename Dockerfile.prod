@@ -17,7 +17,7 @@ COPY . .
 COPY vcpkg.json .
 RUN git clone https://github.com/Microsoft/vcpkg.git
 RUN cd vcpkg && ./bootstrap-vcpkg.sh
-RUN cd vcpkg && ./vcpkg install --max-concurrency=1
+RUN cd vcpkg && VCPKG_MAX_CONCURRENCY=1 ./vcpkg install
 RUN mkdir build && \
     cd build && \
     cmake .. -DCMAKE_TOOLCHAIN_FILE="../vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release && \
