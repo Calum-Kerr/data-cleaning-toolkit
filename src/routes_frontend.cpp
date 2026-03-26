@@ -105,6 +105,14 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     }
 
     std::string filepath = "../frontend/" + path;
+    std::string content = getCachedFile(filepath);
+    if (!content.empty()) {
+      auto res = crow::response(content);
+      res.set_header("Content-Type", getContentType(filepath));
+      res.set_header("Content-Length", std::to_string(content.length()));
+      logRequest("GET", "/" + path, 200);
+      return res;
+    }
 
     // Check file exists before reading
     if (!fs::exists(filepath)) {
@@ -116,12 +124,13 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
       return crow::response(413, "Payload Too Large");
     }
 
-    std::string content = readFile(filepath);
+    content = readFile(filepath);
 
     if (content.empty()) {
       return crow::response(404, "Not Found");
     }
 
+    setCachedFile(filepath, content);
     auto res = crow::response(content);
     res.set_header("Content-Type", getContentType(filepath));
     res.set_header("Content-Length", std::to_string(content.length()));
