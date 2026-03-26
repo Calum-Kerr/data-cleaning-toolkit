@@ -40,6 +40,7 @@ int main(){
   CROW_ROUTE(app,"/api/clean").methods("POST"_method)
   ([&auditLog](const crow::request& req){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
+    recordEndpointCall("/api/clean");
     auto parsed=parseCSV(req.body);
     auto cleaned=removeDuplicates(parsed);
     crow::json::wvalue result;
