@@ -4,6 +4,7 @@
 #include <filesystem>
 #include "logger.h"
 #include "rate_limiter.h"
+#include "cache.h"
 
 namespace fs = std::filesystem;
 
