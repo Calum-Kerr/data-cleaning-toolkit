@@ -5,6 +5,9 @@
 #include "cleaners.h"
 #include "audit.h"
 #include "pdf_report.h"
+#include "logger.h"
+#include "rate_limiter.h"
+#include "alerts.h"
 #include <iostream>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
