@@ -3,6 +3,8 @@
 #include "text_utils.h"
 #include "cleaners.h"
 #include "detectors.h"
+#include "logger.h"
+#include "rate_limiter.h"
 
 void registerCleaningRoutes(crow::SimpleApp& app){
   CROW_ROUTE(app,"/api/standardize-nulls").methods("POST"_method)
