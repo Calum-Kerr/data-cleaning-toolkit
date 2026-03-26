@@ -9,6 +9,7 @@
 #include "rate_limiter.h"
 #include "alerts.h"
 #include "analytics.h"
+#include "documentation.h"
 #include <iostream>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
