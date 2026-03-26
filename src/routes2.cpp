@@ -6,6 +6,7 @@
 void registerTextRoutes(crow::SimpleApp& app){
   CROW_ROUTE(app,"/api/remove-state-suffixes").methods("POST"_method)
   ([](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/remove-state-suffixes", 429); return crow::response(429);}
     auto parsed=parseCSV(req.body);
     std::vector<std::vector<std::string>> result;
     for(const auto& row:parsed){
@@ -16,6 +17,7 @@ void registerTextRoutes(crow::SimpleApp& app){
     }
     crow::json::wvalue resp;
     resp["message"]="State suffixes removed";
+    logRequest("POST", "/api/remove-state-suffixes", 200);
     return crow::response(resp);
   });
   CROW_ROUTE(app,"/api/remove-duplicate-words").methods("POST"_method)
