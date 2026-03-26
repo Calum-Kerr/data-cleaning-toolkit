@@ -11,6 +11,7 @@
 #include "analytics.h"
 #include "documentation.h"
 #include "backup.h"
+#include "seo.h"
 #include <iostream>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
