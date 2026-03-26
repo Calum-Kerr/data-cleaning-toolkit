@@ -63,6 +63,14 @@ int main(){
     logRequest("POST", "/api/detect-duplicates", 200);
     return crow::response(result);
   });
+  CROW_ROUTE(app,"/api/analytics").methods("GET"_method)
+  ([](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/api/analytics", 429); return crow::response(429);}
+    recordEndpointCall("/api/analytics");
+    writeAnalyticsSummary();
+    logRequest("GET", "/api/analytics", 200);
+    crow::json::wvalue result; result["status"]="analytics logged"; return crow::response(result);
+  });
   registerAdditionalRoutes(app);
   registerTextRoutes(app);
   registerCleaningRoutes(app);
