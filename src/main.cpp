@@ -13,6 +13,7 @@
 #include "backup.h"
 #include "seo.h"
 #include "load_test.h"
+#include "database.h"
 #include <iostream>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
