@@ -89,6 +89,14 @@ int main(){
     logRequest("POST", "/api/backup", 200);
     crow::json::wvalue result; result["status"]="backup created"; return crow::response(result);
   });
+  CROW_ROUTE(app,"/api/seo").methods("GET"_method)
+  ([](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/api/seo", 429); return crow::response(429);}
+    recordEndpointCall("/api/seo");
+    writeSeoReport();
+    logRequest("GET", "/api/seo", 200);
+    crow::json::wvalue result; result["status"]="seo report generated"; return crow::response(result);
+  });
   registerAdditionalRoutes(app);
   registerTextRoutes(app);
   registerCleaningRoutes(app);
