@@ -23,6 +23,7 @@ include/asio/
 *.md
 *.txt
 *.log
+*.tex
 stress-test-100x10.csv
 include/asio.hpp
 not-needed/
