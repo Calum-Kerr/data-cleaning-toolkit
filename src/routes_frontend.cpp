@@ -40,13 +40,15 @@ std::string getContentType(const std::string& filepath) {
 void registerFrontendRoutes(crow::SimpleApp& app) {
   // Root route - serve home.html
   CROW_ROUTE(app, "/").methods("GET"_method)
-  ([]() {
+  ([](const crow::request& req) {
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/", 429); return crow::response(429);}
     std::string content = readFile("../frontend/home.html");
     if (content.empty()) {
       return crow::response(404, "Not Found");
     }
     auto res = crow::response(content);
     res.set_header("Content-Type", "text/html; charset=utf-8");
+    logRequest("GET", "/", 200);
     return res;
   });
 
