@@ -41,10 +41,12 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
   });
   CROW_ROUTE(app,"/api/standardize-case").methods("POST"_method)
   ([](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/standardize-case", 429); return crow::response(429);}
     auto parsed=parseCSV(req.body);
     auto standardized=standardizeCase(parsed,"lower");
     crow::json::wvalue result;
     result["message"]="Case standardized";
+    logRequest("POST", "/api/standardize-case", 200);
     return crow::response(result);
   });
   CROW_ROUTE(app,"/api/remove-outliers").methods("POST"_method)
