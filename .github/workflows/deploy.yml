@@ -15,6 +15,4 @@ jobs:
           username: root
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd /root/data-cleaning-toolkit
-            git pull origin main
-            (cd build && cmake .. -DCMAKE_TOOLCHAIN_FILE="../vcpkg/scripts/buildsystems/vcpkg.cmake" -DCMAKE_BUILD_TYPE=Release && make -j1 && pkill -f Toolkit || true && nohup ./Toolkit > /tmp/toolkit.log 2>&1 &) &
+            nohup /root/deploy.sh > /tmp/deploy.log 2>&1 &
