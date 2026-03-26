@@ -10,6 +10,7 @@
 #include "alerts.h"
 #include "analytics.h"
 #include "documentation.h"
+#include "backup.h"
 #include <iostream>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
