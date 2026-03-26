@@ -17,6 +17,7 @@ void registerFrontendRoutes(crow::SimpleApp& app);
 
 int main(){
   crow::SimpleApp app;
+  writeStartupAlert();
   AuditLog auditLog;
   CROW_ROUTE(app,"/api/health").methods("GET"_method)
   ([](){ crow::json::wvalue result; result["status"]="ok"; return crow::response(result); });
