@@ -51,12 +51,14 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
   });
   CROW_ROUTE(app,"/api/remove-outliers").methods("POST"_method)
   ([](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/remove-outliers", 429); return crow::response(429);}
     auto parsed=parseCSV(req.body);
     auto cleaned=removeOutliers(parsed);
     crow::json::wvalue result;
     result["originalRows"]=(int)parsed.size();
     result["cleanedRows"]=(int)cleaned.size();
     result["outliersRemoved"]=(int)(parsed.size()-cleaned.size());
+    logRequest("POST", "/api/remove-outliers", 200);
     return crow::response(result);
   });
 }
