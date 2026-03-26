@@ -36,12 +36,14 @@ int main(){
   });
   CROW_ROUTE(app,"/api/clean").methods("POST"_method)
   ([&auditLog](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
     auto parsed=parseCSV(req.body);
     auto cleaned=removeDuplicates(parsed);
     crow::json::wvalue result;
     result["originalRows"]=(int)parsed.size();
     result["cleanedRows"]=(int)cleaned.size();
     result["message"]="Data cleaned successfully";
+    logRequest("POST", "/api/clean", 200);
     return crow::response(result);
   });
   CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
