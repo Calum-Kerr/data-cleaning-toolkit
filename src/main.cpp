@@ -108,6 +108,16 @@ int main(){
     logRequest("POST", "/api/load-test", 200);
     crow::json::wvalue response; response["status"]="load test completed"; response["total"]=result.totalRequests; return crow::response(response);
   });
+  CROW_ROUTE(app,"/api/requests/<int>").methods("GET"_method)
+  ([](const crow::request& req, int limit){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/api/requests", 429); return crow::response(429);}
+    recordEndpointCall("/api/requests");
+    initializeDatabase();
+    auto records=getRequestHistory(limit);
+    crow::json::wvalue response; response["records"]=crow::json::wvalue::list(); auto& recList=response["records"]; for (const auto& rec : records) { crow::json::wvalue item; item["timestamp"]=rec.timestamp; item["method"]=rec.method; item["path"]=rec.path; item["statusCode"]=rec.statusCode; recList.push_back(item); }
+    logRequest("GET", "/api/requests", 200);
+    return crow::response(response);
+  });
   registerAdditionalRoutes(app);
   registerTextRoutes(app);
   registerCleaningRoutes(app);
