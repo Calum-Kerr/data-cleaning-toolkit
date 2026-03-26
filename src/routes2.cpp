@@ -38,11 +38,13 @@ void registerTextRoutes(crow::SimpleApp& app){
   });
   CROW_ROUTE(app,"/api/natural-sort/<int>").methods("POST"_method)
   ([](const crow::request& req, int colIndex){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/natural-sort", 429); return crow::response(429);}
     auto parsed=parseCSV(req.body);
     auto sorted=naturalSort(parsed,colIndex);
     crow::json::wvalue result;
     result["message"]="Data sorted naturally";
     result["rows"]=(int)sorted.size();
+    logRequest("POST", "/api/natural-sort", 200);
     return crow::response(result);
   });
 }
