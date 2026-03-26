@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include "logger.h"
+#include "rate_limiter.h"
 
 namespace fs = std::filesystem;
 
