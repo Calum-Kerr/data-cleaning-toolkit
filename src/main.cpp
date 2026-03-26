@@ -80,6 +80,14 @@ int main(){
     logRequest("GET", "/api/documentation", 200);
     return getApiDocumentation();
   });
+  CROW_ROUTE(app,"/api/backup").methods("POST"_method)
+  ([](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/backup", 429); return crow::response(429);}
+    recordEndpointCall("/api/backup");
+    createBackup();
+    logRequest("POST", "/api/backup", 200);
+    crow::json::wvalue result; result["status"]="backup created"; return crow::response(result);
+  });
   registerAdditionalRoutes(app);
   registerTextRoutes(app);
   registerCleaningRoutes(app);
