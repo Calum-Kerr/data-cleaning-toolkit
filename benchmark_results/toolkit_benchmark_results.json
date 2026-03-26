@@ -1,0 +1,49 @@
+{
+  "results": [
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "task": "duplicates",
+      "runs": 5,
+      "mean_ms": 1554.07,
+      "median_ms": 1673.31,
+      "stdev_ms": 633.75,
+      "min_ms": 811.64,
+      "max_ms": 2377.83,
+      "rows_processed": 18406,
+      "accuracy": 1.0,
+      "errors_detected": 0,
+      "audit_log_lines": 0
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Titanic",
+      "task": "missing_values",
+      "runs": 5,
+      "mean_ms": 12.67,
+      "median_ms": 11.18,
+      "stdev_ms": 4.53,
+      "min_ms": 9.1,
+      "max_ms": 20.59,
+      "rows_processed": 624,
+      "accuracy": 0.95,
+      "errors_detected": 0,
+      "audit_log_lines": 0
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Credit",
+      "task": "outliers",
+      "runs": 5,
+      "mean_ms": 109.31,
+      "median_ms": 108.77,
+      "stdev_ms": 14.33,
+      "min_ms": 91.78,
+      "max_ms": 123.94,
+      "rows_processed": 8403,
+      "accuracy": 0.88,
+      "errors_detected": 3290,
+      "audit_log_lines": 0
+    }
+  ]
+}
