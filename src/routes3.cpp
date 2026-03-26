@@ -19,12 +19,14 @@ void registerCleaningRoutes(crow::SimpleApp& app){
   });
   CROW_ROUTE(app,"/api/fuzzy-deduplicate/<double>").methods("POST"_method)
   ([](const crow::request& req, double threshold){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/fuzzy-deduplicate", 429); return crow::response(429);}
     auto parsed=parseCSV(req.body);
     auto deduped=fuzzyDeduplicateRows(parsed,threshold);
     crow::json::wvalue result;
     result["originalRows"]=(int)parsed.size();
     result["deduplicatedRows"]=(int)deduped.size();
     result["merged"]=(int)(parsed.size()-deduped.size());
+    logRequest("POST", "/api/fuzzy-deduplicate", 200);
     return crow::response(result);
   });
 }
