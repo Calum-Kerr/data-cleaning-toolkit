@@ -24,6 +24,7 @@ void registerFrontendRoutes(crow::SimpleApp& app);
 int main(){
   crow::SimpleApp app;
   writeStartupAlert();
+  initializeDatabase();
   AuditLog auditLog;
   CROW_ROUTE(app,"/api/health").methods("GET"_method)
   ([](const crow::request& req){
