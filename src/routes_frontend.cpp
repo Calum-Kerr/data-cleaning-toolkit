@@ -68,13 +68,15 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
 
   // Features route
   CROW_ROUTE(app, "/features").methods("GET"_method)
-  ([]() {
+  ([](const crow::request& req) {
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/features", 429); return crow::response(429);}
     std::string content = readFile("../frontend/features.html");
     if (content.empty()) {
       return crow::response(404, "Not Found");
     }
     auto res = crow::response(content);
     res.set_header("Content-Type", "text/html; charset=utf-8");
+    logRequest("GET", "/features", 200);
     return res;
   });
 
