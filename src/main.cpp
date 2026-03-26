@@ -20,7 +20,10 @@ int main(){
   writeStartupAlert();
   AuditLog auditLog;
   CROW_ROUTE(app,"/api/health").methods("GET"_method)
-  ([](){ crow::json::wvalue result; result["status"]="ok"; return crow::response(result); });
+  ([](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) return crow::response(429);
+    crow::json::wvalue result; result["status"]="ok"; return crow::response(result);
+  });
   CROW_ROUTE(app,"/api/parse").methods("POST"_method)
   ([](const crow::request& req){
     auto parsed=parseCSV(req.body);
