@@ -4,6 +4,12 @@
 enum ParserState {FIELD_START, UNQUOTED_FIELD, QUOTED_FIELD, ESCAPE_QUOTE, FIELD_END};
 const char QUOTE = '"', COMMA = ',', NEWLINE = '\n', CARRIAGE_RETURN = '\r';
 
+bool isValidClosedQuote(const std::string& field){
+  int quoteCount=0;
+  for(char c:field) if(c==QUOTE) ++quoteCount;
+  return quoteCount%2==0;
+}
+
 std::vector<std::string> parseCSVLine(const std::string& line){
   std::vector<std::string> row;
   std::string cell;
