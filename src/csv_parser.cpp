@@ -1,6 +1,9 @@
 #include "csv_parser.h"
 #include <sstream>
 
+enum ParserState {FIELD_START, UNQUOTED_FIELD, QUOTED_FIELD, ESCAPE_QUOTE, FIELD_END};
+const char QUOTE = '"', COMMA = ',', NEWLINE = '\n', CARRIAGE_RETURN = '\r';
+
 std::vector<std::string> parseCSVLine(const std::string& line){
   std::vector<std::string> row;
   std::string cell;
