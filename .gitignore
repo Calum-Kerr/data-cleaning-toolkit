@@ -28,3 +28,7 @@ stress-test-100x10.csv
 include/asio.hpp
 not-needed/
 
+*.pdf
+*.bib
+
+benchmark_results/logo.png
