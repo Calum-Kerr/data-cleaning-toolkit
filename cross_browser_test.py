@@ -21,3 +21,11 @@ def test_dataset(filepath):
     return (True,hash1) if hash1==hash2 else (False,"Hashes differ")
   except Exception as e:
     return False,str(e)
+
+def main():
+  test_files=['datasets/Airbnb/duplicates/dirty_train.csv',
+              'datasets/Titanic/missing_values/dirty_test.csv',
+              'datasets/Credit/outliers/dirty_test.csv']
+  print("Cross-Browser CSV Parsing Parity Test")
+  print("="*60)
+  passed,failed=0,0
