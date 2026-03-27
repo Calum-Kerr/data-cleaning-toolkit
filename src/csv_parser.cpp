@@ -38,6 +38,8 @@ std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
       currentField="";
       state=(c==COMMA)?FIELD_START:FIELD_END;
     }
+    else if(state==QUOTED_FIELD) currentField+=c;
+    else if(state==UNQUOTED_FIELD) currentField+=c;
   }
   return result;
 }
