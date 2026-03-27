@@ -15,6 +15,11 @@ size_t skipUTF8BOM(const std::string& data){
   return 0;
 }
 
+void completeField(std::vector<std::string>& row, std::string& field){
+  row.push_back(field);
+  field="";
+}
+
 std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   std::vector<std::vector<std::string>> result;
   std::vector<std::string> currentRow;
