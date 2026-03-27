@@ -30,7 +30,8 @@ std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   for(size_t i=startIdx;i<data.length();++i){
     char c=data[i];
     if(c==CARRIAGE_RETURN&&i+1<data.length()&&data[i+1]==NEWLINE) continue;
-    if(state==FIELD_START&&c==QUOTE) state=QUOTED_FIELD;
+    if(state==FIELD_START&&(c==COMMA||c==NEWLINE)){currentRow.push_back("");state=(c==COMMA)?FIELD_START:FIELD_END;}
+    else if(state==FIELD_START&&c==QUOTE) state=QUOTED_FIELD;
     else if(state==FIELD_START&&c!=COMMA&&c!=NEWLINE){state=UNQUOTED_FIELD;currentField+=c;}
     else if(state==QUOTED_FIELD&&c==QUOTE) state=ESCAPE_QUOTE;
     else if(state==ESCAPE_QUOTE){
