@@ -9,6 +9,12 @@ bool isValidClosedQuote(const std::string& field){
   return quoteCount%2==0;
 }
 
+size_t skipUTF8BOM(const std::string& data){
+  if(data.length()>=3&&(unsigned char)data[0]==0xEF&&
+     (unsigned char)data[1]==0xBB&&(unsigned char)data[2]==0xBF) return 3;
+  return 0;
+}
+
 std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   std::vector<std::vector<std::string>> result;
   std::vector<std::string> currentRow;
