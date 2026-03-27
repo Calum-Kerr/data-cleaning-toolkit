@@ -20,6 +20,12 @@ void completeField(std::vector<std::string>& row, std::string& field){
   field="";
 }
 
+void completeRow(std::vector<std::vector<std::string>>& result,
+                 std::vector<std::string>& row){
+  if(!row.empty()) result.push_back(row);
+  row.clear();
+}
+
 std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   std::vector<std::vector<std::string>> result;
   std::vector<std::string> currentRow;
