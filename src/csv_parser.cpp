@@ -42,6 +42,8 @@ std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
     else if(state==QUOTED_FIELD) currentField+=c;
     else if(state==UNQUOTED_FIELD) currentField+=c;
   }
+  if(!currentField.empty()||state==FIELD_END) currentRow.push_back(currentField);
+  if(!currentRow.empty()) result.push_back(currentRow);
   return result;
 }
 
