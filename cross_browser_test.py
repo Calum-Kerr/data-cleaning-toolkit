@@ -29,3 +29,16 @@ def main():
   print("Cross-Browser CSV Parsing Parity Test")
   print("="*60)
   passed,failed=0,0
+  for filepath in test_files:
+    import os
+    if not os.path.exists(filepath):
+      print(f"⊘ {filepath}: FILE NOT FOUND")
+      continue
+    success,result=test_dataset(filepath)
+    if success:
+      print(f"✓ {filepath}")
+      print(f"  Hash: {result[:16]}...")
+      passed+=1
+    else:
+      print(f"✗ {filepath}: {result}")
+      failed+=1
