@@ -20,6 +20,13 @@ std::vector<std::string> parseCSVLine(const std::string& line){
   return row;
 }
 
+std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
+  std::vector<std::vector<std::string>> result;
+  std::vector<std::string> currentRow;
+  std::string currentField;
+  ParserState state = FIELD_START;
+  for(size_t i=0;i<data.length();++i){
+
 std::vector<std::vector<std::string>> parseCSV(const std::string& data){
   std::vector<std::vector<std::string>> result;
   std::stringstream ss(data);
