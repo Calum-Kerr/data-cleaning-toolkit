@@ -26,6 +26,14 @@ void completeRow(std::vector<std::vector<std::string>>& result,
   row.clear();
 }
 
+ParserState handleFieldStart(char c, std::vector<std::string>& row,
+                             std::string& field){
+  if(c==COMMA||c==NEWLINE){row.push_back("");return FIELD_START;}
+  if(c==QUOTE) return QUOTED_FIELD;
+  if(c!=COMMA&&c!=NEWLINE){field+=c;return UNQUOTED_FIELD;}
+  return FIELD_START;
+}
+
 std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   std::vector<std::vector<std::string>> result;
   std::vector<std::string> currentRow;
