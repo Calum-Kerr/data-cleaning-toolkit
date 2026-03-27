@@ -1,5 +1,11 @@
 #include "csv_parser.h"
 
+// RFC 4180 CSV parsing state machine. see: https://tools.ietf.org/html/rfc4180
+// FIELD_START: beginning of field, check for quote or content
+// UNQUOTED_FIELD: reading unquoted content, stop at comma or newline
+// QUOTED_FIELD: inside quotes, accumulate everything including newlines
+// ESCAPE_QUOTE: just saw quote inside quoted field, check if it's an escape ("")
+// FIELD_END: field complete, expect comma or newline to proceed to next field
 enum ParserState {FIELD_START, UNQUOTED_FIELD, QUOTED_FIELD, ESCAPE_QUOTE, FIELD_END};
 const char QUOTE = '"', COMMA = ',', NEWLINE = '\n', CARRIAGE_RETURN = '\r';
 
