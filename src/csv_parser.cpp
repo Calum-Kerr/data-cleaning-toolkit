@@ -27,6 +27,7 @@ std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   ParserState state = FIELD_START;
   for(size_t i=0;i<data.length();++i){
     char c=data[i];
+    if(c==CARRIAGE_RETURN&&i+1<data.length()&&data[i+1]==NEWLINE) continue;
     if(state==FIELD_START&&c==QUOTE) state=QUOTED_FIELD;
     else if(state==FIELD_START&&c!=COMMA&&c!=NEWLINE){state=UNQUOTED_FIELD;currentField+=c;}
     else if(state==QUOTED_FIELD&&c==QUOTE) state=ESCAPE_QUOTE;
