@@ -46,6 +46,13 @@ ParserState handleEscapeQuote(char c, std::vector<std::string>& row,
   return QUOTED_FIELD;
 }
 
+ParserState handleUnquotedField(char c, std::vector<std::string>& row,
+                                std::string& field){
+  if(c==COMMA||c==NEWLINE){completeField(row,field);return(c==COMMA)?FIELD_START:FIELD_END;}
+  field+=c;
+  return UNQUOTED_FIELD;
+}
+
 std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   std::vector<std::vector<std::string>> result;
   std::vector<std::string> currentRow;
