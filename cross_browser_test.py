@@ -42,3 +42,6 @@ def main():
     else:
       print(f"✗ {filepath}: {result}")
       failed+=1
+  print("="*60)
+  print(f"Results: {passed} passed, {failed} failed")
+  return 0 if failed==0 else 1
