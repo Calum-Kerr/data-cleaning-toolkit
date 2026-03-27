@@ -26,6 +26,15 @@ std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   std::string currentField;
   ParserState state = FIELD_START;
   for(size_t i=0;i<data.length();++i){
+    char c=data[i];
+    if(state==UNQUOTED_FIELD&&(c==COMMA||c==NEWLINE)){
+      currentRow.push_back(currentField);
+      currentField="";
+      state=(c==COMMA)?FIELD_START:FIELD_END;
+    }
+  }
+  return result;
+}
 
 std::vector<std::vector<std::string>> parseCSV(const std::string& data){
   std::vector<std::vector<std::string>> result;
