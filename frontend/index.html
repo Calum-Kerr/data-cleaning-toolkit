@@ -582,21 +582,43 @@
             const rowsBefore=uploadCSV.trim().split('\n').length-1;
             function updateProgress(message){document.getElementById('progressText').textContent=message;}
             try{
-                updateProgress('Removing duplicates...');
-                let res=await fetch(API_URL+'/api/clean',{method:'POST',body:current});
-                let rowsAfterDedup=current.trim().split('\n').length-1;
-                logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
-                updateProgress('Normalizing whitespace...');
-                res=await fetch(API_URL+'/api/normalize-whitespace',{method:'POST',body:current});
-                logAuditOperation('Normalize Whitespace',rowsAfterDedup,rowsAfterDedup,0);
-                updateProgress('Standardizing case...');
-                res=await fetch(API_URL+'/api/standardize-case',{method:'POST',body:current});
-                logAuditOperation('Standardize Case',rowsAfterDedup,rowsAfterDedup,0);
+                if(wasmReady){
+                    updateProgress('Removing duplicates (WASM)...');
+                    current=wasmModule.ccall('removeAllDuplicatesString','string',['string'],[current]);
+                    let rowsAfterDedup=current.trim().split('\n').length-1;
+                    logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
+                    updateProgress('Normalizing whitespace (WASM)...');
+                    current=wasmModule.ccall('normalizeWhitespaceString','string',['string'],[current]);
+                    logAuditOperation('Normalize Whitespace',rowsAfterDedup,rowsAfterDedup,0);
+                    updateProgress('Standardizing case (WASM)...');
+                    current=wasmModule.ccall('testStandardize','string',['string','number','string'],[current,-1,'upper']);
+                    logAuditOperation('Standardize Case',rowsAfterDedup,rowsAfterDedup,0);
+                }else{
+                    updateProgress('Removing duplicates...');
+                    let res=await fetch(API_URL+'/api/clean',{method:'POST',body:current});
+                    if(!res.ok)throw new Error('API unavailable');
+                    let data=await res.json();
+                    current=data.csvData||current;
+                    let rowsAfterDedup=current.trim().split('\n').length-1;
+                    logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
+                    updateProgress('Normalizing whitespace...');
+                    res=await fetch(API_URL+'/api/normalize-whitespace',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});
+                    if(!res.ok)throw new Error('API unavailable');
+                    data=await res.json();
+                    current=data.csvData||current;
+                    logAuditOperation('Normalize Whitespace',rowsAfterDedup,rowsAfterDedup,0);
+                    updateProgress('Standardizing case...');
+                    res=await fetch(API_URL+'/api/standardize-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});
+                    if(!res.ok)throw new Error('API unavailable');
+                    data=await res.json();
+                    current=data.csvData||current;
+                    logAuditOperation('Standardize Case',rowsAfterDedup,rowsAfterDedup,0);
+                }
                 cleanedCSV=current;
                 showCleaningComplete();
             }catch(err){
                 console.error('Error during cleaning:',err);
-                updateProgress('Error during cleaning. Please try again.');
+                updateProgress('Error: '+err.message+'. Make sure you have cleaned data or internet connection.');
             }
         }
         let currentPage=1;

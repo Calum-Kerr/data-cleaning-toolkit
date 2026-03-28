@@ -24,11 +24,20 @@ const CRITICAL_ASSETS = [
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
-            return cache.addAll(CRITICAL_ASSETS).catch(err => {
-                console.warn('Failed to pre-cache some assets (expected on first deploy):', err);
-                // Continue even if some assets fail - they'll be cached on first use
-            });
-        }).then(() => self.skipWaiting())
+            // Try to cache each asset individually, don't fail entire install
+            return Promise.all(CRITICAL_ASSETS.map(asset => {
+                return cache.add(asset).catch(err => {
+                    console.warn('Failed to pre-cache:', asset, err);
+                    // Continue on individual asset failures
+                });
+            }));
+        }).then(() => {
+            console.log('Service Worker install complete, cache version:', CACHE_VERSION);
+            self.skipWaiting();
+        }).catch(err => {
+            console.warn('Service Worker install warning:', err);
+            self.skipWaiting();
+        })
     );
 });
 self.addEventListener('activate', event => {
@@ -87,18 +96,24 @@ self.addEventListener('fetch', event => {
             caches.open(CACHE_NAME).then(cache => {
                 return cache.match(event.request).then(response => {
                     if (response) {
-                        return verifyWasmIntegrity(response.clone()).then(isValid => {
-                            if (isValid) {
-                                return response;
-                            } else {
-                                console.warn('Cached WASM file failed integrity check, fetching fresh copy');
-                                return fetchAndCache(event.request, cache);
-                            }
-                        });
+                        console.log('Serving WASM/JS from cache:', event.request.url);
+                        return response;
                     } else {
-                        return fetchAndCache(event.request, cache);
+                        console.log('WASM/JS not in cache, fetching:', event.request.url);
+                        return fetch(event.request).then(fetchResponse => {
+                            if (fetchResponse.ok) {
+                                cache.put(event.request, fetchResponse.clone());
+                            }
+                            return fetchResponse;
+                        }).catch(err => {
+                            console.error('Failed to fetch WASM/JS:', event.request.url, err);
+                            throw err;
+                        });
                     }
                 });
+            }).catch(err => {
+                console.error('WASM/JS fetch error:', err);
+                return new Response('WASM module unavailable', { status: 503 });
             })
         );
     } else if (event.request.destination === 'script' || event.request.destination === 'worker') {
@@ -125,36 +140,42 @@ self.addEventListener('fetch', event => {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
                 return cache.match(event.request).then(response => {
-                    return response || fetch(event.request).then(fetchResponse => {
-                        if (fetchResponse.ok) {
+                    if (response) {
+                        console.log('Serving from cache:', event.request.url);
+                        return response;
+                    }
+                    return fetch(event.request).then(fetchResponse => {
+                        if (fetchResponse && fetchResponse.ok) {
                             cache.put(event.request, fetchResponse.clone());
                         }
                         return fetchResponse;
+                    }).catch(err => {
+                        console.warn('Fetch failed, trying cached fallback:', event.request.url);
+                        return cache.match('/app') || new Response('Offline - page not cached', { status: 503 });
                     });
                 });
+            }).catch(err => {
+                console.error('Cache error:', err);
+                return new Response('Service unavailable', { status: 503 });
             })
         );
     }
 });
 
-async function verifyWasmIntegrity(response) {
-    try {
-        const buffer = await response.arrayBuffer();
-        const hashBuffer = await crypto.subtle.digest('SHA-384', buffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        return true; // Placeholder - implement proper hash comparison
-    } catch (error) {
-        console.error('Error verifying WASM integrity:', error);
-        return false;
-    }
-}
+// Removed: verifyWasmIntegrity (was causing fetch errors)
+// WASM files are cached on first successful fetch
 
 async function fetchAndCache(request, cache) {
-    const fetchResponse = await fetch(request);
-    if (fetchResponse.ok) {
-        const responseClone = fetchResponse.clone();
-        cache.put(request, responseClone);
+    try {
+        const fetchResponse = await fetch(request);
+        if (fetchResponse && fetchResponse.ok) {
+            const responseClone = fetchResponse.clone();
+            cache.put(request, responseClone);
+            console.log('Cached:', request.url);
+        }
+        return fetchResponse;
+    } catch (error) {
+        console.error('fetchAndCache failed:', request.url, error);
+        throw error;
     }
-    return fetchResponse;
 }
