@@ -589,10 +589,10 @@
                     logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
                     updateProgress('Removing empty rows (WASM)...');
                     current=wasmModule.ccall('removeEmptyRowsString','string',['string'],[current]);
-                    logAuditOperation('Remove Empty Rows',rowsAfterDedup,rowsAfterDedup,0);
-                    updateProgress('Standardizing case (WASM)...');
-                    current=wasmModule.ccall('testStandardize','string',['string','number','string'],[current,-1,'upper']);
-                    logAuditOperation('Standardize Case',rowsAfterDedup,rowsAfterDedup,0);
+                    let rowsAfterEmpty=current.trim().split('\n').length-1;
+                    logAuditOperation('Remove Empty Rows',rowsAfterDedup,rowsAfterEmpty,rowsAfterDedup-rowsAfterEmpty);
+                    updateProgress('Cleaning complete...');
+                    logAuditOperation('CSV Cleaning',rowsBefore,rowsAfterEmpty,rowsBefore-rowsAfterEmpty);
                 }else{
                     updateProgress('Removing duplicates...');
                     let res=await fetch(API_URL+'/api/clean',{method:'POST',body:current});
