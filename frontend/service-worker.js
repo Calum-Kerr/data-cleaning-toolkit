@@ -1,6 +1,6 @@
 // bump this when you change frontend assets, so older cached HTML/CSS is dropped
 // (this helps avoid stale pages still referencing removed resources like Google Fonts)
-const CACHE_VERSION = 'v7-increased-wasm-memory';
+const CACHE_VERSION = 'v8-offline-first';
 const CACHE_NAME = 'data-cleaning-toolkit-' + CACHE_VERSION;
 const WASM_HASH = 'sha384-placeholder-hash-will-be-generated-at-build-time';
 const ALLOWED_ORIGINS = [
@@ -8,22 +8,45 @@ const ALLOWED_ORIGINS = [
     'https://localhost',
     'https://127.0.0.1'
 ];
+// Critical assets to pre-cache for offline-first functionality
+const CRITICAL_ASSETS = [
+    '/',
+    '/app',
+    '/index.html',
+    '/home.html',
+    '/features.html',
+    '/honours-project.html',
+    '/algorithms.js',
+    '/algorithms.wasm',
+    '/jspdf.umd.min.js',
+    '/jspdf.plugin.autotable.min.js'
+];
 self.addEventListener('install', event => {
-    self.skipWaiting();
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(CRITICAL_ASSETS).catch(err => {
+                console.warn('Failed to pre-cache some assets (expected on first deploy):', err);
+                // Continue even if some assets fail - they'll be cached on first use
+            });
+        }).then(() => self.skipWaiting())
+    );
 });
 self.addEventListener('activate', event => {
     event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheName !== CACHE_NAME) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
+        Promise.all([
+            caches.keys().then(cacheNames => {
+                return Promise.all(
+                    cacheNames.map(cacheName => {
+                        if (cacheName !== CACHE_NAME) {
+                            console.log('Deleting old cache:', cacheName);
+                            return caches.delete(cacheName);
+                        }
+                    })
+                );
+            }),
+            self.clients.claim()
+        ])
     );
-    self.clients.claim();
 });
 self.addEventListener('fetch', event => {
     if (!ALLOWED_ORIGINS.some(origin => event.request.url.startsWith(origin))) {
@@ -44,11 +67,17 @@ self.addEventListener('fetch', event => {
                         // clone immediately (before returning the response), otherwise the body
                         // can become "already used" by the browser before we cache it.
                         const copy = fetchResponse.clone();
-                        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+                        caches.open(CACHE_NAME).then(cache => {
+                            cache.put(event.request, copy);
+                            console.log('Cached page:', event.request.url);
+                        });
                     }
                     return fetchResponse;
                 })
-                .catch(() => caches.match(event.request))
+                .catch(() => {
+                    console.log('Network failed, falling back to cache:', event.request.url);
+                    return caches.match(event.request);
+                })
         );
         return;
     }
