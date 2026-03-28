@@ -150,8 +150,13 @@ self.addEventListener('fetch', event => {
                         }
                         return fetchResponse;
                     }).catch(err => {
-                        console.warn('Fetch failed, trying cached fallback:', event.request.url);
-                        return cache.match('/app') || new Response('Offline - page not cached', { status: 503 });
+                        console.warn('Fetch failed, offline mode:', event.request.url);
+                        // Don't return fallback for non-HTML requests (favicons, etc.)
+                        if (event.request.mode === 'navigate') {
+                            return cache.match('/app').then(r => r || new Response('Offline - page not cached', { status: 503 }));
+                        }
+                        // For other requests, just let it fail gracefully
+                        return new Response('', { status: 503 });
                     });
                 });
             }).catch(err => {
