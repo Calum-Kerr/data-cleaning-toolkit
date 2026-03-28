@@ -49,7 +49,16 @@ int main(){
     recordEndpointCall("/api/clean");
     auto parsed=parseCSV(req.body);
     auto cleaned=removeDuplicates(parsed);
+    std::string csvData;
+    for(size_t i=0;i<cleaned.size();i++){
+      for(size_t j=0;j<cleaned[i].size();j++){
+        if(j>0)csvData+=",";
+        csvData+=cleaned[i][j];
+      }
+      csvData+="\n";
+    }
     crow::json::wvalue result;
+    result["csvData"]=csvData;
     result["originalRows"]=(int)parsed.size();
     result["cleanedRows"]=(int)cleaned.size();
     result["message"]="Data cleaned successfully";
