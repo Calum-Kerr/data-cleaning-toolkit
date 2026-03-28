@@ -2,6 +2,8 @@
 #include "csv_parser.h"
 #include "text_utils.h"
 #include "cleaners.h"
+#include "logger.h"
+#include "rate_limiter.h"
 
 void registerTextRoutes(crow::SimpleApp& app){
   CROW_ROUTE(app,"/api/remove-state-suffixes").methods("POST"_method)
