@@ -2,14 +2,17 @@
 #include "text_utils.h"
 #include "detectors.h"
 #include <algorithm>
-#include <set>
+#include <unordered_set>
+#include <functional>
 
 std::vector<std::vector<std::string>> removeDuplicates(const std::vector<std::vector<std::string>>& data){
   std::vector<std::vector<std::string>> result;
-  std::set<std::vector<std::string>> seen;
+  std::unordered_set<std::string> seen;
   for(const auto& row:data){
-    if(!seen.count(row)){
-      seen.insert(row);
+    std::string hash;
+    for(const auto& cell:row) hash+=cell+"|";
+    if(!seen.count(hash)){
+      seen.insert(hash);
       result.push_back(row);
     }
   }
