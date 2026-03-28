@@ -604,18 +604,6 @@
                     current=data.csvData||current;
                     let rowsAfterDedup=current.trim().split('\n').length-1;
                     logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
-                    updateProgress('Normalizing whitespace...');
-                    res=await fetch(API_URL+'/api/normalize-whitespace',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});
-                    if(!res.ok)throw new Error('API unavailable');
-                    data=await res.json();
-                    current=data.csvData||current;
-                    logAuditOperation('Normalize Whitespace',rowsAfterDedup,rowsAfterDedup,0);
-                    updateProgress('Standardizing case...');
-                    res=await fetch(API_URL+'/api/standardize-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:current})});
-                    if(!res.ok)throw new Error('API unavailable');
-                    data=await res.json();
-                    current=data.csvData||current;
-                    logAuditOperation('Standardize Case',rowsAfterDedup,rowsAfterDedup,0);
                 }
                 cleanedCSV=current;
                 showCleaningComplete();
