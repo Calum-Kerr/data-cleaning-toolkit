@@ -45,7 +45,9 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
   CROW_ROUTE(app,"/api/normalize-whitespace").methods("POST"_method)
   ([](const crow::request& req){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/normalize-whitespace", 429); return crow::response(429);}
-    auto parsed=parseCSV(req.body);
+    auto json=crow::json::load(req.body);
+    std::string csvData=json["csvData"].s();
+    auto parsed=parseCSV(csvData);
     auto normalized=trimWhitespace(parsed);
     crow::json::wvalue result;
     result["csvData"]=toCSV(normalized);
@@ -57,7 +59,9 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
   CROW_ROUTE(app,"/api/standardize-case").methods("POST"_method)
   ([](const crow::request& req){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/standardize-case", 429); return crow::response(429);}
-    auto parsed=parseCSV(req.body);
+    auto json=crow::json::load(req.body);
+    std::string csvData=json["csvData"].s();
+    auto parsed=parseCSV(csvData);
     auto standardized=standardizeCase(parsed,"lower");
     crow::json::wvalue result;
     result["csvData"]=toCSV(standardized);
