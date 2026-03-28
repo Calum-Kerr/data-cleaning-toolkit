@@ -582,6 +582,7 @@
             const rowsBefore=uploadCSV.trim().split('\n').length-1;
             function updateProgress(message){document.getElementById('progressText').textContent=message;}
             try{
+                let wasmSuccess=false;
                 if(wasmReady){
                     try{
                         updateProgress('Removing duplicates (WASM)...');
@@ -590,11 +591,12 @@
                         logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
                         updateProgress('Cleaning complete...');
                         logAuditOperation('CSV Cleaning',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
+                        wasmSuccess=true;
                     }catch(err){
-                        console.warn('WASM cleaning failed, using original data:',err);
-                        current=uploadCSV;
+                        console.warn('WASM cleaning failed, falling back to API:',err);
                     }
-                }else{
+                }
+                if(!wasmSuccess){
                     updateProgress('Removing duplicates...');
                     let res=await fetch(API_URL+'/api/clean',{method:'POST',body:current});
                     if(!res.ok)throw new Error('API unavailable');
