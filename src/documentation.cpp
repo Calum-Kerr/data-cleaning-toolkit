@@ -3,6 +3,13 @@
 crow::response getApiDocumentation() {
   crow::json::wvalue doc;
   doc["api_version"] = "1.0";
+  doc["status"] = "API documentation endpoint";
+  return crow::response(doc);
+}
+
+crow::response getApiDocumentation_old() {
+  crow::json::wvalue doc;
+  doc["api_version"] = "1.0";
   doc["endpoints"] = crow::json::wvalue::list();
 
   auto& endpoints = doc["endpoints"];
@@ -95,11 +102,4 @@ crow::response getApiDocumentation() {
     {"description", "Fuzzy deduplicate rows by threshold"}
   });
 
-  endpoints.push_back(crow::json::wvalue{
-    {"method", "POST"},
-    {"path", "/api/remove-outliers"},
-    {"description", "Remove outlier rows from data"}
-  });
-
-  return crow::response(doc);
 }
