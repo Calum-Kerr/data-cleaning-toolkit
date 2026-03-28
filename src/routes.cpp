@@ -3,6 +3,8 @@
 #include "text_utils.h"
 #include "detectors.h"
 #include "cleaners.h"
+#include "logger.h"
+#include "rate_limiter.h"
 
 std::string toCSV(const std::vector<std::vector<std::string>>& data){
   std::string result;
