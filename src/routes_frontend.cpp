@@ -39,9 +39,14 @@ std::string getContentType(const std::string& filepath) {
 }
 
 void registerFrontendRoutes(crow::SimpleApp& app) {
+  // Helper to add security headers
+  auto addSecurityHeaders = [](crow::response& res) {
+    res.set_header("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'");
+  };
+
   // Root route - serve home.html
   CROW_ROUTE(app, "/").methods("GET"_method)
-  ([](const crow::request& req) {
+  ([addSecurityHeaders](const crow::request& req) {
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/", 429); return crow::response(429);}
     std::string content = readFile("../frontend/home.html");
     if (content.empty()) {
@@ -49,13 +54,14 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     }
     auto res = crow::response(content);
     res.set_header("Content-Type", "text/html; charset=utf-8");
+    addSecurityHeaders(res);
     logRequest("GET", "/", 200);
     return res;
   });
 
   // App route - serve index.html
   CROW_ROUTE(app, "/app").methods("GET"_method)
-  ([](const crow::request& req) {
+  ([addSecurityHeaders](const crow::request& req) {
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/app", 429); return crow::response(429);}
     std::string content = readFile("../frontend/index.html");
     if (content.empty()) {
@@ -63,13 +69,14 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     }
     auto res = crow::response(content);
     res.set_header("Content-Type", "text/html; charset=utf-8");
+    addSecurityHeaders(res);
     logRequest("GET", "/app", 200);
     return res;
   });
 
   // Features route
   CROW_ROUTE(app, "/features").methods("GET"_method)
-  ([](const crow::request& req) {
+  ([addSecurityHeaders](const crow::request& req) {
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/features", 429); return crow::response(429);}
     std::string content = readFile("../frontend/features.html");
     if (content.empty()) {
@@ -77,13 +84,14 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     }
     auto res = crow::response(content);
     res.set_header("Content-Type", "text/html; charset=utf-8");
+    addSecurityHeaders(res);
     logRequest("GET", "/features", 200);
     return res;
   });
 
   // Honours project route
   CROW_ROUTE(app, "/honours-project").methods("GET"_method)
-  ([](const crow::request& req) {
+  ([addSecurityHeaders](const crow::request& req) {
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/honours-project", 429); return crow::response(429);}
     std::string content = readFile("../frontend/honours-project.html");
     if (content.empty()) {
@@ -91,6 +99,7 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     }
     auto res = crow::response(content);
     res.set_header("Content-Type", "text/html; charset=utf-8");
+    addSecurityHeaders(res);
     logRequest("GET", "/honours-project", 200);
     return res;
   });
