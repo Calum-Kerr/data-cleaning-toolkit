@@ -583,16 +583,17 @@
             function updateProgress(message){document.getElementById('progressText').textContent=message;}
             try{
                 if(wasmReady){
-                    updateProgress('Removing duplicates (WASM)...');
-                    current=wasmModule.ccall('removeAllDuplicatesString','string',['string'],[current]);
-                    let rowsAfterDedup=current.trim().split('\n').length-1;
-                    logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
-                    updateProgress('Removing empty rows (WASM)...');
-                    current=wasmModule.ccall('removeEmptyRowsString','string',['string'],[current]);
-                    let rowsAfterEmpty=current.trim().split('\n').length-1;
-                    logAuditOperation('Remove Empty Rows',rowsAfterDedup,rowsAfterEmpty,rowsAfterDedup-rowsAfterEmpty);
-                    updateProgress('Cleaning complete...');
-                    logAuditOperation('CSV Cleaning',rowsBefore,rowsAfterEmpty,rowsBefore-rowsAfterEmpty);
+                    try{
+                        updateProgress('Removing duplicates (WASM)...');
+                        current=wasmModule.ccall('removeAllDuplicatesString','string',['string'],[current]);
+                        let rowsAfterDedup=current.trim().split('\n').length-1;
+                        logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
+                        updateProgress('Cleaning complete...');
+                        logAuditOperation('CSV Cleaning',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
+                    }catch(err){
+                        console.warn('WASM cleaning failed, using original data:',err);
+                        current=uploadCSV;
+                    }
                 }else{
                     updateProgress('Removing duplicates...');
                     let res=await fetch(API_URL+'/api/clean',{method:'POST',body:current});
