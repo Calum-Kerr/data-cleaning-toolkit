@@ -4,6 +4,18 @@
 #include "detectors.h"
 #include "cleaners.h"
 
+std::string toCSV(const std::vector<std::vector<std::string>>& data){
+  std::string result;
+  for(size_t i=0;i<data.size();i++){
+    for(size_t j=0;j<data[i].size();j++){
+      if(j>0)result+=",";
+      result+=data[i][j];
+    }
+    result+="\n";
+  }
+  return result;
+}
+
 void registerAdditionalRoutes(crow::SimpleApp& app){
   CROW_ROUTE(app,"/api/detect-outliers").methods("POST"_method)
   ([](const crow::request& req){
@@ -34,6 +46,7 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     auto parsed=parseCSV(req.body);
     auto normalized=trimWhitespace(parsed);
     crow::json::wvalue result;
+    result["csvData"]=toCSV(normalized);
     result["message"]="Whitespace normalized";
     result["rows"]=(int)normalized.size();
     logRequest("POST", "/api/normalize-whitespace", 200);
@@ -45,6 +58,7 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     auto parsed=parseCSV(req.body);
     auto standardized=standardizeCase(parsed,"lower");
     crow::json::wvalue result;
+    result["csvData"]=toCSV(standardized);
     result["message"]="Case standardized";
     logRequest("POST", "/api/standardize-case", 200);
     return crow::response(result);
