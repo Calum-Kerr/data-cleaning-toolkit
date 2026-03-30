@@ -50,12 +50,21 @@ int main(){
     auto parsed=parseCSV(req.body);
     auto cleaned=removeDuplicates(parsed);
     std::string csvData;
-    for(size_t i=0;i<cleaned.size();i++){
-      for(size_t j=0;j<cleaned[i].size();j++){
+    for(const auto& row:cleaned){
+      for(size_t j=0;j<row.size();j++){
         if(j>0)csvData+=",";
-        csvData+=cleaned[i][j];
+        const auto& cell=row[j];
+        bool needsQuote=cell.find(',')!=std::string::npos||cell.find('"')!=std::string::npos||cell.find('\n')!=std::string::npos;
+        if(needsQuote){
+          csvData+="\"";
+          for(char c:cell){
+            if(c=='"')csvData+="\"\"";
+            else csvData+=c;
+          }
+          csvData+="\"";
+        }else csvData+=cell;
       }
-      csvData+="\n";
+      csvData+="\r\n";
     }
     crow::json::wvalue result;
     result["csvData"]=csvData;
