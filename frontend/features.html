@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Features | Data Cleaning Toolkit</title>
+    <title>features | data cleaning toolkit</title>
     <meta name="description" content="Features of the Data Cleaning Toolkit: missing value detection, duplicate detection and removal, null standardisation, offline-first WebAssembly mode, and repeatable results." />
     <link rel="canonical" href="https://tidy.calumkerr.com/features" />
     <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
@@ -41,7 +41,7 @@
         --muted:#666;
         --line:#d9d9d9;
       }
-      body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
+      body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 arial,helvetica,sans-serif}
       a{color:var(--c10);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
       a:focus{outline:2px dotted #000;outline-offset:2px}
       .wrap{max-width:980px;margin:0 auto;padding:16px}
@@ -66,7 +66,7 @@
       li{margin:0 0 4px 0}
       hr{border:none;border-top:1px solid var(--line);margin:14px 0}
       footer{font-size:13px;color:#333}
-      code{font-family:Consolas,Monaco,monospace;font-size:12px}
+      code{font-family:consolas,monaco,monospace;font-size:12px}
       @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
     </style>
   </head>
@@ -75,8 +75,8 @@
       <main class="box" role="main">
         <div class="top">
           <div>
-            <h1>Features</h1>
-            <p class="muted">A clear list of what the tool can do, with plain limits and behaviour.</p>
+            <h1>features</h1>
+            <p class="muted">a clear list of what the tool can do, with plain limits and behaviour.</p>
             <div class="btns">
               <a class="btn primary" href="/app">open the app</a>
               <a class="btn" href="/">home</a>
@@ -85,8 +85,8 @@
             </div>
           </div>
           <div class="muted">
-            <p><strong>Goal</strong></p>
-            <p>Fast cleaning, repeatable results, and no mystery behaviour.</p>
+            <p><strong>goal</strong></p>
+            <p>fast cleaning, repeatable results, and no mystery behaviour.</p>
           </div>
         </div>
 
@@ -94,80 +94,80 @@
 
         <div class="cols">
           <section>
-            <h2>Supported input</h2>
-            <p>The current focus is structured CSV files: rows and columns with commas separating values. That covers most simple datasets used in spreadsheets, basic analytics, and machine learning demos.</p>
-            <p>If your data is messy text, mixed formats, or deeply nested structures, that is in the future roadmap (semi-structured and unstructured).</p>
+            <h2>supported input</h2>
+            <p>the current focus is structured csv files: rows and columns with commas separating values. that covers most simple datasets used in spreadsheets, basic analytics, and machine learning demos.</p>
+            <p>if your data is messy text, mixed formats, or deeply nested structures, that is in the future roadmap (semi-structured and unstructured).</p>
           </section>
 
           <section>
-            <h2>How you use it</h2>
-            <p>You can upload a CSV or paste CSV text. Then you run detection to see what issues exist, and run cleaning steps to produce a cleaned file you can download.</p>
-            <p>It is designed so you can explain what you did in plain English, for example: you removed duplicate rows and standardised null values.</p>
-          </section>
-        </div>
-
-        <div class="cols">
-          <section>
-            <h2>Detection</h2>
-            <p>Detection measures issues without changing data. This makes it easier to justify changes and compare before and after.</p>
-            <ul>
-              <li><strong>Missing value detection:</strong> counts empty cells and missing entries.</li>
-              <li><strong>Duplicate detection:</strong> identifies duplicated rows.</li>
-            </ul>
-            <p class="muted">These are deliberately simple and deterministic so results are stable and easy to audit.</p>
-          </section>
-
-          <section>
-            <h2>Cleaning</h2>
-            <p>Cleaning applies a known change, and the output is a new CSV.</p>
-            <ul>
-              <li><strong>Remove duplicate rows:</strong> keeps the first occurrence of each row and removes later duplicates.</li>
-              <li><strong>Standardise common null values:</strong> converts text like <code>n/a</code>, <code>null</code>, or <code>none</code> into a consistent missing representation.</li>
-              <li><strong>Download cleaned CSV:</strong> exports the cleaned result for reuse.</li>
-            </ul>
+            <h2>how you use it</h2>
+            <p>you can upload a csv or paste csv text. then you run detection to see what issues exist, and run cleaning steps to produce a cleaned file you can download.</p>
+            <p>it is designed so you can explain what you did in plain english, for example: you removed duplicate rows and standardised null values.</p>
           </section>
         </div>
 
         <div class="cols">
           <section>
-            <h2>Offline-first mode (privacy)</h2>
-            <p>The app tries to run locally first using WebAssembly. WebAssembly is a browser feature that lets compiled code run inside the page, so the cleaning logic can run without sending data away.</p>
-            <p>When offline mode is active, your CSV stays on your device. This matters if you are working with sensitive data.</p>
+            <h2>detection</h2>
+            <p>detection measures issues without changing data. this makes it easier to justify changes and compare before and after.</p>
+            <ul>
+              <li><strong>missing value detection:</strong> counts empty cells and missing entries.</li>
+              <li><strong>duplicate detection:</strong> identifies duplicated rows.</li>
+            </ul>
+            <p class="muted">these are deliberately simple and deterministic so results are stable and easy to audit.</p>
           </section>
 
           <section>
-            <h2>API fallback mode (compatibility)</h2>
-            <p>If WebAssembly is not available, the app can fall back to calling the server API to run the same style of operations. This keeps the tool usable in more environments.</p>
-            <p class="muted">If you are privacy-conscious, prefer offline mode and double check the mode shown in the app.</p>
+            <h2>cleaning</h2>
+            <p>cleaning applies a known change, and the output is a new csv.</p>
+            <ul>
+              <li><strong>remove duplicate rows:</strong> keeps the first occurrence of each row and removes later duplicates.</li>
+              <li><strong>standardise common null values:</strong> converts text like <code>n/a</code>, <code>null</code>, or <code>none</code> into a consistent missing representation.</li>
+              <li><strong>download cleaned csv:</strong> exports the cleaned result for reuse.</li>
+            </ul>
           </section>
         </div>
 
         <div class="cols">
           <section>
-            <h2>Limits and non-goals</h2>
-            <p>This is not a spreadsheet replacement and it is not an enterprise pipeline tool. It is a focused toolkit that keeps the behaviour understandable and visible.</p>
+            <h2>offline-first mode (privacy)</h2>
+            <p>the app tries to run locally first using webassembly. webassembly is a browser feature that lets compiled code run inside the page, so the cleaning logic can run without sending data away.</p>
+            <p>when offline mode is active, your csv stays on your device. this matters if you are working with sensitive data.</p>
+          </section>
+
+          <section>
+            <h2>api fallback mode (compatibility)</h2>
+            <p>if webassembly is not available, the app can fall back to calling the server api to run the same style of operations. this keeps the tool usable in more environments.</p>
+            <p class="muted">if you are privacy-conscious, prefer offline mode and double check the mode shown in the app.</p>
+          </section>
+        </div>
+
+        <div class="cols">
+          <section>
+            <h2>limits and non-goals</h2>
+            <p>this is not a spreadsheet replacement and it is not an enterprise pipeline tool. it is a focused toolkit that keeps the behaviour understandable and visible.</p>
             <ul>
-              <li>No hidden smart cleaning rules.</li>
-              <li>No automatic changes without you choosing the operation.</li>
-              <li>No requirement to sign in.</li>
+              <li>no hidden smart cleaning rules.</li>
+              <li>no automatic changes without you choosing the operation.</li>
+              <li>no requirement to sign in.</li>
             </ul>
           </section>
 
           <section>
-            <h2>Links</h2>
+            <h2>links</h2>
             <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/app">Open the app</a></li>
-              <li><a href="/honours-project">Honours project</a></li>
-              <li><a href="https://stats.uptimerobot.com/XFEpE5rs9n" rel="noopener" target="_blank">Status</a></li>
-              <li><a href="/sitemap.xml">Sitemap</a> and <a href="/robots.txt">robots.txt</a></li>
+              <li><a href="/">home</a></li>
+              <li><a href="/app">open the app</a></li>
+              <li><a href="/honours-project">honours project</a></li>
+              <li><a href="https://stats.uptimerobot.com/XFEpE5rs9n" rel="noopener" target="_blank">status</a></li>
+              <li><a href="/sitemap.xml">sitemap</a> and <a href="/robots.txt">robots.txt</a></li>
             </ul>
           </section>
         </div>
 
         <hr />
         <footer>
-          <p>Made by Calum Kerr. Simple design on purpose. If something feels unclear, that is a bug.</p>
+          <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
         </footer>
       </main>
     </div>
