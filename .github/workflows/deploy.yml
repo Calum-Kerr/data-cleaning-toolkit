@@ -16,11 +16,11 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             cd /root/data-cleaning-toolkit && \
-            git fetch origin main && \
+            git fetch origin main 2>&1 | head -20 && \
             git reset --hard origin/main && \
             rm -rf build && mkdir -p build && cd build && \
-            cmake .. && make -j4 && \
-            pkill -f "Toolkit" || true && \
-            sleep 2 && \
-            ./Toolkit > /tmp/app.log 2>&1 &
-            echo "Build and deploy completed at $(date)" >> /tmp/deploy.log
+            cmake .. 2>&1 | tail -5 && \
+            make -j4 2>&1 | tail -10 && \
+            echo "Build completed, starting new process..." && \
+            /root/data-cleaning-toolkit/build/Toolkit > /tmp/app.log 2>&1 &
+            echo "Process started with PID $!"
