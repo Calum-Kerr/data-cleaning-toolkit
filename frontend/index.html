@@ -353,7 +353,7 @@
             const API_URL=window.location.origin;
             let current=uploadCSV;
             const totalSteps=4;
-            function updateProgress(step,message){const progress=Math.floor((step/totalSteps)*100);document.getElementById('progressBar').style.width=progress+'%';document.getElementById('progressText').textContent=message;}
+            function updateProgress(step,message){const progress=Math.floor((step/totalSteps)*100);document.getElementById('progressBar').style.width=progress+'%';document.getElementById('progressText').textContent=message;if(!message)return;}
             updateProgress(0,'Starting auto-cleaning...');
             try{
                 updateProgress(1,'Removing duplicates...');
