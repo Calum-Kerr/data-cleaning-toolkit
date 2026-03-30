@@ -48,7 +48,9 @@ int main(){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
     recordEndpointCall("/api/clean");
     auto parsed=parseCSV(req.body);
-    auto cleaned=removeDuplicates(parsed);
+    auto trimmed=trimWhitespace(parsed);
+    auto standardised=standardiseNullValuesInData(trimmed);
+    auto cleaned=removeDuplicates(standardised);
     std::string csvData;
     csvData.reserve(req.body.size());
     for(const auto& row:cleaned){
@@ -79,6 +81,7 @@ int main(){
     jsonBody+="\"";
     jsonBody+=",\"originalRows\":"+std::to_string(parsed.size());
     jsonBody+=",\"cleanedRows\":"+std::to_string(cleaned.size());
+    jsonBody+=",\"rowsRemoved\":"+std::to_string(parsed.size()-cleaned.size());
     jsonBody+=",\"message\":\"Data cleaned successfully\"}";
     logRequest("POST", "/api/clean", 200);
     auto resp=crow::response(jsonBody);
