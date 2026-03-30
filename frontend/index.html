@@ -155,7 +155,7 @@
         <div id=cleaningSection style=display:none;>
             <h2 class=section-title>choose cleaning method</h2>
             <div style=text-align: center; margin-top: 20px;>
-                <button onclick=performQuickClean('upper')>clean & standardise to uppercase</button>
+                <button onclick=performQuickClean()>clean & standardise to uppercase</button>
             </div>
         </div>
         <div id=progressSection style=display:none;>
@@ -569,7 +569,7 @@
             }
             return result.join('\n');
         }
-        async function performQuickClean(caseType){
+        async function performQuickClean(){
             document.getElementById('cleaningSection').style.display='none';
             document.getElementById('progressSection').style.display='block';
             const API_URL=window.location.origin;
