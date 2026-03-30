@@ -51,31 +51,31 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     logRequest("POST", "/api/detect-missing", 200);
     return crow::response(result);
   });
-  CROW_ROUTE(app,"/api/normalize-whitespace").methods("POST"_method)
+  CROW_ROUTE(app,"/api/normalise-whitespace").methods("POST"_method)
   ([](const crow::request& req){
-    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/normalize-whitespace", 429); return crow::response(429);}
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/normalise-whitespace", 429); return crow::response(429);}
     auto json=crow::json::load(req.body);
     std::string csvData=json["csvData"].s();
     auto parsed=parseCSV(csvData);
     auto normalized=trimWhitespace(parsed);
     crow::json::wvalue result;
     result["csvData"]=toCSV(normalized);
-    result["message"]="Whitespace normalized";
+    result["message"]="Whitespace normalised";
     result["rows"]=(int)normalized.size();
-    logRequest("POST", "/api/normalize-whitespace", 200);
+    logRequest("POST", "/api/normalise-whitespace", 200);
     return crow::response(result);
   });
-  CROW_ROUTE(app,"/api/standardize-case").methods("POST"_method)
+  CROW_ROUTE(app,"/api/standardise-case").methods("POST"_method)
   ([](const crow::request& req){
-    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/standardize-case", 429); return crow::response(429);}
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/standardise-case", 429); return crow::response(429);}
     auto json=crow::json::load(req.body);
     std::string csvData=json["csvData"].s();
     auto parsed=parseCSV(csvData);
-    auto standardized=standardizeCase(parsed,"lower");
+    auto standardized=standardiseCase(parsed,"lower");
     crow::json::wvalue result;
     result["csvData"]=toCSV(standardized);
-    result["message"]="Case standardized";
-    logRequest("POST", "/api/standardize-case", 200);
+    result["message"]="Case standardised";
+    logRequest("POST", "/api/standardise-case", 200);
     return crow::response(result);
   });
   CROW_ROUTE(app,"/api/remove-outliers").methods("POST"_method)

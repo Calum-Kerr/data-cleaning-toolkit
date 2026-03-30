@@ -43,7 +43,7 @@ std::vector<std::vector<std::string>> trimWhitespace(const std::vector<std::vect
   return result;
 }
 
-std::vector<std::vector<std::string>> standardizeCase(
+std::vector<std::vector<std::string>> standardiseCase(
   const std::vector<std::vector<std::string>>& data, const std::string& caseType){
   std::vector<std::vector<std::string>> result;
   for(const auto& row:data){
@@ -57,12 +57,12 @@ std::vector<std::vector<std::string>> standardizeCase(
   return result;
 }
 
-std::vector<std::vector<std::string>> standardizeNullValuesInData(
+std::vector<std::vector<std::string>> standardiseNullValuesInData(
   const std::vector<std::vector<std::string>>& data){
   std::vector<std::vector<std::string>> result;
   for(const auto& row:data){
     std::vector<std::string> newRow;
-    for(const auto& cell:row) newRow.push_back(standardizeNullValues(cell));
+    for(const auto& cell:row) newRow.push_back(standardiseNullValues(cell));
     result.push_back(newRow);
   }
   return result;

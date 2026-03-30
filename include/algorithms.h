@@ -36,7 +36,7 @@ class DataCleaner{
     std::vector<bool> detectDuplicates(const std::vector<std::vector<std::string>>& data);
     std::vector<std::vector<std::string>> cleanData(const std::vector<std::vector<std::string>>& data);
     std::map<std::string,int> profileColumn(const std::vector<std::vector<std::string>>& data, size_t columnIndex);
-    std::vector<std::vector<std::string>> standardizeColumnCase(const std::vector<std::vector<std::string>>& data, size_t columnIndex, const std::string& caseType);
+    std::vector<std::vector<std::string>> standardiseColumnCase(const std::vector<std::vector<std::string>>& data, size_t columnIndex, const std::string& caseType);
     std::vector<std::vector<std::string>> removeEmptyRows(const std::vector<std::vector<std::string>>& data);
     std::vector<std::vector<std::string>> removeDuplicates(const std::vector<std::vector<std::string>>& data);
 };

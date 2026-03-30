@@ -4,9 +4,9 @@
 #include <string>
 
 std::string toUpperCase(const std::string& text);
-std::string normalizeWhitespace(const std::string& text);
-std::string normalizePunctuation(const std::string& text);
-std::string standardizeNullValues(const std::string& text);
+std::string normaliseWhitespace(const std::string& text);
+std::string normalisePunctuation(const std::string& text);
+std::string standardiseNullValues(const std::string& text);
 std::string removeStateSuffixes(const std::string& text);
 std::string removeDuplicateWords(const std::string& text);
 bool isNumericColumn(const std::vector<std::string>& columnValues, int sampleSize=100);

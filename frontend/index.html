@@ -127,7 +127,7 @@
         <h3 style="margin:0 0 8px 0;font-size:16px;">Why Use Our CSV Cleaner?</h3>
         <ul style="margin:0;padding-left:20px;font-size:14px;">
             <li>Remove duplicate rows instantly</li>
-            <li>Fix missing values and standardize data</li>
+            <li>Fix missing values and standardise data</li>
             <li>Clean spreadsheets without uploading to cloud</li>
             <li>Privacy-first: your data stays on your device</li>
             <li>Free online data cleaning tool - no sign-up needed</li>
@@ -360,9 +360,9 @@
                 let res=await fetch(API_URL+'/api/clean',{method:'POST',body:current});
                 let data=await res.json();
                 updateProgress(2,'Trimming whitespace...');
-                res=await fetch(API_URL+'/api/normalize-whitespace',{method:'POST',body:current});
-                updateProgress(3,'Standardizing case...');
-                res=await fetch(API_URL+'/api/standardize-case',{method:'POST',body:current});
+                res=await fetch(API_URL+'/api/normalise-whitespace',{method:'POST',body:current});
+                updateProgress(3,'Standardising case...');
+                res=await fetch(API_URL+'/api/standardise-case',{method:'POST',body:current});
                 updateProgress(4,'Finalizing cleaned data...');
                 cleanedCSV=current;
                 document.getElementById('cleaningSection').style.display='none';
@@ -539,10 +539,10 @@
             const colIndex=parseInt(document.getElementById('columnSelect').value);
             const API_URL=window.location.origin;
             if(wasmReady){
-                const result=wasmModule.ccall('testStandardize','string',['string','number','string'],[uploadCSV,colIndex,caseType]);
+                const result=wasmModule.ccall('testStandardise','string',['string','number','string'],[uploadCSV,colIndex,caseType]);
                 uploadCSV=result;
             }else{
-                const res=await fetch(API_URL+'/api/standardize-column-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex,caseType:caseType})});
+                const res=await fetch(API_URL+'/api/standardise-column-case',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({csvData:uploadCSV,colIndex:colIndex,caseType:caseType})});
                 const data=await res.json();
                 uploadCSV=data.csvData;
             }

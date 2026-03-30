@@ -8,7 +8,7 @@ std::string toUpperCase(const std::string& text){
   return result;
 }
 
-std::string normalizeWhitespace(const std::string& text){
+std::string normaliseWhitespace(const std::string& text){
   std::string upper=toUpperCase(text);
   std::string result;
   bool inSpace=false;
@@ -27,7 +27,7 @@ std::string normalizeWhitespace(const std::string& text){
   return result;
 }
 
-std::string normalizePunctuation(const std::string& text){
+std::string normalisePunctuation(const std::string& text){
   std::string result;
   for(char c : text){
     if(c!='.') result+=c;
@@ -35,8 +35,8 @@ std::string normalizePunctuation(const std::string& text){
   return result;
 }
 
-std::string standardizeNullValues(const std::string& text){
-  std::string trimmed=normalizeWhitespace(text);
+std::string standardiseNullValues(const std::string& text){
+  std::string trimmed=normaliseWhitespace(text);
   if(trimmed.empty()) return "";
   if(trimmed=="N/A" || trimmed=="NA") return "";
   if(trimmed=="NULL") return "";

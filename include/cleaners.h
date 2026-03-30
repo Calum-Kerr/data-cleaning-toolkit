@@ -6,9 +6,9 @@
 
 std::vector<std::vector<std::string>> removeDuplicates(const std::vector<std::vector<std::string>>& data);
 std::vector<std::vector<std::string>> trimWhitespace(const std::vector<std::vector<std::string>>& data);
-std::vector<std::vector<std::string>> standardizeCase(
+std::vector<std::vector<std::string>> standardiseCase(
   const std::vector<std::vector<std::string>>& data, const std::string& caseType);
-std::vector<std::vector<std::string>> standardizeNullValuesInData(
+std::vector<std::vector<std::string>> standardiseNullValuesInData(
   const std::vector<std::vector<std::string>>& data);
 std::vector<std::vector<std::string>> fuzzyDeduplicateRows(
   const std::vector<std::vector<std::string>>& data, double threshold);
