@@ -50,6 +50,7 @@ int main(){
     auto parsed=parseCSV(req.body);
     auto cleaned=removeDuplicates(parsed);
     std::string csvData;
+    csvData.reserve(req.body.size());
     for(const auto& row:cleaned){
       for(size_t j=0;j<row.size();j++){
         if(j>0)csvData+=",";
@@ -67,6 +68,7 @@ int main(){
       csvData+="\r\n";
     }
     std::string jsonBody="{\"csvData\":\"";
+    jsonBody.reserve(csvData.size()*2);
     for(char c:csvData){
       if(c=='\\')jsonBody+="\\\\";
       else if(c=='"')jsonBody+="\\\"";
@@ -147,6 +149,6 @@ int main(){
   registerTextRoutes(app);
   registerCleaningRoutes(app);
   registerFrontendRoutes(app);
-  app.port(8080).concurrency(8).run();
+  app.port(8080).concurrency(16).run();
 }
 
