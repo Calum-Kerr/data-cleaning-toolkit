@@ -8,12 +8,21 @@
 
 std::string toCSV(const std::vector<std::vector<std::string>>& data){
   std::string result;
-  for(size_t i=0;i<data.size();i++){
-    for(size_t j=0;j<data[i].size();j++){
+  for(const auto& row:data){
+    for(size_t j=0;j<row.size();j++){
       if(j>0)result+=",";
-      result+=data[i][j];
+      const auto& cell=row[j];
+      bool needsQuote=cell.find(',')!=std::string::npos||cell.find('"')!=std::string::npos||cell.find('\n')!=std::string::npos;
+      if(needsQuote){
+        result+="\"";
+        for(char c:cell){
+          if(c=='"')result+="\"\"";
+          else result+=c;
+        }
+        result+="\"";
+      }else result+=cell;
     }
-    result+="\n";
+    result+="\r\n";
   }
   return result;
 }
