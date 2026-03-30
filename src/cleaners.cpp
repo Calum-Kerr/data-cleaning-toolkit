@@ -3,16 +3,24 @@
 #include "detectors.h"
 #include <algorithm>
 #include <unordered_set>
-#include <functional>
+#include <cstdint>
+
+uint64_t fnv1a(const std::vector<std::string>& row){
+  uint64_t hash=14695981039346656037ULL;
+  const uint64_t FNV_PRIME=1099511628211ULL;
+  for(const auto& cell:row)
+    for(char c:cell)
+      hash=(hash^(uint8_t)c)*FNV_PRIME;
+  return hash;
+}
 
 std::vector<std::vector<std::string>> removeDuplicates(const std::vector<std::vector<std::string>>& data){
   std::vector<std::vector<std::string>> result;
-  std::unordered_set<std::string> seen;
+  std::unordered_set<uint64_t> seen;
   for(const auto& row:data){
-    std::string hash;
-    for(const auto& cell:row) hash+=cell+"|";
-    if(!seen.count(hash)){
-      seen.insert(hash);
+    uint64_t h=fnv1a(row);
+    if(!seen.count(h)){
+      seen.insert(h);
       result.push_back(row);
     }
   }
