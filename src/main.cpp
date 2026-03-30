@@ -48,8 +48,10 @@ int main(){
     recordEndpointCall("/api/clean");
     auto parsed=parseCSV(req.body);
     int parsedSize=parsed.size();
+    auditLog.addEntry("Uppercase All", 0, parsedSize, parsedSize);
+    auto uppercased=standardiseCase(parsed,"upper");
     auditLog.addEntry("Trim Whitespace", 0, parsedSize, parsedSize);
-    auto trimmed=trimWhitespace(parsed);
+    auto trimmed=trimWhitespace(uppercased);
     int trimmedSize=trimmed.size();
     auditLog.addEntry("Standardise Null Values", 0, trimmedSize, trimmedSize);
     auto standardised=standardiseNullValuesInData(trimmed);
