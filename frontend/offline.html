@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Offline</title>
+    <style>
+        body { margin: 0; background: #f4f4f4; color: #000; font: 14px/1.45 Arial, Helvetica, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .offline-container { max-width: 500px; padding: 40px; background: #fff; border: 1px solid #d9d9d9; border-radius: 8px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .offline-icon { font-size: 64px; margin-bottom: 20px; }
+        h1 { margin: 0 0 15px 0; font-size: 28px; color: #000; }
+        p { margin: 0 0 10px 0; color: #666; font-size: 16px; line-height: 1.5; }
+        .status { padding: 15px; margin: 20px 0; background: #fee; border: 1px solid #fcc; border-radius: 4px; color: #c33; }
+        button { padding: 12px 24px; margin-top: 20px; background: #0000ee; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; min-height: 44px; }
+        button:hover { background: #0000cc; }
+        button:active { background: #000099; }
+        .tips { margin-top: 30px; padding-top: 20px; border-top: 1px solid #d9d9d9; text-align: left; color: #666; font-size: 14px; }
+        .tips h3 { margin: 15px 0 10px 0; color: #000; font-size: 14px; }
+        .tips ul { margin: 0; padding-left: 20px; }
+        .tips li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">🌐</div>
+        <h1>Site is Offline</h1>
+        <p>The Data Cleaning Toolkit is currently unavailable. The server may be down for maintenance or there's a network issue.</p>
+        <div class="status">
+            <strong>Connection Error</strong><br>
+            Unable to reach the server at this time.
+        </div>
+        <button onclick="location.reload()">Try Again</button>
+        <div class="tips">
+            <h3>What you can do:</h3>
+            <ul>
+                <li>Check your internet connection</li>
+                <li>Wait a few moments and try again</li>
+                <li>Clear your browser cache and cookies</li>
+                <li>Try a different browser</li>
+                <li>Check <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit/issues" target="_blank">GitHub Issues</a> for status updates</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
