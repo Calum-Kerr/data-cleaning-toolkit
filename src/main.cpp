@@ -48,8 +48,11 @@ int main(){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
     recordEndpointCall("/api/clean");
     auto parsed=parseCSV(req.body);
+    auditLog.addEntry("Trim Whitespace", 0, parsed.size(), parsed.size());
     auto trimmed=trimWhitespace(parsed);
+    auditLog.addEntry("Standardise Null Values", 0, trimmed.size(), trimmed.size());
     auto standardised=standardiseNullValuesInData(trimmed);
+    auditLog.addEntry("Remove Duplicates", 0, standardised.size(), standardised.size());
     auto cleaned=removeDuplicates(standardised);
     std::string csvData;
     csvData.reserve(req.body.size());
