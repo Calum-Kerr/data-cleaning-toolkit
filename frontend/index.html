@@ -568,6 +568,20 @@
             }
             displayFacets();
         }
+        function simpleRemoveDuplicates(csvText){
+            const lines=csvText.trim().split('\n');
+            if(lines.length<=1)return csvText;
+            const header=lines[0];
+            const seen=new Set();
+            const result=[header];
+            for(let i=1;i<lines.length;i++){
+                if(!seen.has(lines[i])){
+                    seen.add(lines[i]);
+                    result.push(lines[i]);
+                }
+            }
+            return result.join('\n');
+        }
         async function performQuickClean(caseType){
             document.getElementById('cleaningSection').style.display='none';
             document.getElementById('progressSection').style.display='block';
@@ -590,8 +604,18 @@
                 console.log('Cleaned CSV rows:',rowsAfterDedup,'First 200 chars:',current.substring(0,200));
                 showCleaningComplete();
             }catch(err){
-                console.error('Error during cleaning:',err);
-                updateProgress('Unable to clean data. Please check your internet connection and try again.');
+                console.error('API unavailable, using offline deduplication:',err);
+                try{
+                    updateProgress('Running offline deduplication...');
+                    current=simpleRemoveDuplicates(current);
+                    let rowsAfterDedup=current.trim().split('\n').length-1;
+                    logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
+                    cleanedCSV=current;
+                    showCleaningComplete();
+                }catch(offlineErr){
+                    console.error('Offline dedup failed:',offlineErr);
+                    updateProgress('Error: '+offlineErr.message+'. Please check your internet connection and try again.');
+                }
             }
         }
         let currentPage=1;
