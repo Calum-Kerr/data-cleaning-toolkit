@@ -235,6 +235,11 @@
         <div id=clusterList></div>
         <button onclick=approveClusters() style=margin:10px 0;background:#0000ee;color:#fff;>approve & merge</button>
     </div>
+	    <div class=panel id=duplicateReviewSection style=display:none;>
+        <h2 class=section-title>remove duplicate rows</h2>
+        <div id=duplicateInfo></div>
+        <button onclick=confirmDuplicateRemoval() style=margin:10px 0;background:#0000ee;color:#fff;>remove duplicates</button>
+    </div>
 	    <div class=result-section panel id=resultSection>
         <h2 class=section-title>cleaning complete!</h2>
         <div class=success-message>
