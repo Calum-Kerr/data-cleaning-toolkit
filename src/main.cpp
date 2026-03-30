@@ -48,11 +48,14 @@ int main(){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
     recordEndpointCall("/api/clean");
     auto parsed=parseCSV(req.body);
-    auditLog.addEntry("Trim Whitespace", 0, parsed.size(), parsed.size());
+    int parsedSize=parsed.size();
+    auditLog.addEntry("Trim Whitespace", 0, parsedSize, parsedSize);
     auto trimmed=trimWhitespace(parsed);
-    auditLog.addEntry("Standardise Null Values", 0, trimmed.size(), trimmed.size());
+    int trimmedSize=trimmed.size();
+    auditLog.addEntry("Standardise Null Values", 0, trimmedSize, trimmedSize);
     auto standardised=standardiseNullValuesInData(trimmed);
-    auditLog.addEntry("Remove Duplicates", 0, standardised.size(), standardised.size());
+    int standardisedSize=standardised.size();
+    auditLog.addEntry("Remove Duplicates", 0, standardisedSize, standardisedSize);
     auto cleaned=removeDuplicates(standardised);
     std::string csvData;
     csvData.reserve(req.body.size());
@@ -85,7 +88,12 @@ int main(){
     jsonBody+=",\"originalRows\":"+std::to_string(parsed.size());
     jsonBody+=",\"cleanedRows\":"+std::to_string(cleaned.size());
     jsonBody+=",\"rowsRemoved\":"+std::to_string(parsed.size()-cleaned.size());
-    jsonBody+=",\"message\":\"Data cleaned successfully\"}";
+    jsonBody+=",\"message\":\"Data cleaned successfully\",\"auditLog\":[";
+    for(size_t i=0;i<auditLog.entries.size();i++){
+      if(i>0)jsonBody+=",";
+      jsonBody+="{\"operationName\":\""+auditLog.entries[i].operationName+"\",\"cellsAffected\":"+std::to_string(auditLog.entries[i].cellsAffected)+",\"rowsBefore\":"+std::to_string(auditLog.entries[i].rowsBefore)+",\"rowsAfter\":"+std::to_string(auditLog.entries[i].rowsAfter)+",\"timestamp\":\""+auditLog.entries[i].timestamp+"\"}";
+    }
+    jsonBody+="]}";
     logRequest("POST", "/api/clean", 200);
     auto resp=crow::response(jsonBody);
     resp.set_header("Content-Type","application/json; charset=utf-8");
