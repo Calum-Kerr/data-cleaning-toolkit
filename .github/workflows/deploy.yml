@@ -16,7 +16,8 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             cd /root/data-cleaning-toolkit && \
-            git pull origin main && \
+            git fetch origin main && \
+            git reset --hard origin/main && \
             rm -rf build && mkdir -p build && cd build && \
             cmake .. && make -j4 && \
             pkill -f "Toolkit" || true && \
