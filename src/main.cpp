@@ -66,18 +66,21 @@ int main(){
       }
       csvData+="\r\n";
     }
-    std::string jsonResponse="{\"csvData\":\"";
+    std::string jsonBody="{\"csvData\":\"";
     for(char c:csvData){
-      if(c=='"')jsonResponse+="\\\"";
-      else if(c=='\\'')jsonResponse+="\\\\";
-      else if(c=='\n')jsonResponse+="\\n";
-      else if(c=='\r')jsonResponse+="\\r";
-      else jsonResponse+=c;
+      if(c=='\\')jsonBody+="\\\\";
+      else if(c=='"')jsonBody+="\\\"";
+      else if(c=='\n')jsonBody+="\\n";
+      else if(c=='\r')jsonBody+="\\r";
+      else jsonBody+=c;
     }
-    jsonResponse+="\",\"originalRows\":"+std::to_string(parsed.size())+",\"cleanedRows\":"+std::to_string(cleaned.size())+",\"message\":\"Data cleaned successfully\"}";
+    jsonBody+="\"";
+    jsonBody+=",\"originalRows\":"+std::to_string(parsed.size());
+    jsonBody+=",\"cleanedRows\":"+std::to_string(cleaned.size());
+    jsonBody+=",\"message\":\"Data cleaned successfully\"}";
     logRequest("POST", "/api/clean", 200);
-    auto resp=crow::response(jsonResponse);
-    resp.set_header("Content-Type","application/json");
+    auto resp=crow::response(jsonBody);
+    resp.set_header("Content-Type","application/json; charset=utf-8");
     return resp;
   });
   CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
