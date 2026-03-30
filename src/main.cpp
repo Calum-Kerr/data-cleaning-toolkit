@@ -66,13 +66,19 @@ int main(){
       }
       csvData+="\r\n";
     }
-    crow::json::wvalue result;
-    result["csvData"]=csvData;
-    result["originalRows"]=(int)parsed.size();
-    result["cleanedRows"]=(int)cleaned.size();
-    result["message"]="Data cleaned successfully";
+    std::string jsonResponse="{\"csvData\":\"";
+    for(char c:csvData){
+      if(c=='"')jsonResponse+="\\\"";
+      else if(c=='\\'')jsonResponse+="\\\\";
+      else if(c=='\n')jsonResponse+="\\n";
+      else if(c=='\r')jsonResponse+="\\r";
+      else jsonResponse+=c;
+    }
+    jsonResponse+="\",\"originalRows\":"+std::to_string(parsed.size())+",\"cleanedRows\":"+std::to_string(cleaned.size())+",\"message\":\"Data cleaned successfully\"}";
     logRequest("POST", "/api/clean", 200);
-    return crow::response(result);
+    auto resp=crow::response(jsonResponse);
+    resp.set_header("Content-Type","application/json");
+    return resp;
   });
   CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
   ([](const crow::request& req){
