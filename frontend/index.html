@@ -583,9 +583,11 @@
                 if(!res.ok)throw new Error('API unavailable');
                 let data=await res.json();
                 current=data.csvData||current;
+                if(typeof current!=='string'){current=JSON.stringify(current);}
                 let rowsAfterDedup=current.trim().split('\n').length-1;
                 logAuditOperation('Remove Duplicates',rowsBefore,rowsAfterDedup,rowsBefore-rowsAfterDedup);
                 cleanedCSV=current;
+                console.log('Cleaned CSV rows:',rowsAfterDedup,'First 200 chars:',current.substring(0,200));
                 showCleaningComplete();
             }catch(err){
                 console.error('Error during cleaning:',err);
