@@ -15,4 +15,5 @@ jobs:
           username: root
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            nohup /root/deploy.sh > /tmp/deploy.log 2>&1 &
+            cd /root/data-cleaning-toolkit && git pull origin main && cmake --build build -- -j4 && pkill -f "Toolkit" || true && ./build/Toolkit &
+            echo "Deployment triggered at $(date)" >> /tmp/deploy.log
