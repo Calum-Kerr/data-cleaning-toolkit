@@ -16,6 +16,7 @@ const CRITICAL_ASSETS = [
     '/home.html',
     '/features.html',
     '/honours-project.html',
+    '/offline.html',
     '/algorithms.js',
     '/algorithms.wasm',
     '/jspdf.umd.min.js',
@@ -85,7 +86,15 @@ self.addEventListener('fetch', event => {
                 })
                 .catch(() => {
                     console.log('Network failed, falling back to cache:', event.request.url);
-                    return caches.match(event.request);
+                    return caches.match(event.request).then(response => {
+                        if (response) {
+                            return response;
+                        }
+                        // Site is completely offline, show offline error page
+                        return caches.match('/offline.html').then(offlineResponse => {
+                            return offlineResponse || new Response('Site is offline', { status: 503 });
+                        });
+                    });
                 })
         );
         return;
