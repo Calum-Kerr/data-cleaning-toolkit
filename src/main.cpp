@@ -50,7 +50,8 @@ int main(){
     int parsedSize=parsed.size();
     auditLog.addEntry("Uppercase All", 0, parsedSize, parsedSize);
     auto uppercased=standardiseCase(parsed,"upper");
-    auditLog.addEntry("Trim Whitespace", 0, parsedSize, parsedSize);
+    int uppercasedSize=uppercased.size();
+    auditLog.addEntry("Trim Whitespace", 0, uppercasedSize, uppercasedSize);
     auto trimmed=trimWhitespace(uppercased);
     int trimmedSize=trimmed.size();
     auditLog.addEntry("Standardise Null Values", 0, trimmedSize, trimmedSize);
