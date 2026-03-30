@@ -359,12 +359,8 @@
                 updateProgress(1,'Removing duplicates...');
                 let res=await fetch(API_URL+'/api/clean',{method:'POST',body:current});
                 let data=await res.json();
-                updateProgress(2,'Trimming whitespace...');
-                res=await fetch(API_URL+'/api/normalise-whitespace',{method:'POST',body:current});
-                updateProgress(3,'Standardising case...');
-                res=await fetch(API_URL+'/api/standardise-case',{method:'POST',body:current});
+                cleanedCSV=data.csvData||current;
                 updateProgress(4,'Finalizing cleaned data...');
-                cleanedCSV=current;
                 document.getElementById('cleaningSection').style.display='none';
                 document.getElementById('completeSection').style.display='block';
                 showCleaningComplete();
