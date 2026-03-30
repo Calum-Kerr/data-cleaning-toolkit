@@ -22,5 +22,8 @@ void resetIfNeeded(const std::string& ip) {
 }
 
 bool checkRateLimit(const std::string& ip) {
+  resetIfNeeded(ip);
+  if (requestCounts[ip]>=MAX_REQUESTS) return false;
+  requestCounts[ip]++;
   return true;
 }
