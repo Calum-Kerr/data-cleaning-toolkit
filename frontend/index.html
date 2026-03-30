@@ -100,6 +100,10 @@
 	    </style>
 </head>
 	<body>
+	  <div id="offlineBanner" style="display: none; background: #fff3cd; border-bottom: 2px solid #ffc107; padding: 12px 16px; text-align: center; font-size: 14px; color: #856404;">
+	    <span>📡 Running in offline mode. Using cached data.</span>
+	    <button onclick="goOnlineMode()" style="margin-left: 12px; padding: 6px 12px; background: #ffc107; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: #000;">Go Online</button>
+	  </div>
 	  <div class="wrap">
 	    <nav class="topnav" aria-label="site">
 	      <a href="/">home</a>
@@ -693,6 +697,24 @@
             }
         }
         document.addEventListener('DOMContentLoaded',()=>{const searchInput=document.getElementById('tableSearchInput');const columnFilter=document.getElementById('tableColumnFilter');if(searchInput){searchInput.addEventListener('input',filterTable);}if(columnFilter){columnFilter.addEventListener('change',filterTable);}});
+        function goOnlineMode(){
+            if('serviceWorker'in navigator){
+                navigator.serviceWorker.getRegistrations().then(registrations=>{
+                    for(let reg of registrations){reg.unregister();}
+                });
+                caches.keys().then(cacheNames=>{
+                    cacheNames.forEach(cacheName=>{caches.delete(cacheName);});
+                });
+            }
+            location.reload();
+        }
+        function checkOfflineMode(){
+            if('serviceWorker'in navigator&&navigator.serviceWorker.controller){
+                document.getElementById('offlineBanner').style.display='block';
+            }else{
+                document.getElementById('offlineBanner').style.display='none';
+            }
+        }
         if('serviceWorker'in navigator){
             navigator.serviceWorker.getRegistrations().then(registrations=>{
                 for(let reg of registrations){reg.unregister();}
@@ -702,6 +724,7 @@
             });
             navigator.serviceWorker.register('service-worker.js').then(registration=>{console.log('Service Worker registered with scope:',registration.scope);}).catch(error=>{console.log('Service Worker registration failed:',error);});
         }
+        checkOfflineMode();
     </script>
 </body>
 </html>
