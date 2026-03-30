@@ -1,0 +1,3 @@
+let wasmModule=null;let wasmReady=false;let uploadCSV='';let cleanedCSV='';let originalCSV='';let comparisonData=null;let auditOperations=[];
+const sampleDatasets={airbnb:'bathrooms,bedrooms,beds,locationname,price,rating\n1,1,1,atlanta,38,y\n1,1,2,san diego,150,y\n2,2,3,new orleans,175,y\n',credit:'age,debtratio,monthlyincome,seriousdlqin2yrs\n45,0.80,9120,1\n40,0.12,2600,0\n38,0.09,3042,0\n',titanic:'passengerid,survived,pclass,age,sex,fare\n1,0,3,22.0,male,7.25\n2,1,1,38.0,female,71.28\n3,1,3,26.0,female,7.93\n'};
+AlgorithmsModule().then(module=>{wasmModule=module;wasmReady=true;});
