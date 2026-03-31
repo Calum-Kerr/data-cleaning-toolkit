@@ -116,9 +116,9 @@
         <h2>clean your data instantly</h2>
         <p>remove duplicates, fix missing values, and clean spreadsheets online. no sign-up required. privacy-first and offline-capable.</p>
         <div class=cta-buttons>
-            <button class=cta-button onclick=selectStructured()>structured data</button>
-            <button class=cta-button coming-soon onclick=showComingSoon('Semi-Structured')>semi-structured (coming soon)</button>
-            <button class=cta-button coming-soon onclick=showComingSoon('Unstructured')>unstructured (coming soon)</button>
+            <button class=cta-button onclick="selectStructured()">structured data</button>
+            <button class=cta-button coming-soon onclick="showComingSoon('Semi-Structured')">semi-structured (coming soon)</button>
+            <button class=cta-button coming-soon onclick="showComingSoon('Unstructured')">unstructured (coming soon)</button>
         </div>
     </div>
     <div class=panel style=background:#f9f9f9;border-left:4px solid #0000ee;>
@@ -134,62 +134,62 @@
 	    <div class=structured-section panel id=structuredSection>
         <div id=uploadSection>
             <h2 class=section-title>upload csv file</h2>
-            <div class=upload-area id=uploadArea ondragover=handleDragOver(event) ondragleave=handleDragLeave(event) ondrop=handleDrop(event)>
+            <div class=upload-area id=uploadArea ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
                 <p>drag and drop your file here, or use paste from clipboard</p>
                 <div class=upload-options>
-                    <button class=upload-option onclick=document.getElementById('fileInput').click()>choose file</button>
-                    <button class=upload-option onclick=pasteFromClipboard()>paste from clipboard</button>
+                    <button class=upload-option onclick="document.getElementById('fileInput').click()">choose file</button>
+                    <button class=upload-option onclick="pasteFromClipboard()">paste from clipboard</button>
                 </div>
-                <input type=file id=fileInput accept=.csv onchange=handleFileUpload(event) aria-label=Upload CSV file style=display: none;>
+                <input type=file id=fileInput accept=.csv onchange="handleFileUpload(event)" aria-label=Upload CSV file style="display: none;">
             </div>
-            <div style=margin-top: 20px; padding: 14px; background: #fafafa; border: 1px solid #d9d9d9;>
-                <h3 style=margin: 0 0 10px 0; color: #111; font-size: 14px;>or try a real dataset:</h3>
-                <div style=display: flex; gap: 8px; flex-wrap: wrap;>
-                    <button class=upload-option onclick=loadSampleDataset('airbnb')>airbnb listings</button>
-                    <button class=upload-option onclick=loadSampleDataset('credit')>credit card data</button>
-                    <button class=upload-option onclick=loadSampleDataset('titanic')>titanic passengers</button>
+            <div style="margin-top: 20px; padding: 14px; background: #fafafa; border: 1px solid #d9d9d9;">
+                <h3 style="margin: 0 0 10px 0; color: #111; font-size: 14px;">or try a real dataset:</h3>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class=upload-option onclick="loadSampleDataset('airbnb')">airbnb listings</button>
+                    <button class=upload-option onclick="loadSampleDataset('credit')">credit card data</button>
+                    <button class=upload-option onclick="loadSampleDataset('titanic')">titanic passengers</button>
                 </div>
             </div>
 
         </div>
-        <div id=cleaningSection style=display:none;>
+        <div id=cleaningSection style="display:none;">
             <h2 class=section-title>choose cleaning method</h2>
-            <div style=text-align: center; margin-top: 20px;>
-                <button onclick=performQuickClean()>clean & standardise to uppercase</button>
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="performQuickClean()">clean & standardise to uppercase</button>
             </div>
         </div>
-        <div id=progressSection style=display:none;>
+        <div id=progressSection style="display:none;">
             <h2 class=section-title>cleaning in progress</h2>
-            <div id=progressText style=text-align: center; margin: 20px 0; font-size: 16px;>starting...</div>
+            <div id=progressText style="text-align: center; margin: 20px 0; font-size: 16px;">starting...</div>
         </div>
-        <div id=completeSection style=display:none;>
+        <div id=completeSection style="display:none;">
             <h2 class=section-title>cleaning complete</h2>
-            <p id=cleaningSummaryLine style=text-align: center; margin: 20px 0; font-size: 15px; color: #555;></p>
-            <div style=margin: 20px 0; padding: 14px; background: #f0f7ff; border-left: 4px solid #0000ee;>
-                <h3 style=margin: 0 0 10px 0; color: #111; font-size: 14px;>audit log</h3>
-                <div id=auditLogDisplay style=font-size: 13px; color: #333; max-height: 200px; overflow-y: auto;></div>
+            <p id=cleaningSummaryLine style="text-align: center; margin: 20px 0; font-size: 15px; color: #555;"></p>
+            <div style="margin: 20px 0; padding: 14px; background: #f0f7ff; border-left: 4px solid #0000ee;">
+                <h3 style="margin: 0 0 10px 0; color: #111; font-size: 14px;">audit log</h3>
+                <div id=auditLogDisplay style="font-size: 13px; color: #333; max-height: 200px; overflow-y: auto;"></div>
             </div>
-            <div style=margin: 20px 0;>
-                <h3 style=margin: 0 0 10px 0; color: #111;>cleaned data</h3>
+            <div style="margin: 20px 0;">
+                <h3 style="margin: 0 0 10px 0; color: #111;">cleaned data</h3>
                 <div class=table-controls>
-                    <input type=text id=tableSearchInput placeholder=Search data... aria-label=Search table data style=flex: 1; min-width: 200px;>
-                    <select id=tableColumnFilter aria-label=Filter by column style=padding: 6px; border: 1px solid var(--line); font-size: 13px;>
+                    <input type=text id=tableSearchInput placeholder=Search data... aria-label=Search table data style="flex: 1; min-width: 200px;">
+                    <select id=tableColumnFilter aria-label=Filter by column style="padding: 6px; border: 1px solid var(--line); font-size: 13px;">
                         <option value>all columns</option>
                     </select>
                 </div>
-                <div id=dataTableContainer class=data-table-container style=max-height: 400px; overflow-y: auto;></div>
+                <div id=dataTableContainer class=data-table-container style="max-height: 400px; overflow-y: auto;"></div>
                 <div class=table-pagination>
-                    <button id=prevPageBtn onclick=previousPage()>← previous</button>
+                    <button id=prevPageBtn onclick="previousPage()">← previous</button>
                     <span id=pageInfo>page 1</span>
-                    <button id=nextPageBtn onclick=nextPage()>next →</button>
+                    <button id=nextPageBtn onclick="nextPage()">next →</button>
                 </div>
             </div>
-            <div style=text-align: center;>
-                <button onclick=downloadAsCSV() style=margin-right: 8px;>download csv</button>
-                <button onclick=downloadAsJSON() style=margin-right: 8px;>download json</button>
-                <button onclick=downloadAsTSV() style=margin-right: 8px;>download tsv</button>
-                <button onclick=downloadAuditLogJSON() style=margin-right: 8px;>download audit log (json)</button>
-                <button onclick=startNewSession()>clean another file</button>
+            <div style="text-align: center;">
+                <button onclick="downloadAsCSV()" style="margin-right: 8px;">download csv</button>
+                <button onclick="downloadAsJSON()" style="margin-right: 8px;">download json</button>
+                <button onclick="downloadAsTSV()" style="margin-right: 8px;">download tsv</button>
+                <button onclick="downloadAuditLogJSON()" style="margin-right: 8px;">download audit log (json)</button>
+                <button onclick="startNewSession()">clean another file</button>
             </div>
         </div>
     </div>
@@ -199,7 +199,7 @@
         <div class=progress-container>
             <div class=progress-bar id=progressBar></div>
         </div>
-	        <div id=progressText style=text-align: center; margin: 10px 0;>initialising...</div>
+	        <div id=progressText style="text-align: center; margin: 10px 0;">initialising...</div>
         <div class=settings-section>
             <h3>cleaning settings</h3>
             <div class=setting-option>
@@ -224,28 +224,28 @@
             </div>
         </div>
     </div>
-	    <div class=panel id=findReplaceSection style=display:none;>
+	    <div class=panel id=findReplaceSection style="display:none;">
         <h2 class=section-title>define find & replace rules</h2>
-        <div style=margin-bottom:10px;>
-            <label>search in column: <input type=text id=findReplaceColumn placeholder="* for all columns" style=width:200px;></label>
+        <div style="margin-bottom:10px;">
+            <label>search in column: <input type=text id=findReplaceColumn placeholder="* for all columns" style="width:200px;"></label>
         </div>
         <div id=findReplaceRules></div>
-        <button onclick=addFindReplaceRule() style=margin:10px 0;>add rule</button>
-        <button onclick=applyFindReplace() style=margin:10px 0;margin-left:10px;background:#0000ee;color:#fff;>apply rules</button>
+        <button onclick="addFindReplaceRule()" style="margin:10px 0;">add rule</button>
+        <button onclick="applyFindReplace()" style="margin:10px 0;margin-left:10px;background:#0000ee;color:#fff;">apply rules</button>
     </div>
-	    <div class=panel id=clusterReviewSection style=display:none;>
+	    <div class=panel id=clusterReviewSection style="display:none;">
         <h2 class=section-title>review clustered similar values</h2>
-        <div style=margin-bottom:10px;>
-            <label>select column: <input type=text id=clusterColumn placeholder="column name" style=width:200px;></label>
-            <button onclick=detectClusters() style=margin-left:10px;>detect clusters</button>
+        <div style="margin-bottom:10px;">
+            <label>select column: <input type=text id=clusterColumn placeholder="column name" style="width:200px;"></label>
+            <button onclick="detectClusters()" style="margin-left:10px;">detect clusters</button>
         </div>
         <div id=clusterList></div>
-        <button onclick=approveClusters() style=margin:10px 0;background:#0000ee;color:#fff;>approve & merge</button>
+        <button onclick="approveClusters()" style="margin:10px 0;background:#0000ee;color:#fff;">approve & merge</button>
     </div>
-	    <div class=panel id=duplicateReviewSection style=display:none;>
+	    <div class=panel id=duplicateReviewSection style="display:none;">
         <h2 class=section-title>remove duplicate rows</h2>
         <div id=duplicateInfo></div>
-        <button onclick=confirmDuplicateRemoval() style=margin:10px 0;background:#0000ee;color:#fff;>remove duplicates</button>
+        <button onclick="confirmDuplicateRemoval()" style="margin:10px 0;background:#0000ee;color:#fff;">remove duplicates</button>
     </div>
 	    <div class=result-section panel id=resultSection>
         <h2 class=section-title>cleaning complete!</h2>
@@ -253,27 +253,27 @@
             <h3>your data has been successfully cleaned</h3>
             <p>the cleaned file has been automatically downloaded to your device.</p>
         </div>
-        <div style=text-align: center; margin-top: 20px;>
-            <button onclick=startNewSession()>clean another file</button>
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="startNewSession()">clean another file</button>
         </div>
     </div>
-    <div class=panel style=margin-top:32px;>
-        <h2 style=margin:0 0 16px 0;font-size:18px;>frequently asked questions</h2>
-        <div style=margin-bottom:16px;>
-            <h3 style=margin:0 0 4px 0;font-size:14px;font-weight:bold;>how do i clean my csv file?</h3>
-            <p style=margin:0;font-size:14px;color:#666;>upload your csv file or paste data directly. our tool will detect issues like duplicates and missing values, then clean your spreadsheet instantly.</p>
+    <div class=panel style="margin-top:32px;">
+        <h2 style="margin:0 0 16px 0;font-size:18px;">frequently asked questions</h2>
+        <div style="margin-bottom:16px;">
+            <h3 style="margin:0 0 4px 0;font-size:14px;font-weight:bold;">how do i clean my csv file?</h3>
+            <p style="margin:0;font-size:14px;color:#666;">upload your csv file or paste data directly. our tool will detect issues like duplicates and missing values, then clean your spreadsheet instantly.</p>
         </div>
-        <div style=margin-bottom:16px;>
-            <h3 style=margin:0 0 4px 0;font-size:14px;font-weight:bold;>is my data private when i clean spreadsheets?</h3>
-            <p style=margin:0;font-size:14px;color:#666;>yes. our csv cleaner runs offline in your browser using webassembly. your data never leaves your device.</p>
+        <div style="margin-bottom:16px;">
+            <h3 style="margin:0 0 4px 0;font-size:14px;font-weight:bold;">is my data private when i clean spreadsheets?</h3>
+            <p style="margin:0;font-size:14px;color:#666;">yes. our csv cleaner runs offline in your browser using webassembly. your data never leaves your device.</p>
         </div>
-        <div style=margin-bottom:16px;>
-            <h3 style=margin:0 0 4px 0;font-size:14px;font-weight:bold;>can i remove duplicates from my spreadsheet?</h3>
-            <p style=margin:0;font-size:14px;color:#666;>yes. our duplicate remover identifies and removes duplicate rows while keeping the first occurrence.</p>
+        <div style="margin-bottom:16px;">
+            <h3 style="margin:0 0 4px 0;font-size:14px;font-weight:bold;">can i remove duplicates from my spreadsheet?</h3>
+            <p style="margin:0;font-size:14px;color:#666;">yes. our duplicate remover identifies and removes duplicate rows while keeping the first occurrence.</p>
         </div>
-        <div style=margin-bottom:16px;>
-            <h3 style=margin:0 0 4px 0;font-size:14px;font-weight:bold;>do i need to sign up to clean data?</h3>
-            <p style=margin:0;font-size:14px;color:#666;>no sign-up required. this free online data cleaning tool works immediately without registration.</p>
+        <div style="margin-bottom:16px;">
+            <h3 style="margin:0 0 4px 0;font-size:14px;font-weight:bold;">do i need to sign up to clean data?</h3>
+            <p style="margin:0;font-size:14px;color:#666;">no sign-up required. this free online data cleaning tool works immediately without registration.</p>
         </div>
     </div>
 	    </main>
