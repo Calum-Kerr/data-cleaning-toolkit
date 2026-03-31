@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+  <record>
+    <account_id>ACC001</account_id>
+    <customer_name>John Smith</customer_name>
+    <balance>15234.50</balance>
+    <status>Active</status>
+    <last_transaction>2026-03-31</last_transaction>
+  </record>
+  <record>
+    <account_id>ACC002</account_id>
+    <customer_name>Jane Doe</customer_name>
+    <balance>8765.25</balance>
+    <status>Active</status>
+    <last_transaction>2026-03-28</last_transaction>
+  </record>
+  <record>
+    <account_id>ACC003</account_id>
+    <customer_name>Bob Johnson</customer_name>
+    <balance>0.00</balance>
+    <status>Closed</status>
+    <last_transaction>2026-01-15</last_transaction>
+  </record>
+</dataset>
