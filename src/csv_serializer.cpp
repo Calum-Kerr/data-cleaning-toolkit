@@ -3,6 +3,15 @@
 std::string serializeToCSV(const std::vector<std::vector<std::string>>& data) {
   std::string result;
   for(const auto& row : data) {
+    bool isEmptyRow = true;
+    for(const auto& cell : row) {
+      if(!cell.empty()) {
+        isEmptyRow = false;
+        break;
+      }
+    }
+    if(isEmptyRow) continue;
+
     for(size_t j = 0; j < row.size(); j++) {
       if(j > 0) result += ",";
       const auto& cell = row[j];

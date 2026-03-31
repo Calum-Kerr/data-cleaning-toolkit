@@ -22,6 +22,7 @@ std::vector<std::vector<std::string>> parseCSV(const std::string& data){
   std::stringstream ss(data);
   std::string line;
   while(std::getline(ss,line)){
+    if(!line.empty() && line.back()=='\r') line.pop_back();
     if(!line.empty()) result.push_back(parseCSVLine(line));
   }
   return result;

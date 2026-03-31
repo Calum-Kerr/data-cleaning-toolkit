@@ -28,7 +28,11 @@ void completeField(std::vector<std::string>& row, std::string& field){
 
 void completeRow(std::vector<std::vector<std::string>>& result,
                  std::vector<std::string>& row){
-  if(!row.empty()) result.push_back(row);
+  bool hasContent=false;
+  for(const auto& cell:row){
+    if(!cell.empty()){hasContent=true;break;}
+  }
+  if(!row.empty()&&hasContent) result.push_back(row);
   row.clear();
 }
 
@@ -66,7 +70,7 @@ std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   ParserState state=FIELD_START;
   for(size_t i=skipUTF8BOM(data);i<data.length();++i){
     char c=data[i];
-    if(c==CARRIAGE_RETURN&&i+1<data.length()&&data[i+1]==NEWLINE) continue;
+    if(c==CARRIAGE_RETURN) continue;
     if(state==FIELD_START) state=handleFieldStart(c,currentRow,currentField);
     else if(state==QUOTED_FIELD) state=handleQuotedField(c);
     else if(state==ESCAPE_QUOTE) state=handleEscapeQuote(c,currentRow,currentField);
