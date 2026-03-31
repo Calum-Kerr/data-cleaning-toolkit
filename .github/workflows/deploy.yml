@@ -24,6 +24,6 @@ jobs:
             git reset --hard origin/${{ github.ref_name }} && \
             rm -rf build && mkdir -p build && cd build && \
             cmake .. >/dev/null && \
-            make -j4 >/dev/null && \
+            make -j8 >/dev/null && \
             [ -f Toolkit ] || (echo "Build failed" && exit 1) && \
             nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
