@@ -1,6 +1,5 @@
 function logAuditOperation(name,rowsBefore,rowsAfter,cellsAffected){const timestamp=new Date().toISOString();auditOperations.push({operationName:name,rowsBefore,rowsAfter,cellsAffected,timestamp});}
-function beginProfiling(){document.getElementById('welcomeSection').classList.add('hidden');document.getElementById('structuredSection').style.display='block';displayProfileDetails();}
-function displayProfileDetails(){const lines=uploadCSV.trim().split('\n');const rows=lines.slice(1);const headers=lines[0].split(',');document.getElementById('profileSection').style.display='block';document.getElementById('issuesList').innerHTML=`<p>rows: ${rows.length}</p><p>columns: ${headers.length}</p><p>estimated size: ${(uploadCSV.length/1024).toFixed(2)}kb</p>`;}
+function beginProfiling(){document.getElementById('welcomeSection').classList.add('hidden');document.getElementById('structuredSection').style.display='block';}
 function getColumnCount(){return uploadCSV.trim().split('\n')[0].split(',').length;}
 function downloadAsCSV(){triggerDownload(cleanedCSV,'cleaned_data.csv','text/csv');}
 function downloadAsJSON(){const json=JSON.stringify(cleanedCSV,null,2);triggerDownload(json,'cleaned_data.json','application/json');}
