@@ -28,7 +28,11 @@ void completeField(std::vector<std::string>& row, std::string& field){
 
 void completeRow(std::vector<std::vector<std::string>>& result,
                  std::vector<std::string>& row){
-  if(!row.empty()) result.push_back(row);
+  bool hasContent=false;
+  for(const auto& cell:row){
+    if(!cell.empty()){hasContent=true;break;}
+  }
+  if(!row.empty()&&hasContent) result.push_back(row);
   row.clear();
 }
 
