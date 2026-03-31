@@ -70,7 +70,7 @@ std::vector<std::vector<std::string>> parseCSVRFC4180(const std::string& data){
   ParserState state=FIELD_START;
   for(size_t i=skipUTF8BOM(data);i<data.length();++i){
     char c=data[i];
-    if(c==CARRIAGE_RETURN&&i+1<data.length()&&data[i+1]==NEWLINE) continue;
+    if(c==CARRIAGE_RETURN) continue;
     if(state==FIELD_START) state=handleFieldStart(c,currentRow,currentField);
     else if(state==QUOTED_FIELD) state=handleQuotedField(c);
     else if(state==ESCAPE_QUOTE) state=handleEscapeQuote(c,currentRow,currentField);
