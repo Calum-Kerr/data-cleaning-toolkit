@@ -24,5 +24,4 @@ jobs:
             cmake .. >/dev/null && \
             make -j4 >/dev/null && \
             [ -f Toolkit ] || (echo "Build failed" && exit 1) && \
-            cd /root/data-cleaning-toolkit && \
-            nohup ./build/Toolkit >/var/log/toolkit.log 2>&1 &
+            nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
