@@ -37,9 +37,18 @@ std::vector<bool> detectDuplicates(const std::vector<std::vector<std::string>>& 
   return isDuplicate;
 }
 
+std::string normalizeForComparison(const std::string& s){
+  std::string result=s;
+  for(auto& c:result){if(c>='A'&&c<='Z') c+=(char)32;}
+  size_t start=0;while(start<result.length()&&result[start]==' ') start++;
+  size_t end=result.length();while(end>start&&result[end-1]==' ') end--;
+  return result.substr(start,end-start);
+}
 double calculateSimilarity(const std::string& s1, const std::string& s2){
-  int distance=levenshteinDistance(s1,s2);
-  int maxLen=std::max(s1.length(),s2.length());
+  std::string norm1=normalizeForComparison(s1);
+  std::string norm2=normalizeForComparison(s2);
+  int distance=levenshteinDistance(norm1,norm2);
+  int maxLen=std::max(norm1.length(),norm2.length());
   if(maxLen==0) return 1.0;
   return 1.0-(double)distance/maxLen;
 }
