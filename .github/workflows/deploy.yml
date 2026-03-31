@@ -21,8 +21,9 @@ jobs:
             rm -rf build && mkdir -p build && cd build && \
             cmake .. 2>&1 | tail -5 && \
             make -j4 2>&1 | tail -10 && \
-            echo "Build completed, stopping old process..." && \
-            pkill -f "/root/data-cleaning-toolkit/build/Toolkit" || true && \
+            if [ ! -f Toolkit ]; then echo "Build failed"; exit 1; fi && \
+            echo "Build succeeded, stopping old process..." && \
+            pkill -f "Toolkit" || true && \
             sleep 1 && \
             /root/data-cleaning-toolkit/build/Toolkit > /tmp/app.log 2>&1 &
             echo "Process started with PID $!"
