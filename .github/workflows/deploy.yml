@@ -15,6 +15,7 @@ jobs:
           username: root
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
+            apt-get update && apt-get install -y asio-dev 2>&1 | tail -3 && \
             cd /root/data-cleaning-toolkit && \
             git fetch origin main 2>&1 | head -20 && \
             git reset --hard origin/main && \
@@ -25,6 +26,5 @@ jobs:
             echo "Build succeeded, stopping old process..." && \
             pkill -9 -f "Toolkit" || true && \
             sleep 2 && \
-            lsof -i :8080 || echo "Port 8080 is free" && \
             /root/data-cleaning-toolkit/build/Toolkit > /tmp/app.log 2>&1 &
-            sleep 1 && echo "New process started, checking..." && lsof -i :8080
+            sleep 1 && echo "Process started"
