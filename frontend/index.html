@@ -212,14 +212,23 @@
         </div>
     </div>
     <div class=panel id=semiStructuredSection style="display:none;">
-        <h2 class=section-title>clean json & xml</h2>
+        <h2 class=section-title>clean json</h2>
         <div id=jsonUploadArea class=upload-area ondragover="handleJsonDragOver(event)" ondragleave="handleJsonDragLeave(event)" ondrop="handleJsonDrop(event)">
-            <p>paste or drag your json/xml file here</p>
+            <p>drag your json file or paste here</p>
             <div class=upload-options>
                 <button class=upload-option onclick="document.getElementById('jsonFileInput').click()">choose file</button>
                 <button class=upload-option onclick="pasteJsonFromClipboard()">paste from clipboard</button>
             </div>
-            <input type=file id=jsonFileInput accept=.json,.xml onchange="handleJsonFileUpload(event)" style="display:none;">
+            <input type=file id=jsonFileInput accept=.json onchange="handleJsonFileUpload(event)" style="display:none;">
+        </div>
+        <h2 class=section-title style="margin-top:20px;">clean xml</h2>
+        <div id=xmlUploadArea class=upload-area ondragover="handleXmlDragOver(event)" ondragleave="handleXmlDragLeave(event)" ondrop="handleXmlDrop(event)">
+            <p>drag your xml file or paste here</p>
+            <div class=upload-options>
+                <button class=upload-option onclick="document.getElementById('xmlFileInput').click()">choose file</button>
+                <button class=upload-option onclick="pasteXmlFromClipboard()">paste from clipboard</button>
+            </div>
+            <input type=file id=xmlFileInput accept=.xml onchange="handleXmlFileUpload(event)" style="display:none;">
         </div>
     </div>
     <div class=panel id=unstructuredSection style="display:none;">
