@@ -43,21 +43,22 @@ int main(){
     return crow::response(result);
   });
   CROW_ROUTE(app,"/api/clean").methods("POST"_method)
-  ([&auditLog](const crow::request& req){
+  ([](const crow::request& req){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
     recordEndpointCall("/api/clean");
+    AuditLog auditLog;
     auto parsed=parseCSV(req.body);
-    int parsedSize=parsed.size();
-    auditLog.addEntry("Uppercase All", 0, parsedSize, parsedSize);
+    int rowsBefore=parsed.size();
+    auditLog.addEntry("Uppercase All", 0, rowsBefore, rowsBefore);
     auto uppercased=standardiseCase(parsed,"upper");
-    int uppercasedSize=uppercased.size();
-    auditLog.addEntry("Trim Whitespace", 0, uppercasedSize, uppercasedSize);
+    int rowsAfterUpper=uppercased.size();
+    auditLog.addEntry("Trim Whitespace", 0, rowsAfterUpper, rowsAfterUpper);
     auto trimmed=trimWhitespace(uppercased);
-    int trimmedSize=trimmed.size();
-    auditLog.addEntry("Standardise Null Values", 0, trimmedSize, trimmedSize);
+    int rowsAfterTrim=trimmed.size();
+    auditLog.addEntry("Standardise Null Values", 0, rowsAfterTrim, rowsAfterTrim);
     auto standardised=standardiseNullValuesInData(trimmed);
-    int standardisedSize=standardised.size();
-    auditLog.addEntry("Remove Duplicates", 0, standardisedSize, standardisedSize);
+    int rowsAfterStandard=standardised.size();
+    auditLog.addEntry("Remove Duplicates", 0, rowsAfterStandard, rowsAfterStandard);
     auto cleaned=removeDuplicates(standardised);
     std::string csvData;
     csvData.reserve(req.body.size());
