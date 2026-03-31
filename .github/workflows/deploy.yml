@@ -20,8 +20,8 @@ jobs:
             pkill -9 Toolkit || true && \
             sleep 2 && \
             cd /root/data-cleaning-toolkit && \
-            git fetch origin main && \
-            git reset --hard origin/main && \
+            git fetch origin ${{ github.ref_name }} && \
+            git reset --hard origin/${{ github.ref_name }} && \
             rm -rf build && mkdir -p build && cd build && \
             cmake .. >/dev/null && \
             make -j4 >/dev/null && \
