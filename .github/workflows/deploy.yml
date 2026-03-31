@@ -15,18 +15,15 @@ jobs:
           username: root
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            apt-get update && apt-get install -y asio-dev 2>&1 | tail -3 && \
+            set -e && \
+            apt-get update -qq && apt-get install -y asio-dev >/dev/null 2>&1 && \
             cd /root/data-cleaning-toolkit && \
-            git fetch origin main 2>&1 | head -10 && \
+            git fetch origin main && \
             git reset --hard origin/main && \
             rm -rf build && mkdir -p build && cd build && \
             cmake .. && make -j4 && \
-            if [ ! -f Toolkit ]; then echo "Build failed"; exit 1; fi && \
-            echo "Build complete" && \
+            [ -f Toolkit ] || (echo "Build failed" && exit 1) && \
             pkill -9 Toolkit || true && \
-            sleep 3 && \
-            cd /root/data-cleaning-toolkit && \
-            ./build/Toolkit > /tmp/app.log 2>&1 &
-            PID=$! && \
-            sleep 2 && \
-            kill -0 $PID && echo "Process $PID running" || echo "Process $PID died"
+            sleep 5 && \
+            cd /root && \
+            ./data-cleaning-toolkit/build/Toolkit >/var/log/toolkit.log 2>&1 &
