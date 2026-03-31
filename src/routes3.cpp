@@ -74,19 +74,18 @@ void registerCleaningRoutes(crow::SimpleApp& app){
       std::vector<std::string> headers=parsed.empty()?std::vector<std::string>():parsed[0];
       auto clResult=detectClusters(parsed,column,threshold,headers);
       crow::json::wvalue resp;
-      std::vector<crow::json::wvalue> clusters;
+      resp["clusters"]=crow::json::wvalue::list();
+      int idx=0;
       for(const auto& c:clResult.clusters) {
-        crow::json::wvalue cluster;
-        cluster["id"]=c.id;
-        cluster["count"]=c.count;
-        std::vector<crow::json::wvalue> values;
+        resp["clusters"][idx]["id"]=c.id;
+        resp["clusters"][idx]["count"]=c.count;
+        resp["clusters"][idx]["values"]=crow::json::wvalue::list();
+        int vidx=0;
         for(const auto& v:c.values) {
-          values.push_back(crow::json::wvalue(v));
+          resp["clusters"][idx]["values"][vidx++]=v;
         }
-        cluster["values"]=values;
-        clusters.push_back(cluster);
+        idx++;
       }
-      resp["clusters"]=clusters;
       logRequest("POST", "/api/detect-clusters", 200);
       return crow::response(resp);
     } catch(...) {
