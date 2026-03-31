@@ -103,7 +103,11 @@ void registerCleaningRoutes(crow::SimpleApp& app){
       auto parsed=parseCSV(csvData);
       std::vector<MergeMapping> merges;
       for(auto& m:json["merges"]) {
-        merges.push_back({(int)m["clusterId"].i(),m["mergeInto"].s()});
+        MergeMapping mm{0,m["mergeInto"].s(),{}};
+        if(m.has("values")) {
+          for(auto& v:m["values"]) mm.values.push_back(v.s());
+        }
+        merges.push_back(mm);
       }
       std::vector<std::string> headers=parsed.empty()?std::vector<std::string>():parsed[0];
       auto mcResult=applyClustering(parsed,column,merges,headers);

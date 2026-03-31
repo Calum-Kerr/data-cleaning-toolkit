@@ -16,14 +16,10 @@ std::vector<std::vector<std::string>> applyClustering(
   }
   std::vector<std::vector<std::string>> result = data;
   if(colIndex < 0) return result;
-  std::map<int, std::set<std::string>> mergeMap;
-  for(const auto& m : merges) mergeMap[m.clusterId].insert(m.mergeInto);
-  auto clusters = detectClusters(data, column, 0.75, headers);
   std::map<std::string, std::string> valueMapping;
-  for(const auto& cluster : clusters.clusters) {
-    if(mergeMap.find(cluster.id) != mergeMap.end()) {
-      const std::string& mergeInto = *mergeMap[cluster.id].begin();
-      for(const auto& val : cluster.values) valueMapping[val] = mergeInto;
+  for(const auto& m : merges) {
+    for(const auto& val : m.values) {
+      valueMapping[val] = m.mergeInto;
     }
   }
   for(auto& row : result) {

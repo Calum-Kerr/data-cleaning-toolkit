@@ -17,6 +17,7 @@ struct ClusterResult {
 struct MergeMapping {
   int clusterId;
   std::string mergeInto;
+  std::vector<std::string> values;
 };
 
 ClusterResult detectClusters(
