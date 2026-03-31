@@ -23,7 +23,8 @@ jobs:
             make -j4 2>&1 | tail -10 && \
             if [ ! -f Toolkit ]; then echo "Build failed"; exit 1; fi && \
             echo "Build succeeded, stopping old process..." && \
-            pkill -f "Toolkit" || true && \
-            sleep 1 && \
+            pkill -9 -f "Toolkit" || true && \
+            sleep 2 && \
+            lsof -i :8080 || echo "Port 8080 is free" && \
             /root/data-cleaning-toolkit/build/Toolkit > /tmp/app.log 2>&1 &
-            echo "Process started with PID $!"
+            sleep 1 && echo "New process started, checking..." && lsof -i :8080
