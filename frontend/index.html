@@ -176,6 +176,15 @@
                     <select id=tableColumnFilter aria-label=Filter by column style="padding: 6px; border: 1px solid var(--line); font-size: 13px;">
                         <option value>all columns</option>
                     </select>
+                    <button onclick="showClusteringUI()" style="margin-left: 8px;">detect clusters</button>
+                </div>
+                <div id=clusteringUI style="display:none;margin:15px 0;padding:15px;background:#f9f9f9;border:1px solid var(--line);">
+                    <h3 style="margin:0 0 10px 0;font-size:14px;">detect similar values</h3>
+                    <div style="margin-bottom:10px;">
+                        <label>column: <select id=clusteringColumnSelect style="padding:6px;border:1px solid var(--line);margin-left:5px;"></select></label>
+                        <button onclick="runClusterDetection()" style="margin-left:8px;">find clusters</button>
+                    </div>
+                    <div id=clusteringResults style="margin-top:10px;"></div>
                 </div>
                 <div id=dataTableContainer class=data-table-container style="max-height: 400px; overflow-y: auto;"></div>
                 <div class=table-pagination>
