@@ -15,14 +15,13 @@ jobs:
           username: root
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            if command -v apt-get >/dev/null 2>&1; then apt-get update -qq && apt-get install -y asio-dev >/dev/null 2>&1 || true; fi && \
+            if command -v apt-get >/dev/null 2>&1; then apt-get update -qq >/dev/null 2>&1 && apt-get install -y asio-dev >/dev/null 2>&1 || true; fi && \
             if command -v yum >/dev/null 2>&1; then yum install -y asio-devel >/dev/null 2>&1 || true; fi && \
             cd /root/data-cleaning-toolkit && \
-            git fetch --timeout=10 origin main && \
+            git fetch origin main && \
             git reset --hard origin/main && \
             rm -rf build && mkdir -p build && cd build && \
-            timeout 60 cmake .. && \
-            timeout 120 make -j4 && \
-            [ -f Toolkit ] && echo "Build OK" || exit 1 && \
-            timeout 5 pkill -9 Toolkit || true && \
-            /root/data-cleaning-toolkit/build/Toolkit >/var/log/toolkit.log 2>&1 &
+            cmake .. >/dev/null && \
+            make -j4 >/dev/null && \
+            [ -f Toolkit ] || (echo "Build failed" && exit 1) && \
+            nohup /root/data-cleaning-toolkit/build/Toolkit >/var/log/toolkit.log 2>&1 &
