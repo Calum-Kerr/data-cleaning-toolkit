@@ -10,7 +10,7 @@ std::string serializeToCSV(const std::vector<std::vector<std::string>>& data) {
         break;
       }
     }
-    if(isEmptyRow && row.size() <= 1) continue;
+    if(isEmptyRow) continue;
 
     for(size_t j = 0; j < row.size(); j++) {
       if(j > 0) result += ",";
