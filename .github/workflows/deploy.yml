@@ -17,14 +17,16 @@ jobs:
           script: |
             apt-get update && apt-get install -y asio-dev 2>&1 | tail -3 && \
             cd /root/data-cleaning-toolkit && \
-            git fetch origin main 2>&1 | head -20 && \
+            git fetch origin main 2>&1 | head -10 && \
             git reset --hard origin/main && \
             rm -rf build && mkdir -p build && cd build && \
-            cmake .. 2>&1 | tail -5 && \
-            make -j4 2>&1 | tail -10 && \
+            cmake .. && make -j4 && \
             if [ ! -f Toolkit ]; then echo "Build failed"; exit 1; fi && \
-            echo "Build succeeded, stopping old process..." && \
-            pkill -9 -f "Toolkit" || true && \
+            echo "Build complete" && \
+            pkill -9 Toolkit || true && \
+            sleep 3 && \
+            cd /root/data-cleaning-toolkit && \
+            ./build/Toolkit > /tmp/app.log 2>&1 &
+            PID=$! && \
             sleep 2 && \
-            /root/data-cleaning-toolkit/build/Toolkit > /tmp/app.log 2>&1 &
-            sleep 1 && echo "Process started"
+            kill -0 $PID && echo "Process $PID running" || echo "Process $PID died"
