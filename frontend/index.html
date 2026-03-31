@@ -123,8 +123,8 @@
         <p>remove duplicates, fix missing values, and clean spreadsheets online. no sign-up required. privacy-first and offline-capable.</p>
         <div class=cta-buttons>
             <button class=cta-button onclick="selectStructured()">structured data</button>
-            <button class=cta-button coming-soon onclick="showComingSoon('Semi-Structured')">semi-structured (coming soon)</button>
-            <button class=cta-button coming-soon onclick="showComingSoon('Unstructured')">unstructured (coming soon)</button>
+            <button class=cta-button onclick="selectSemiStructured()">semi-structured</button>
+            <button class=cta-button onclick="selectUnstructured()">unstructured</button>
         </div>
     </div>
     <div class=panel style=background:#f9f9f9;border-left:4px solid #0000ee;>
@@ -210,6 +210,75 @@
             </div>
         </div>
     </div>
+    <div class=panel id=semiStructuredSection style="display:none;">
+        <h2 class=section-title>json & xml cleaner</h2>
+        <div style="margin-bottom:20px;">
+            <div style="margin-bottom:12px;">
+                <strong style="font-size:14px;">upload json file</strong>
+                <div class=upload-area id=jsonUploadArea ondragover="handleJsonDragOver(event)" ondragleave="handleJsonDragLeave(event)" ondrop="handleJsonDrop(event)" style="margin:12px 0;">
+                    <p>drag and drop your json file here</p>
+                    <div class=upload-options>
+                        <button class=upload-option onclick="document.getElementById('jsonFileInput').click()">choose file</button>
+                        <button class=upload-option onclick="pasteJsonFromClipboard()">paste from clipboard</button>
+                    </div>
+                    <input type=file id=jsonFileInput accept=.json onchange="handleJsonFileUpload(event)" style="display:none;">
+                </div>
+            </div>
+            <div>
+                <strong style="font-size:14px;">upload xml file</strong>
+                <div class=upload-area id=xmlUploadArea ondragover="handleXmlDragOver(event)" ondragleave="handleXmlDragLeave(event)" ondrop="handleXmlDrop(event)" style="margin:12px 0;">
+                    <p>drag and drop your xml file here</p>
+                    <div class=upload-options>
+                        <button class=upload-option onclick="document.getElementById('xmlFileInput').click()">choose file</button>
+                        <button class=upload-option onclick="pasteXmlFromClipboard()">paste from clipboard</button>
+                    </div>
+                    <input type=file id=xmlFileInput accept=.xml onchange="handleXmlFileUpload(event)" style="display:none;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class=panel id=semiStructuredResults style="display:none;">
+        <h2 class=section-title>cleaned data</h2>
+        <div style="padding:16px;background:#f0f7ff;border-left:4px solid #0000ee;border-radius:4px;margin-bottom:20px;">
+            <h3 style="margin:0 0 10px 0;color:#111;font-size:14px;">cleaning operations</h3>
+            <div id=jsonAuditSection style="font-size:13px;"></div>
+            <div id=xmlAuditSection style="font-size:13px;"></div>
+        </div>
+        <div style="margin-bottom:20px;">
+            <pre id=jsonOutput style="margin:0;font-family:monospace;font-size:12px;background:#f9f9f9;padding:12px;border:1px solid #d9d9d9;overflow-x:auto;"></pre>
+            <pre id=xmlOutput style="margin:0;font-family:monospace;font-size:12px;background:#f9f9f9;padding:12px;border:1px solid #d9d9d9;overflow-x:auto;"></pre>
+        </div>
+        <div style="text-align:center;padding:12px;background:#fafafa;border-radius:4px;">
+            <button onclick="downloadSemiStructured()" style="margin:4px;padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;">download json</button>
+            <button onclick="downloadXml()" style="margin:4px;padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;">download xml</button>
+            <button onclick="backToHome()" style="margin:4px;padding:8px 16px;background:#fff;border:1px solid #d9d9d9;cursor:pointer;">clean another file</button>
+        </div>
+    </div>
+    <div class=panel id=unstructuredSection style="display:none;">
+        <h2 class=section-title>text cleaner</h2>
+        <div class=upload-area id=textUploadArea ondragover="handleTextDragOver(event)" ondragleave="handleTextDragLeave(event)" ondrop="handleTextDrop(event)" style="margin:12px 0;">
+            <p>drag and drop your text file here</p>
+            <div class=upload-options>
+                <button class=upload-option onclick="document.getElementById('textFileInput').click()">choose file</button>
+                <button class=upload-option onclick="pasteTextFromClipboard()">paste from clipboard</button>
+            </div>
+            <input type=file id=textFileInput accept=.txt onchange="handleTextFileUpload(event)" style="display:none;">
+        </div>
+    </div>
+    <div class=panel id=unstructuredResults style="display:none;">
+        <h2 class=section-title>cleaned text</h2>
+        <div style="padding:16px;background:#f0f7ff;border-left:4px solid #0000ee;border-radius:4px;margin-bottom:20px;">
+            <h3 style="margin:0 0 10px 0;color:#111;font-size:14px;">cleaning operations</h3>
+            <div id=textAuditSection style="font-size:13px;"></div>
+        </div>
+        <div style="margin-bottom:20px;">
+            <pre id=textOutput style="margin:0;font-family:monospace;font-size:12px;background:#f9f9f9;padding:12px;border:1px solid #d9d9d9;overflow-x:auto;white-space:pre-wrap;"></pre>
+        </div>
+        <div style="text-align:center;padding:12px;background:#fafafa;border-radius:4px;">
+            <button onclick="downloadText()" style="margin:4px;padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;">download text</button>
+            <button onclick="backToHome()" style="margin:4px;padding:8px 16px;background:#fff;border:1px solid #d9d9d9;cursor:pointer;">clean another file</button>
+        </div>
+    </div>
     <div class=panel style="margin-top:32px;">
         <h2 style="margin:0 0 16px 0;font-size:18px;">frequently asked questions</h2>
         <div style="margin-bottom:16px;">
@@ -240,5 +309,8 @@
     <script src="js/interactive.js"></script>
     <script src="js/workflow.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/json-processor.js"></script>
+    <script src="js/xml-processor.js"></script>
+    <script src="js/text-processor.js"></script>
 </body>
 </html>

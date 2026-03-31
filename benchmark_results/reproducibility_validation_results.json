@@ -1,0 +1,249 @@
+{
+  "test_date": "2026-03-31T20:11:06.755766",
+  "total_runs": 30,
+  "all_hashes_match": true,
+  "canonical_hash": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+  "unique_hashes_count": 1,
+  "results": [
+    {
+      "run": 1,
+      "timestamp": "2026-03-31T20:11:06.755024",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 2,
+      "timestamp": "2026-03-31T20:11:06.755030",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 3,
+      "timestamp": "2026-03-31T20:11:06.755034",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 4,
+      "timestamp": "2026-03-31T20:11:06.755038",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 5,
+      "timestamp": "2026-03-31T20:11:06.755041",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 6,
+      "timestamp": "2026-03-31T20:11:06.755044",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 7,
+      "timestamp": "2026-03-31T20:11:06.755047",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 8,
+      "timestamp": "2026-03-31T20:11:06.755050",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 9,
+      "timestamp": "2026-03-31T20:11:06.755053",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 10,
+      "timestamp": "2026-03-31T20:11:06.755058",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 11,
+      "timestamp": "2026-03-31T20:11:06.755064",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 12,
+      "timestamp": "2026-03-31T20:11:06.755067",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 13,
+      "timestamp": "2026-03-31T20:11:06.755070",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 14,
+      "timestamp": "2026-03-31T20:11:06.755075",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 15,
+      "timestamp": "2026-03-31T20:11:06.755078",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 16,
+      "timestamp": "2026-03-31T20:11:06.755083",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 17,
+      "timestamp": "2026-03-31T20:11:06.755086",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 18,
+      "timestamp": "2026-03-31T20:11:06.755089",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 19,
+      "timestamp": "2026-03-31T20:11:06.755092",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 20,
+      "timestamp": "2026-03-31T20:11:06.755095",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 21,
+      "timestamp": "2026-03-31T20:11:06.755099",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 22,
+      "timestamp": "2026-03-31T20:11:06.755101",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 23,
+      "timestamp": "2026-03-31T20:11:06.755104",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 24,
+      "timestamp": "2026-03-31T20:11:06.755107",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 25,
+      "timestamp": "2026-03-31T20:11:06.755110",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 26,
+      "timestamp": "2026-03-31T20:11:06.755113",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 27,
+      "timestamp": "2026-03-31T20:11:06.755116",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 28,
+      "timestamp": "2026-03-31T20:11:06.755118",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 29,
+      "timestamp": "2026-03-31T20:11:06.755124",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    },
+    {
+      "run": 30,
+      "timestamp": "2026-03-31T20:11:06.755128",
+      "output": "NAME,CITY,COUNTRY\nJOHN,ALEXANDRIA,USA\nJANE,BROOKLYN,USA\nBOB,BRONX,USA\nALICE,ATLANTA,USA",
+      "sha256": "0c6b08bf445aca51fcddc3ab78bfb0feaf8707baae48839019ca2d10e3b01686",
+      "row_count": 5,
+      "duplicates_removed": 4
+    }
+  ]
+}
