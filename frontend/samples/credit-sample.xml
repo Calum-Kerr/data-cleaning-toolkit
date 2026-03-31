@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <dataset>
   <record>
     <account_id>ACC001</account_id>
@@ -22,3 +23,19 @@
     <last_transaction>2026-01-15</last_transaction>
   </record>
 </dataset>
+=======
+<accounts>
+  <account>
+    <id>  ACC-001  </id>
+    <holder>  John   Smith  </holder>
+    <balance>5250.75</balance>
+    <created>   2024-01-15   </created>
+  </account>
+  <account>
+    <id>  ACC-002  </id>
+    <holder>  jane    doe  </holder>
+    <balance>3100.00</balance>
+    <created>   2024-02-20   </created>
+  </account>
+</accounts>
+>>>>>>> controlled-refactor

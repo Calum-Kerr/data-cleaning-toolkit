@@ -2,6 +2,7 @@
   "listings": [
     {
       "id": 12345,
+<<<<<<< HEAD
       "name": "Cozy Brooklyn Apartment",
       "price": 125.50,
       "location": "Brooklyn, NY",
@@ -23,6 +24,32 @@
       "location": "Queens, NY",
       "reviews": 56,
       "rating": 4.7
+=======
+      "name": "  cozy  brooklyn  apartment  ",
+      "price": 125.5,
+      "location": "BROOKLYN, NY",
+      "reviews": 87,
+      "rating": 4.8,
+      "notes": null
+    },
+    {
+      "id": 12345,
+      "name": "  cozy  brooklyn  apartment  ",
+      "price": 125.5,
+      "location": "BROOKLYN, NY",
+      "reviews": 87,
+      "rating": 4.8,
+      "notes": null
+    },
+    {
+      "id": 12346,
+      "name": "manhattan   studio",
+      "price": 185,
+      "location": "new   york, ny",
+      "reviews": 142,
+      "rating": 4.9,
+      "notes": ""
+>>>>>>> controlled-refactor
     }
   ]
 }
