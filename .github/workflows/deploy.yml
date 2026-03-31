@@ -17,6 +17,8 @@ jobs:
           script: |
             if command -v apt-get >/dev/null 2>&1; then apt-get update -qq >/dev/null 2>&1 && apt-get install -y asio-dev >/dev/null 2>&1 || true; fi && \
             if command -v yum >/dev/null 2>&1; then yum install -y asio-devel >/dev/null 2>&1 || true; fi && \
+            pkill -9 Toolkit || true && \
+            sleep 2 && \
             cd /root/data-cleaning-toolkit && \
             git fetch origin main && \
             git reset --hard origin/main && \
