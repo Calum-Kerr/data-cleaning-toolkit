@@ -230,6 +230,14 @@
             </div>
             <input type=file id=xmlFileInput accept=.xml onchange="handleXmlFileUpload(event)" style="display:none;">
         </div>
+        <div id=semiStructuredResults style="display:none;margin-top:20px;">
+            <h2 class=section-title>processed data</h2>
+            <div id=semiStructuredOutput style="background:#fafafa;border:1px solid var(--line);padding:14px;border-radius:4px;overflow-x:auto;max-height:400px;overflow-y:auto;"></div>
+            <div style="text-align:center;margin-top:14px;">
+                <button onclick="downloadSemiStructured()" style="padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;border:none;">download cleaned data</button>
+                <button onclick="startNewSession()" style="padding:8px 16px;background:#f0f0f0;border:1px solid #d9d9d9;margin-left:8px;cursor:pointer;">clean another file</button>
+            </div>
+        </div>
     </div>
     <div class=panel id=unstructuredSection style="display:none;">
         <h2 class=section-title>clean text data</h2>
@@ -240,6 +248,14 @@
                 <button class=upload-option onclick="pasteTextFromClipboard()">paste from clipboard</button>
             </div>
             <input type=file id=textFileInput accept=.txt onchange="handleTextFileUpload(event)" style="display:none;">
+        </div>
+        <div id=unstructuredResults style="display:none;margin-top:20px;">
+            <h2 class=section-title>cleaned text</h2>
+            <div id=textOutput style="background:#fafafa;border:1px solid var(--line);padding:14px;border-radius:4px;overflow-x:auto;max-height:400px;overflow-y:auto;"></div>
+            <div style="text-align:center;margin-top:14px;">
+                <button onclick="downloadText()" style="padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;border:none;">download cleaned text</button>
+                <button onclick="startNewSession()" style="padding:8px 16px;background:#f0f0f0;border:1px solid #d9d9d9;margin-left:8px;cursor:pointer;">clean another file</button>
+            </div>
         </div>
     </div>
     <div class=panel style="margin-top:32px;">
