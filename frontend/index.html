@@ -123,8 +123,8 @@
         <p>remove duplicates, fix missing values, and clean spreadsheets online. no sign-up required. privacy-first and offline-capable.</p>
         <div class=cta-buttons>
             <button class=cta-button onclick="selectStructured()">structured data</button>
-            <button class=cta-button coming-soon onclick="showComingSoon('Semi-Structured')">semi-structured (coming soon)</button>
-            <button class=cta-button coming-soon onclick="showComingSoon('Unstructured')">unstructured (coming soon)</button>
+            <button class=cta-button onclick="selectSemiStructured()">semi-structured</button>
+            <button class=cta-button onclick="selectUnstructured()">unstructured</button>
         </div>
     </div>
     <div class=panel style=background:#f9f9f9;border-left:4px solid #0000ee;>
@@ -211,6 +211,28 @@
             </div>
         </div>
     </div>
+    <div class=panel id=semiStructuredSection style="display:none;">
+        <h2 class=section-title>clean json & xml</h2>
+        <div id=jsonUploadArea class=upload-area ondragover="handleJsonDragOver(event)" ondragleave="handleJsonDragLeave(event)" ondrop="handleJsonDrop(event)">
+            <p>paste or drag your json/xml file here</p>
+            <div class=upload-options>
+                <button class=upload-option onclick="document.getElementById('jsonFileInput').click()">choose file</button>
+                <button class=upload-option onclick="pasteJsonFromClipboard()">paste from clipboard</button>
+            </div>
+            <input type=file id=jsonFileInput accept=.json,.xml onchange="handleJsonFileUpload(event)" style="display:none;">
+        </div>
+    </div>
+    <div class=panel id=unstructuredSection style="display:none;">
+        <h2 class=section-title>clean text data</h2>
+        <div id=textUploadArea class=upload-area ondragover="handleTextDragOver(event)" ondragleave="handleTextDragLeave(event)" ondrop="handleTextDrop(event)">
+            <p>paste or drag your text file here</p>
+            <div class=upload-options>
+                <button class=upload-option onclick="document.getElementById('textFileInput').click()">choose file</button>
+                <button class=upload-option onclick="pasteTextFromClipboard()">paste from clipboard</button>
+            </div>
+            <input type=file id=textFileInput accept=.txt onchange="handleTextFileUpload(event)" style="display:none;">
+        </div>
+    </div>
     <div class=panel style="margin-top:32px;">
         <h2 style="margin:0 0 16px 0;font-size:18px;">frequently asked questions</h2>
         <div style="margin-bottom:16px;">
@@ -241,5 +263,8 @@
     <script src="js/interactive.js"></script>
     <script src="js/workflow.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/json-processor.js"></script>
+    <script src="js/xml-processor.js"></script>
+    <script src="js/text-processor.js"></script>
 </body>
 </html>
