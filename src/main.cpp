@@ -47,7 +47,9 @@ int main(){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
     recordEndpointCall("/api/clean");
     AuditLog auditLog;
-    auto parsed=parseCSV(req.body);
+    auto json=crow::json::load(req.body);
+    std::string csvData=json["csvData"].s();
+    auto parsed=parseCSV(csvData);
     int rowsBefore=parsed.size();
     auditLog.addEntry("Uppercase All", 0, rowsBefore, rowsBefore);
     auto uppercased=standardiseCase(parsed,"upper");
@@ -78,7 +80,7 @@ int main(){
       }
       csvData+="\r\n";
     }
-    std::string jsonBody="{\"csvData\":\"";
+    std::string jsonBody="{\"cleanedData\":\"";
     jsonBody.reserve(csvData.size()*2);
     for(char c:csvData){
       if(c=='\\')jsonBody+="\\\\";
