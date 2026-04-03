@@ -1,0 +1,884 @@
+{
+  "results": [
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "AutoER_test.csv",
+      "status": "success",
+      "time_ms": 266.56,
+      "rows_before": 6788,
+      "rows_after": 6788,
+      "rows_removed": 0,
+      "bytes_before": 2000392,
+      "bytes_after": 2000388,
+      "bytes_removed": 4,
+      "duplicates_found": 0,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 3
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 0
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "AutoER_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "AutoER_train.csv",
+      "status": "success",
+      "time_ms": 597.33,
+      "rows_before": 15923,
+      "rows_after": 15921,
+      "rows_removed": 2,
+      "bytes_before": 4695640,
+      "bytes_after": 4695028,
+      "bytes_removed": 612,
+      "duplicates_found": 2,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 1
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 2
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "AutoER_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "clean_test.csv",
+      "status": "success",
+      "time_ms": 325.22,
+      "rows_before": 7484,
+      "rows_after": 7484,
+      "rows_removed": 0,
+      "bytes_before": 2207395,
+      "bytes_after": 2207391,
+      "bytes_removed": 4,
+      "duplicates_found": 0,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 3
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 0
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "clean_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "clean_train.csv",
+      "status": "success",
+      "time_ms": 1026.65,
+      "rows_before": 16601,
+      "rows_after": 16601,
+      "rows_removed": 0,
+      "bytes_before": 4896949,
+      "bytes_after": 4896947,
+      "bytes_removed": 2,
+      "duplicates_found": 0,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 1
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 0
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "clean_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "dirty_test.csv",
+      "status": "success",
+      "time_ms": 333.23,
+      "rows_before": 7883,
+      "rows_after": 7542,
+      "rows_removed": 341,
+      "bytes_before": 2326160,
+      "bytes_after": 2224571,
+      "bytes_removed": 101589,
+      "duplicates_found": 341,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 3
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 341
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "dirty_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "dirty_train.csv",
+      "status": "success",
+      "time_ms": 824.11,
+      "rows_before": 18407,
+      "rows_after": 16859,
+      "rows_removed": 1548,
+      "bytes_before": 5434619,
+      "bytes_after": 4973428,
+      "bytes_removed": 461191,
+      "duplicates_found": 1548,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 1
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 1548
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "dirty_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "indicator_AutoER_test.csv",
+      "status": "success",
+      "time_ms": 13.8,
+      "rows_before": 7883,
+      "rows_after": 3,
+      "rows_removed": 7880,
+      "bytes_before": 46204,
+      "bytes_after": 17,
+      "bytes_removed": 46187,
+      "duplicates_found": 7880,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 7880
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "indicator_AutoER_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "indicator_AutoER_train.csv",
+      "status": "success",
+      "time_ms": 39.68,
+      "rows_before": 18407,
+      "rows_after": 3,
+      "rows_removed": 18404,
+      "bytes_before": 107959,
+      "bytes_after": 17,
+      "bytes_removed": 107942,
+      "duplicates_found": 18404,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 18404
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "indicator_AutoER_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_test.csv",
+      "status": "success",
+      "time_ms": 11.01,
+      "rows_before": 7883,
+      "rows_after": 3,
+      "rows_removed": 7880,
+      "bytes_before": 46900,
+      "bytes_after": 17,
+      "bytes_removed": 46883,
+      "duplicates_found": 7880,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 7880
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_train.csv",
+      "status": "success",
+      "time_ms": 27.57,
+      "rows_before": 18407,
+      "rows_after": 3,
+      "rows_removed": 18404,
+      "bytes_before": 108637,
+      "bytes_after": 17,
+      "bytes_removed": 108620,
+      "duplicates_found": 18404,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 18404
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "clean_HC_impute_holoclean_test.csv",
+      "status": "success",
+      "time_ms": 445.19,
+      "rows_before": 7883,
+      "rows_after": 7555,
+      "rows_removed": 328,
+      "bytes_before": 2159806,
+      "bytes_after": 2067929,
+      "bytes_removed": 91877,
+      "duplicates_found": 328,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 3
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 328
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "clean_HC_impute_holoclean_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "clean_HC_impute_holoclean_train.csv",
+      "status": "success",
+      "time_ms": 803.02,
+      "rows_before": 18407,
+      "rows_after": 16906,
+      "rows_removed": 1501,
+      "bytes_before": 5046453,
+      "bytes_after": 4626130,
+      "bytes_removed": 420323,
+      "duplicates_found": 1501,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 1
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 1501
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "clean_HC_impute_holoclean_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "clean_SD_impute_mean_dummy_test.csv",
+      "status": "success",
+      "time_ms": 340.93,
+      "rows_before": 7883,
+      "rows_after": 7540,
+      "rows_removed": 343,
+      "bytes_before": 2451076,
+      "bytes_after": 2344290,
+      "bytes_removed": 106786,
+      "duplicates_found": 343,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 3
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 343
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "clean_SD_impute_mean_dummy_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "clean_SD_impute_mean_dummy_train.csv",
+      "status": "success",
+      "time_ms": 0.09,
+      "rows_before": 1,
+      "rows_after": 1,
+      "rows_removed": 0,
+      "bytes_before": 844,
+      "bytes_after": 843,
+      "bytes_removed": 1,
+      "duplicates_found": 0,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 0
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "clean_SD_impute_mean_dummy_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "dirty_test.csv",
+      "status": "success",
+      "time_ms": 337.3,
+      "rows_before": 7883,
+      "rows_after": 7542,
+      "rows_removed": 341,
+      "bytes_before": 2326160,
+      "bytes_after": 2224571,
+      "bytes_removed": 101589,
+      "duplicates_found": 341,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 3
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 341
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "dirty_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "dirty_train.csv",
+      "status": "success",
+      "time_ms": 811.84,
+      "rows_before": 18407,
+      "rows_after": 16859,
+      "rows_removed": 1548,
+      "bytes_before": 5434619,
+      "bytes_after": 4973428,
+      "bytes_removed": 461191,
+      "duplicates_found": 1548,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 1
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 1548
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "dirty_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_HC_impute_holoclean_test.csv",
+      "status": "success",
+      "time_ms": 374.65,
+      "rows_before": 7883,
+      "rows_after": 672,
+      "rows_removed": 7211,
+      "bytes_before": 1875363,
+      "bytes_after": 159194,
+      "bytes_removed": 1716169,
+      "duplicates_found": 7211,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 7211
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_HC_impute_holoclean_test.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_HC_impute_holoclean_train.csv",
+      "status": "success",
+      "time_ms": 721.48,
+      "rows_before": 18407,
+      "rows_after": 980,
+      "rows_removed": 17427,
+      "bytes_before": 4378668,
+      "bytes_after": 231613,
+      "bytes_removed": 4147055,
+      "duplicates_found": 17427,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 17427
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_HC_impute_holoclean_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_SD_impute_mean_dummy_train.csv",
+      "status": "success",
+      "time_ms": 105.32,
+      "rows_before": 2501,
+      "rows_after": 97,
+      "rows_removed": 2404,
+      "bytes_before": 599547,
+      "bytes_after": 23628,
+      "bytes_removed": 575919,
+      "duplicates_found": 2404,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 2404
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "indicator_clean_SD_impute_mean_dummy_train.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    },
+    {
+      "tool": "Reference Cleaner",
+      "dataset": "Airbnb",
+      "filename": "AutoER.csv",
+      "status": "success",
+      "time_ms": 44.8,
+      "rows_before": 33146,
+      "rows_after": 3057,
+      "rows_removed": 30089,
+      "bytes_before": 109522,
+      "bytes_after": 17094,
+      "bytes_removed": 92428,
+      "duplicates_found": 30089,
+      "nulls_detected": 0,
+      "audit_log": [
+        {
+          "name": "trim whitespace",
+          "affected": 0
+        },
+        {
+          "name": "collapse multiple spaces",
+          "affected": 0
+        },
+        {
+          "name": "remove empty rows",
+          "affected": 0
+        },
+        {
+          "name": "remove duplicates",
+          "affected": 30089
+        },
+        {
+          "name": "null values detected",
+          "affected": 0
+        }
+      ]
+    },
+    {
+      "tool": "Toolkit",
+      "dataset": "Airbnb",
+      "filename": "AutoER.csv",
+      "status": "skipped",
+      "error": "API not reachable"
+    }
+  ]
+}
