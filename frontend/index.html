@@ -46,6 +46,9 @@
 	        .cta-button:hover{background:#f0f0f0;border-color:#0000cc}
         .cta-button:active{background:#e8e8e8}
 	        .cta-button:focus-visible{outline:2px solid var(--c10);outline-offset:2px}
+	        .cta-button.primary{background:var(--c10);color:#fff;border-color:var(--c10)}
+	        .cta-button.primary:hover{background:#0000cc;border-color:#0000cc}
+	        .cta-button.primary:active{background:#0000aa}
 	        .cta-button.coming-soon{color:#ccc;cursor:not-allowed;opacity:0.6}
 	        .cta-button.coming-soon:hover{background:#fff}
 	        .structured-section{display:none}
@@ -122,7 +125,7 @@
         <h2>clean your data instantly</h2>
         <p>remove duplicates, fix missing values, and clean spreadsheets online. no sign-up required. privacy-first and offline-capable.</p>
         <div class=cta-buttons>
-            <button class=cta-button onclick="selectStructured()">structured data</button>
+            <button class="cta-button primary" onclick="selectStructured()">structured data</button>
             <button class=cta-button onclick="selectSemiStructured()">semi-structured</button>
             <button class=cta-button onclick="selectUnstructured()">unstructured</button>
         </div>
