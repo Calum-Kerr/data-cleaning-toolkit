@@ -148,7 +148,7 @@ class RealDatasetBenchmark:
                         dataset_name = Path(root).parent.name
                         dirty_files.append((filepath, dataset_name))
 
-        return sorted(dirty_files)[:20]  # Limit to 20 for initial run
+        return sorted(dirty_files)  # Test all datasets
 
     def test_reference_cleaner(self, csv_path: Path, dataset_name: str) -> Dict[str, Any]:
         """Test using reference CSV cleaner"""
