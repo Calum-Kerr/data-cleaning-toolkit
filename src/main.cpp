@@ -47,7 +47,9 @@ int main(){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
     recordEndpointCall("/api/clean");
     AuditLog auditLog;
-    auto parsed=parseCSV(req.body);
+    auto json=crow::json::load(req.body);
+    std::string csvData=json["csvData"].s();
+    auto parsed=parseCSV(csvData);
     int rowsBefore=parsed.size();
     auditLog.addEntry("Uppercase All", 0, rowsBefore, rowsBefore);
     auto uppercased=standardiseCase(parsed,"upper");
@@ -60,27 +62,27 @@ int main(){
     int rowsAfterStandard=standardised.size();
     auditLog.addEntry("Remove Duplicates", 0, rowsAfterStandard, rowsAfterStandard);
     auto cleaned=removeDuplicates(standardised);
-    std::string csvData;
-    csvData.reserve(req.body.size());
+    std::string outputCsv;
+    outputCsv.reserve(req.body.size());
     for(const auto& row:cleaned){
       for(size_t j=0;j<row.size();j++){
-        if(j>0)csvData+=",";
+        if(j>0)outputCsv+=",";
         const auto& cell=row[j];
         bool needsQuote=cell.find(',')!=std::string::npos||cell.find('"')!=std::string::npos||cell.find('\n')!=std::string::npos;
         if(needsQuote){
-          csvData+="\"";
+          outputCsv+="\"";
           for(char c:cell){
-            if(c=='"')csvData+="\"\"";
-            else csvData+=c;
+            if(c=='"')outputCsv+="\"\"";
+            else outputCsv+=c;
           }
-          csvData+="\"";
-        }else csvData+=cell;
+          outputCsv+="\"";
+        }else outputCsv+=cell;
       }
-      csvData+="\r\n";
+      outputCsv+="\r\n";
     }
-    std::string jsonBody="{\"csvData\":\"";
-    jsonBody.reserve(csvData.size()*2);
-    for(char c:csvData){
+    std::string jsonBody="{\"cleanedData\":\"";
+    jsonBody.reserve(outputCsv.size()*2);
+    for(char c:outputCsv){
       if(c=='\\')jsonBody+="\\\\";
       else if(c=='"')jsonBody+="\\\"";
       else if(c=='\n')jsonBody+="\\n";

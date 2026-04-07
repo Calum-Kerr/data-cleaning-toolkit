@@ -24,6 +24,7 @@ include/asio/
 *.txt
 *.log
 *.tex
+*.py
 stress-test-100x10.csv
 include/asio.hpp
 not-needed/
@@ -36,3 +37,5 @@ benchmark_results/reproducibility_validation_results.json
 benchmark_results/logo.png
 proofs/
 test-data.csv
+benchmark_results/
+benchmark_real_datasets.py
