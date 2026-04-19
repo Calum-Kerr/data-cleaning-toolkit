@@ -1,0 +1,9 @@
+/* design tokens: craigslist palette, typography, spacing */
+:root {
+  --bg-page: #f4f4f4;
+  --bg-panel: #ffffff;
+  --text-dark: #111111;
+  --text-muted: #555555;
+  --border-line: #d9d9d9;
+  --link-blue: #0000ee;
+}
