@@ -5,7 +5,7 @@
 #include "string_issue_detectors.h"
 #include "logger.h"
 #include "rate_limiter.h"
-#include "find_replace.h"
+#include "find_replace_rules.h"
 #include "cluster_detection.h"
 #include "csv_serializer.h"
 
