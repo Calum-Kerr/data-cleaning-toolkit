@@ -1,5 +1,5 @@
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
-    set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
+    set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif()
 cmake_minimum_required(VERSION 3.10)
 project(DataCleaningToolkit)
@@ -16,8 +16,8 @@ if(NOT MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,noexecstack -Wl,-z,relro,-z,now")
 endif()
-include_directories(include backend/src/platform backend/src/parsers backend/src/text backend/vendor backend/src/routes backend/src/core)
-set(SOURCES src/main.cpp backend/src/parsers/csv_parser.cpp backend/src/text/text_utils.cpp backend/src/text/text_utils2.cpp backend/src/core/detectors.cpp backend/src/core/detectors2.cpp backend/src/core/cleaners.cpp backend/src/core/cleaners2.cpp backend/src/core/cleaners3.cpp backend/src/routes/routes.cpp backend/src/routes/routes2.cpp backend/src/routes/routes3.cpp backend/src/routes/routes_frontend.cpp backend/src/platform/logger.cpp backend/src/platform/rate_limiter.cpp backend/src/platform/alerts.cpp backend/src/platform/audit_logger.cpp backend/src/platform/analytics.cpp backend/src/platform/cache.cpp backend/src/platform/documentation.cpp backend/src/platform/backup.cpp backend/src/platform/seo.cpp backend/src/platform/load_test.cpp backend/src/platform/database.cpp backend/src/core/find_replace.cpp backend/src/core/find_replace2.cpp backend/src/core/find_replace_substr.cpp backend/src/core/clustering.cpp backend/src/core/clustering2.cpp backend/src/parsers/csv_serializer.cpp)
+include_directories(src/platform src/parsers src/text vendor src/routes src/core)
+set(SOURCES src/main.cpp src/parsers/csv_parser.cpp src/text/text_utils.cpp src/text/text_utils2.cpp src/core/detectors.cpp src/core/detectors2.cpp src/core/cleaners.cpp src/core/cleaners2.cpp src/core/cleaners3.cpp src/routes/routes.cpp src/routes/routes2.cpp src/routes/routes3.cpp src/routes/routes_frontend.cpp src/platform/logger.cpp src/platform/rate_limiter.cpp src/platform/alerts.cpp src/platform/audit_logger.cpp src/platform/analytics.cpp src/platform/cache.cpp src/platform/documentation.cpp src/platform/backup.cpp src/platform/seo.cpp src/platform/load_test.cpp src/platform/database.cpp src/core/find_replace.cpp src/core/find_replace2.cpp src/core/find_replace_substr.cpp src/core/clustering.cpp src/core/clustering2.cpp src/parsers/csv_serializer.cpp)
 add_executable(Toolkit ${SOURCES})
 find_package(Threads REQUIRED)
 
@@ -34,10 +34,10 @@ set(_ASIO_HINT_DIRS
     "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
     "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
     "${CMAKE_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/include"
-    "${CMAKE_SOURCE_DIR}/vcpkg/installed/${VCPKG_TARGET_TRIPLET}/include"
-    "${CMAKE_SOURCE_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/include"
-    "${CMAKE_SOURCE_DIR}/vcpkg/installed/x64-windows/include"
-    "${CMAKE_SOURCE_DIR}/vcpkg/installed/x64-linux/include"
+    "${CMAKE_SOURCE_DIR}/../vcpkg/installed/${VCPKG_TARGET_TRIPLET}/include"
+    "${CMAKE_SOURCE_DIR}/../vcpkg_installed/${VCPKG_TARGET_TRIPLET}/include"
+    "${CMAKE_SOURCE_DIR}/../vcpkg/installed/x64-windows/include"
+    "${CMAKE_SOURCE_DIR}/../vcpkg/installed/x64-linux/include"
     "/usr/include"
 )
 
@@ -57,5 +57,5 @@ endif()
 option(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
     enable_testing()
-    add_subdirectory(tests)
+    add_subdirectory(../tests)
 endif()
