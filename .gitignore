@@ -43,3 +43,5 @@ _strawberry-portable/
 _texcount/
 ruvector.db
 scratch/
+vcpkg/
+vcpkg_installed/
