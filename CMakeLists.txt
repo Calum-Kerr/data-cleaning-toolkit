@@ -17,7 +17,7 @@ if(NOT MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,noexecstack -Wl,-z,relro,-z,now")
 endif()
 include_directories(include)
-set(SOURCES src/main.cpp src/csv_parser.cpp src/text_utils.cpp src/text_utils2.cpp src/detectors.cpp src/detectors2.cpp src/cleaners.cpp src/cleaners2.cpp src/cleaners3.cpp src/audit.cpp src/routes.cpp src/routes2.cpp src/routes3.cpp src/routes_frontend.cpp src/logger.cpp src/rate_limiter.cpp src/alerts.cpp src/analytics.cpp src/cache.cpp src/documentation.cpp src/backup.cpp src/seo.cpp src/load_test.cpp src/database.cpp src/find_replace.cpp src/find_replace2.cpp src/find_replace_substr.cpp src/clustering.cpp src/clustering2.cpp src/csv_serializer.cpp)
+set(SOURCES src/main.cpp src/csv_parser.cpp src/text_utils.cpp src/text_utils2.cpp src/detectors.cpp src/detectors2.cpp src/cleaners.cpp src/cleaners2.cpp src/cleaners3.cpp src/routes.cpp src/routes2.cpp src/routes3.cpp src/routes_frontend.cpp src/logger.cpp src/rate_limiter.cpp src/alerts.cpp src/analytics.cpp src/cache.cpp src/documentation.cpp src/backup.cpp src/seo.cpp src/load_test.cpp src/database.cpp src/find_replace.cpp src/find_replace2.cpp src/find_replace_substr.cpp src/clustering.cpp src/clustering2.cpp src/csv_serializer.cpp)
 add_executable(Toolkit ${SOURCES})
 find_package(Threads REQUIRED)
 
