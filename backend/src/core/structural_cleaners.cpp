@@ -1,4 +1,4 @@
-#include "cleaners.h"
+#include "structural_cleaners.h"
 #include "text_normalisation.h"
 #include "detectors.h"
 #include <algorithm>
