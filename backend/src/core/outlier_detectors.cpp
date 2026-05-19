@@ -1,4 +1,4 @@
-#include "detectors.h"
+#include "string_issue_detectors.h"
 #include <algorithm>
 #include <set>
 #include <cmath>

@@ -2,7 +2,7 @@
 #include "csv_parser.h"
 #include "text_normalisation.h"
 #include "structural_cleaners.h"
-#include "detectors.h"
+#include "string_issue_detectors.h"
 #include "logger.h"
 #include "rate_limiter.h"
 #include "find_replace.h"

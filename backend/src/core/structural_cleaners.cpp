@@ -1,6 +1,6 @@
 #include "structural_cleaners.h"
 #include "text_normalisation.h"
-#include "detectors.h"
+#include "string_issue_detectors.h"
 #include <algorithm>
 #include <unordered_set>
 #include <cstdint>

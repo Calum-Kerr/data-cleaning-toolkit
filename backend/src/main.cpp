@@ -1,7 +1,7 @@
 #include "crow_all.h"
 #include "csv_parser.h"
 #include "text_normalisation.h"
-#include "detectors.h"
+#include "string_issue_detectors.h"
 #include "structural_cleaners.h"
 #include "audit.h"
 #include "logger.h"

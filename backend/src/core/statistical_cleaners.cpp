@@ -1,5 +1,5 @@
 #include "structural_cleaners.h"
-#include "detectors.h"
+#include "string_issue_detectors.h"
 #include <set>
 
 std::vector<std::vector<std::string>> removeOutliers(

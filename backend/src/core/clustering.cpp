@@ -1,5 +1,5 @@
 #include "clustering.h"
-#include "detectors.h"
+#include "string_issue_detectors.h"
 #include <map>
 
 ClusterResult detectClusters(const std::vector<std::vector<std::string>>& data,
