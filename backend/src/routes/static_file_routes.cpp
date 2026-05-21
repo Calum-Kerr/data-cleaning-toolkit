@@ -89,7 +89,7 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
   CROW_ROUTE(app, "/features").methods("GET"_method)
   ([addSecurityHeaders](const crow::request& req) {
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/features", 429); return crow::response(429);}
-    std::string content = readFile("../frontend/features.html");
+    std::string content = readFile(getFrontendDir() + "/features.html");
     if (content.empty()) {
       return crow::response(404, "Not Found");
     }
