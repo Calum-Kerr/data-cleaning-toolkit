@@ -146,6 +146,9 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     auto res = crow::response(content);
     res.set_header("Content-Type", getContentType(filepath));
     res.set_header("Content-Length", std::to_string(content.length()));
+    if (endsWith(filepath, "service-worker.js")) {
+      res.set_header("Service-Worker-Allowed", "/");
+    }
     logRequest("GET", "/" + path, 200);
     return res;
   });
