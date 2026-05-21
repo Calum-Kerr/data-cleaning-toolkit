@@ -17,10 +17,23 @@ const CRITICAL_ASSETS = [
     '/features.html',
     '/honours-project.html',
     '/offline.html',
-    '/algorithms.js',
-    '/algorithms.wasm',
-    '/jspdf.umd.min.js',
-    '/jspdf.plugin.autotable.min.js'
+    '/css/tokens.css',
+    '/js/register-sw.js',
+    '/js/service-worker.js',
+    '/js/app/init.js',
+    '/js/app/cleaning.js',
+    '/js/app/file-ops.js',
+    '/js/app/game.js',
+    '/js/app/interactive.js',
+    '/js/app/json-processor.js',
+    '/js/app/table.js',
+    '/js/app/text-processor.js',
+    '/js/app/ui.js',
+    '/js/app/utils.js',
+    '/js/app/workflow.js',
+    '/js/app/xml-processor.js',
+    '/js/vendor/jspdf.umd.min.js',
+    '/js/vendor/jspdf.plugin.autotable.min.js'
 ];
 self.addEventListener('install', event => {
     event.waitUntil(
