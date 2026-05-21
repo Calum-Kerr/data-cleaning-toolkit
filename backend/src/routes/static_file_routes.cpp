@@ -124,7 +124,7 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
       return crow::response(403, "Forbidden");
     }
 
-    std::string filepath = "../frontend/" + path;
+    std::string filepath = getFrontendDir() + "/" + path;
     std::string content = getCachedFile(filepath);
     if (!content.empty()) {
       auto res = crow::response(content);
