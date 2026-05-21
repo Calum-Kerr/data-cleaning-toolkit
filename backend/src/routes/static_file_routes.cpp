@@ -16,7 +16,6 @@ std::string getFrontendDir() {
   const char* envDir = std::getenv("FRONTEND_DIR");
   std::string dir = envDir ? std::string(envDir) : "../../../frontend";
   if (!dir.empty() && dir.back() == '/') dir.pop_back();
-  std::cerr << "[DEBUG] frontend dir: " << dir << std::endl;
   return dir;
 }
 
