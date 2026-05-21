@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 // allows the binary to run from backend/build/Debug/ during dev and from any location in production.
 std::string getFrontendDir() {
   const char* envDir = std::getenv("FRONTEND_DIR");
-  std::string dir = envDir ? std::string(envDir) : "../../frontend";
+  std::string dir = envDir ? std::string(envDir) : "../../../frontend";
   if (!dir.empty() && dir.back() == '/') dir.pop_back();
   return dir;
 }
