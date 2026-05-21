@@ -113,32 +113,7 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    if (event.request.url.includes('/algorithms.wasm') || event.request.url.includes('/algorithms.js')) {
-        event.respondWith(
-            caches.open(CACHE_NAME).then(cache => {
-                return cache.match(event.request).then(response => {
-                    if (response) {
-                        console.log('Serving WASM/JS from cache:', event.request.url);
-                        return response;
-                    } else {
-                        console.log('WASM/JS not in cache, fetching:', event.request.url);
-                        return fetch(event.request).then(fetchResponse => {
-                            if (fetchResponse.ok) {
-                                cache.put(event.request, fetchResponse.clone());
-                            }
-                            return fetchResponse;
-                        }).catch(err => {
-                            console.error('Failed to fetch WASM/JS:', event.request.url, err);
-                            throw err;
-                        });
-                    }
-                });
-            }).catch(err => {
-                console.error('WASM/JS fetch error:', err);
-                return new Response('WASM module unavailable', { status: 503 });
-            })
-        );
-    } else if (event.request.destination === 'script' || event.request.destination === 'worker') {
+    if (event.request.destination === 'script' || event.request.destination === 'worker') {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache => {
                 return cache.match(event.request).then(response => {
