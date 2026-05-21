@@ -2,11 +2,22 @@
 #include <fstream>
 #include <sstream>
 #include <filesystem>
+#include <cstdlib>
 #include "logger.h"
 #include "rate_limiter.h"
 #include "cache.h"
 
 namespace fs = std::filesystem;
+
+// get frontend directory path from environment variable or development default.
+// deployment engineers can set FRONTEND_DIR=/path/to/frontend for non-standard layouts.
+// allows the binary to run from backend/build/Debug/ during dev and from any location in production.
+std::string getFrontendDir() {
+  const char* envDir = std::getenv("FRONTEND_DIR");
+  std::string dir = envDir ? std::string(envDir) : "../../frontend";
+  if (!dir.empty() && dir.back() == '/') dir.pop_back();
+  return dir;
+}
 
 bool endsWith(const std::string& str, const std::string& suffix) {
   if (str.length() < suffix.length()) return false;
