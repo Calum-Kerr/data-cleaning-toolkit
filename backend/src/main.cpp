@@ -19,6 +19,7 @@ void registerAdditionalRoutes(crow::SimpleApp& app);
 void registerTextRoutes(crow::SimpleApp& app);
 void registerCleaningRoutes(crow::SimpleApp& app);
 void registerFrontendRoutes(crow::SimpleApp& app);
+void logFrontendDirStartup();
 
 int main(){
   crow::SimpleApp app;
