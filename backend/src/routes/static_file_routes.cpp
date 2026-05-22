@@ -9,14 +9,20 @@
 
 namespace fs = std::filesystem;
 
-// get frontend directory path from environment variable or development default.
-// deployment engineers can set FRONTEND_DIR=/path/to/frontend for non-standard layouts.
-// allows the binary to run from backend/build/Debug/ during dev and from any location in production.
+// resolve frontend directory: environment variable, probed paths, or fallback.
+// tries in order: ../frontend, ../../frontend, frontend. uses first that exists.
 std::string getFrontendDir() {
-  const char* envDir = std::getenv("FRONTEND_DIR");
-  std::string dir = envDir ? std::string(envDir) : "../../../../frontend";
-  if (!dir.empty() && dir.back() == '/') dir.pop_back();
-  return dir;
+  const char* env = std::getenv("FRONTEND_DIR");
+  if (env) {std::string d(env); if (!d.empty() && d.back() == '/') d.pop_back(); return d;}
+  for (const auto& path : {"../frontend", "../../frontend", "frontend"})
+    if (fs::exists(path)) return path;
+  std::cerr << "WARNING: frontend directory not found, using ../frontend" << std::endl;
+  return "../frontend";
+}
+
+// log which frontend directory was resolved at startup.
+void logFrontendDirStartup() {
+  std::cout << "frontend directory resolved to: " << getFrontendDir() << std::endl;
 }
 
 bool endsWith(const std::string& str, const std::string& suffix) {
