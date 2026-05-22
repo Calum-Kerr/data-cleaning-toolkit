@@ -169,6 +169,7 @@ int main(){
   registerTextRoutes(app);
   registerCleaningRoutes(app);
   registerFrontendRoutes(app);
+  logFrontendDirStartup();
   app.port(8080).concurrency(16).run();
 }
 
