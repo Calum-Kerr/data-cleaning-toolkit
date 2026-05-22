@@ -19,11 +19,12 @@ jobs:
             git fetch origin ${{ github.ref_name }}
             CHANGED_FILES=$(git diff HEAD origin/${{ github.ref_name }} --name-only)
             git reset --hard origin/${{ github.ref_name }}
-            if echo "$CHANGED_FILES" | grep -qE '(src/|include/|CMakeLists)'; then
+            if echo "$CHANGED_FILES" | grep -qE '(backend/src/|backend/include/|backend/CMakeLists)'; then
               if command -v apt-get >/dev/null 2>&1; then apt-get update -qq >/dev/null 2>&1 && apt-get install -y asio-dev >/dev/null 2>&1 || true; fi
               if command -v yum >/dev/null 2>&1; then yum install -y asio-devel >/dev/null 2>&1 || true; fi
               pkill -9 Toolkit || true
               sleep 2
+              cd /root/data-cleaning-toolkit/backend
               rm -rf build && mkdir -p build && cd build
               cmake .. >/dev/null
               make -j8 >/dev/null
@@ -32,6 +33,6 @@ jobs:
             else
               pkill -9 Toolkit || true
               sleep 2
-              cd /root/data-cleaning-toolkit/build
+              cd /root/data-cleaning-toolkit/backend/build
               nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
             fi
