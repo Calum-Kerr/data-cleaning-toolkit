@@ -2,7 +2,7 @@ name: Deploy to IONOS
 
 on:
   push:
-    branches: [ main, controlled-refactor ]
+    branches: [ main ]
 
 jobs:
   deploy:
