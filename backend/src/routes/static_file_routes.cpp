@@ -121,6 +121,21 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
     return res;
   });
 
+  // Privacy route
+  CROW_ROUTE(app, "/privacy").methods("GET"_method)
+  ([addSecurityHeaders](const crow::request& req) {
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/privacy", 429); return crow::response(429);}
+    std::string content = readFile(getFrontendDir() + "/privacy.html");
+    if (content.empty()) {
+      return crow::response(404, "Not Found");
+    }
+    auto res = crow::response(content);
+    res.set_header("Content-Type", "text/html; charset=utf-8");
+    addSecurityHeaders(res);
+    logRequest("GET", "/privacy", 200);
+    return res;
+  });
+
   // Static files route - catch-all for frontend assets
   CROW_ROUTE(app, "/<path>").methods("GET"_method)
   ([](const crow::request& req, const std::string& path) {
