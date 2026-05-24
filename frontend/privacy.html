@@ -1,0 +1,205 @@
+
+<html lang=en-GB>
+  <head>
+    <meta charset=utf-8></meta>
+    <meta name=viewport content=width=device-width, initial-scale=1></meta>
+    <title>privacy policy | data cleaning toolkit</title>
+    <meta name=description content=Privacy policy for the Data Cleaning Toolkit. We do not store uploaded files, do not use analytics, and retain technical request logs for 30 days.></meta>
+    <link rel=canonical href=https://tidy.calumkerr.com/privacy></link>
+    <meta name=robots content=index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1></meta>
+    <meta name=theme-color content=#f4f4f4></meta>
+
+    <meta property=og:type content=website></meta>
+    <meta property=og:title content=Privacy Policy | Data Cleaning Toolkit></meta>
+    <meta property=og:site_name content=Calum Kerr></meta>
+    <meta property=og:locale content=en_GB></meta>
+    <meta property=og:description content=Privacy policy for the Data Cleaning Toolkit.></meta>
+    <meta property=og:url content=https://tidy.calumkerr.com/privacy></meta>
+    <meta property=og:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
+    <meta property=og:image:width content=512></meta>
+    <meta property=og:image:height content=512></meta>
+    <meta property=og:image:alt content=Data Cleaning Toolkit app icon></meta>
+    <meta name=twitter:card content=summary></meta>
+    <meta name=twitter:title content=Privacy Policy | Data Cleaning Toolkit></meta>
+    <meta name=twitter:description content=Privacy policy for the Data Cleaning Toolkit.></meta>
+    <meta name=twitter:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
+    <meta name=twitter:image:alt content=Data Cleaning Toolkit app icon></meta>
+
+    <link rel=icon href=/favicon.ico></link>
+    <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png></link>
+    <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png></link>
+    <link rel=apple-touch-icon href=/apple-touch-icon.png></link>
+    <link rel=manifest href=/manifest.json></link>
+
+    <style>
+      :root{
+        /* 60 / 30 / 10 colour rule: background / panels / accents */
+        --c60:#f4f4f4;
+        --c30:#ffffff;
+        --c10:#0000ee;
+        --t:#000;
+        --muted:#666;
+        --line:#d9d9d9;
+      }
+      body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
+      a{color:var(--c10);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+      a:focus{outline:2px dotted #000;outline-offset:2px}
+      .wrap{max-width:980px;margin:0 auto;padding:16px}
+      .box{background:var(--c30);border:1px solid var(--line);padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+      .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
+      h1{font-size:24px;margin:0 0 8px 0}
+      h2{font-size:16px;margin:16px 0 8px 0}
+      p{margin:0 0 10px 0}
+      .muted{color:var(--muted)}
+      .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+      .btn{display:inline-block;padding:10px 16px;border:1px solid var(--line);background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.05);min-height:44px;display:flex;align-items:center}
+      .btn:hover{background:#f0f0f0;border-color:#0000cc}
+      .btn:active{background:#e8e8e8}
+      .btn:focus-visible{outline:2px solid var(--c10);outline-offset:2px}
+      .btn.primary{border-color:var(--c10);background:var(--c10);color:#fff}
+      .btn.primary:hover{background:#0000cc}
+      .cols{display:grid;grid-template-columns:1fr;gap:14px}
+      @media (min-width:840px){.cols{grid-template-columns:1fr 1fr}}
+      ul{margin:6px 0 10px 18px;padding:0}
+      li{margin:0 0 4px 0}
+      hr{border:none;border-top:1px solid var(--line);margin:14px 0}
+      footer{font-size:13px;color:#333}
+      code{font-family:Consolas,Monaco,monospace;font-size:12px}
+      @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+    </style>
+  </head>
+  <body>
+    <div class=wrap>
+      <main class=box role=main>
+        <div class=top>
+          <div>
+            <h1>privacy policy</h1>
+            <p class=muted>last updated: 24 may 2026</p>
+            <div class=btns>
+              <a class="btn primary" href=/app>open the app</a>
+              <a class=btn href=/>home</a>
+              <a class=btn href=/features>features</a>
+            </div>
+          </div>
+        </div>
+
+        <hr></hr>
+
+        <section>
+          <h2>who we are</h2>
+          <p>this website (tidy.calumkerr.com) and the data cleaning toolkit are operated by calum kerr as part of a final-year honours research project at edinburgh napier university. for any privacy questions, contact: calumxkerr@gmail.com.</p>
+          <p>for the purposes of uk gdpr, we are the data controller for any personal data processed through this site.</p>
+        </section>
+
+        <section>
+          <h2>what data we process</h2>
+          <p>the toolkit lets you clean data files (csv, json, xml, plain text) in your browser. two kinds of data are relevant:</p>
+          <p><strong>1. the files you upload.</strong> when you upload a file and run a cleaning operation, the file contents are sent to our server over https, processed in memory, and returned to you. the contents of your file are never written to disk on our server, never logged, never stored, and never shared with any third party. once your cleaning operation completes, the file contents are discarded from server memory.</p>
+          <p>if your file contains personal data (such as names, email addresses, postcodes, or anything else identifying), that data is briefly processed by the server but is not retained.</p>
+          <p><strong>2. technical request information.</strong> like any web server, ours records basic information about each request to help with security, debugging, and abuse prevention. specifically:</p>
+          <ul>
+            <li>the ip address of the requesting device</li>
+            <li>the http method and path of the request (e.g. "post /api/clean")</li>
+            <li>the response status code</li>
+            <li>the timestamp</li>
+            <li>the approximate response time</li>
+          </ul>
+          <p>these records do not contain the contents of any file you upload. they are stored in server log files for up to 30 days, then automatically deleted.</p>
+        </section>
+
+        <section>
+          <h2>what we do not do</h2>
+          <p>to be explicit about things commonly done by other sites that we do not do:</p>
+          <ul>
+            <li>we do not use cookies or browser local storage for tracking. the site does use a service worker to cache static assets so the app loads offline, but no user data is stored client-side beyond the file you have currently loaded in your browser tab.</li>
+            <li>we do not use google analytics, plausible, hotjar, or any other analytics or telemetry service.</li>
+            <li>we do not load fonts, scripts, or other resources from third-party servers. all resources are served from our own domain.</li>
+            <li>we do not have user accounts, logins, or any kind of authentication. we do not collect names, email addresses, or any other contact information from users of the toolkit.</li>
+            <li>we do not share, sell, or transfer any data to any third party.</li>
+            <li>we do not send error reports, crash reports, or telemetry anywhere.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>legal basis for processing</h2>
+          <p>under uk gdpr, we rely on legitimate interests as our legal basis for processing technical request information (ip addresses, timestamps, paths). the legitimate interest is the operation, security, and improvement of a free public service.</p>
+          <p>we do not store the contents of files you upload, so no legal basis is needed for that — the data is processed only briefly to fulfil your explicit request to clean the file.</p>
+        </section>
+
+        <section>
+          <h2>how long we keep data</h2>
+          <ul>
+            <li>file contents you upload: discarded immediately after processing (seconds, not stored).</li>
+            <li>technical request logs (ips, paths, timestamps): retained for up to 30 days, then automatically deleted by a scheduled task.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>where data is processed</h2>
+          <p>our server is hosted with ionos se, in a data centre in london, united kingdom. all data is processed within the united kingdom.</p>
+        </section>
+
+        <section>
+          <h2>your rights</h2>
+          <p>under uk gdpr, you have the following rights:</p>
+          <ul>
+            <li>the right to be informed (this notice fulfils part of that).</li>
+            <li>the right of access to any personal data we hold about you.</li>
+            <li>the right to rectification if any of it is inaccurate.</li>
+            <li>the right to erasure ("the right to be forgotten").</li>
+            <li>the right to restrict processing.</li>
+            <li>the right to data portability.</li>
+            <li>the right to object to processing.</li>
+            <li>the right to lodge a complaint with the information commissioner's office (ico.org.uk).</li>
+          </ul>
+          <p>to exercise any of these rights, email calumxkerr@gmail.com. we will respond within one month.</p>
+        </section>
+
+        <section>
+          <h2>children</h2>
+          <p>this site is not intended for children under 13. we do not knowingly collect data from children. if you are under 13, please do not use this site.</p>
+        </section>
+
+        <section>
+          <h2>research and academic use</h2>
+          <p>this toolkit is the deployed artefact of a final-year honours research project. the project itself has been examined and is no longer in active assessment. information about the research is available at <a href=/honours-project>honours-project</a>.</p>
+          <p>a conference paper based on this work is in preparation. no personal data from toolkit users is used in the research or the paper — the research is about the toolkit's design and architecture, not about its users.</p>
+        </section>
+
+        <section>
+          <h2>changes to this policy</h2>
+          <p>if we materially change this policy, we will update the "last updated" date at the top. we recommend reviewing this policy periodically.</p>
+        </section>
+
+        <section>
+          <h2>contact</h2>
+          <ul>
+            <li><strong>calum kerr</strong> — calumxkerr@gmail.com</li>
+            <li><strong>information commissioner's office</strong> (for complaints):<br/>
+              website: <a href=https://ico.org.uk rel=noopener target=_blank>ico.org.uk</a><br/>
+              helpline: 0303 123 1113</li>
+          </ul>
+        </section>
+
+        <div class=cols>
+          <section>
+            <h2>links</h2>
+            <ul>
+              <li><a href=/>home</a></li>
+              <li><a href=/app>open the app</a></li>
+              <li><a href=/features>features</a></li>
+              <li><a href=/honours-project>honours project</a></li>
+              <li><a href=/sitemap.xml>sitemap</a> and <a href=/robots.txt>robots.txt</a></li>
+            </ul>
+          </section>
+        </div>
+
+        <hr></hr>
+        <footer>
+          <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
+        </footer>
+      </main>
+    </div>
+    <script src="/js/register-sw.js"></script>
+  </body>
+</html>
