@@ -47,7 +47,7 @@ jobs:
               cd /root/data-cleaning-toolkit/backend
               rm -rf build && mkdir -p build && cd build
               cmake .. -DCMAKE_TOOLCHAIN_FILE=../../vcpkg/scripts/buildsystems/vcpkg.cmake
-              make -j4
+              make -j$(nproc)
               if [ ! -f Toolkit ]; then
                 echo "ERROR: build failed, Toolkit binary not created"
                 exit 1
@@ -59,26 +59,28 @@ jobs:
 
             # stop existing toolkit process
             echo "=== Stopping existing process ==="
-            pkill -f Toolkit || true
-            sleep 1
-
-            # verify process is dead, force-kill if needed
-            if pgrep -f Toolkit > /dev/null; then
-              echo "process still running, force-killing..."
-              pkill -9 -f Toolkit || true
-              sleep 1
+            if [ -f /var/run/toolkit.pid ]; then
+              OLD_PID=$(cat /var/run/toolkit.pid)
+              if kill -0 "$OLD_PID" 2>/dev/null; then
+                kill "$OLD_PID" || true
+                sleep 1
+                if kill -0 "$OLD_PID" 2>/dev/null; then
+                  kill -9 "$OLD_PID" || true
+                  sleep 1
+                fi
+              fi
+              rm -f /var/run/toolkit.pid
             fi
-
-            if pgrep -f Toolkit > /dev/null; then
-              echo "ERROR: failed to kill Toolkit process"
-              exit 1
-            fi
+            # belt and braces: catch any orphan Toolkit (only matches the absolute path)
+            pkill -f "/root/data-cleaning-toolkit/backend/build/Toolkit" || true
             echo "process stopped"
 
             # start new binary
             echo "=== Starting Toolkit ==="
             cd /root/data-cleaning-toolkit/backend/build
+            # must launch from backend/build so getFrontendDir() resolves ../../frontend correctly
             nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
+            echo $! > /var/run/toolkit.pid
             sleep 3
 
             # verify server is responding
@@ -87,6 +89,7 @@ jobs:
               echo "deployment successful, server responding"
             else
               echo "ERROR: server not responding after startup"
-              echo "check /var/log/toolkit.log for details"
+              echo "--- last 20 lines of toolkit.log ---"
+              tail -n 20 /var/log/toolkit.log 2>/dev/null || echo "(no log file)"
               exit 1
             fi
