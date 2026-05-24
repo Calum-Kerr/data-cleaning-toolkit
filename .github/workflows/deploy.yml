@@ -15,24 +15,78 @@ jobs:
           username: root
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
+            set -e
             cd /root/data-cleaning-toolkit
-            git fetch origin ${{ github.ref_name }}
-            CHANGED_FILES=$(git diff HEAD origin/${{ github.ref_name }} --name-only)
-            git reset --hard origin/${{ github.ref_name }}
-            if echo "$CHANGED_FILES" | grep -qE '(backend/src/|backend/include/|backend/CMakeLists)'; then
-              if command -v apt-get >/dev/null 2>&1; then apt-get update -qq >/dev/null 2>&1 && apt-get install -y asio-dev >/dev/null 2>&1 || true; fi
-              if command -v yum >/dev/null 2>&1; then yum install -y asio-devel >/dev/null 2>&1 || true; fi
-              pkill -9 Toolkit || true
-              sleep 2
+
+            # fetch and stage code
+            echo "=== Fetching code ==="
+            git fetch origin main
+            CHANGED_FILES=$(git diff HEAD origin/main --name-only)
+            git reset --hard origin/main
+            git submodule update --init --recursive
+
+            # install vcpkg dependencies (idempotent, cached by vcpkg)
+            echo "=== Installing dependencies ==="
+            ./vcpkg/vcpkg install --x-manifest-root=. --x-install-root=./vcpkg_installed
+
+            # decide if rebuild is needed
+            BINARY_PATH="/root/data-cleaning-toolkit/backend/build/Toolkit"
+            NEEDS_REBUILD=false
+
+            if [ ! -f "$BINARY_PATH" ]; then
+              echo "binary missing, rebuild required"
+              NEEDS_REBUILD=true
+            elif echo "$CHANGED_FILES" | grep -qE '(backend/src/|backend/include/|backend/CMakeLists)'; then
+              echo "backend files changed, rebuild required"
+              NEEDS_REBUILD=true
+            fi
+
+            # rebuild if needed
+            if [ "$NEEDS_REBUILD" = true ]; then
+              echo "=== Building ==="
               cd /root/data-cleaning-toolkit/backend
               rm -rf build && mkdir -p build && cd build
-              cmake .. >/dev/null
-              make -j8 >/dev/null
-              [ -f Toolkit ] || (echo "Build failed" && exit 1)
-              nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
+              cmake .. -DCMAKE_TOOLCHAIN_FILE=../../vcpkg/scripts/buildsystems/vcpkg.cmake
+              make -j4
+              if [ ! -f Toolkit ]; then
+                echo "ERROR: build failed, Toolkit binary not created"
+                exit 1
+              fi
+              echo "build complete"
             else
-              pkill -9 Toolkit || true
-              sleep 2
-              cd /root/data-cleaning-toolkit/backend/build
-              nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
+              echo "no rebuild needed, restarting existing binary"
+            fi
+
+            # stop existing toolkit process
+            echo "=== Stopping existing process ==="
+            pkill -f Toolkit || true
+            sleep 1
+
+            # verify process is dead, force-kill if needed
+            if pgrep -f Toolkit > /dev/null; then
+              echo "process still running, force-killing..."
+              pkill -9 -f Toolkit || true
+              sleep 1
+            fi
+
+            if pgrep -f Toolkit > /dev/null; then
+              echo "ERROR: failed to kill Toolkit process"
+              exit 1
+            fi
+            echo "process stopped"
+
+            # start new binary
+            echo "=== Starting Toolkit ==="
+            cd /root/data-cleaning-toolkit/backend/build
+            nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
+            sleep 3
+
+            # verify server is responding
+            echo "=== Verifying server ==="
+            if curl -fsS http://localhost:8080/ > /dev/null 2>&1; then
+              echo "deployment successful, server responding"
+            else
+              echo "ERROR: server not responding after startup"
+              echo "check /var/log/toolkit.log for details"
+              exit 1
             fi
