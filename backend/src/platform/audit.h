@@ -20,10 +20,7 @@ public:
   void addEntry(const std::string& opName, int cellsAffected, int rowsBefore, int rowsAfter){
     auto now=std::chrono::system_clock::now();
     auto time=std::chrono::system_clock::to_time_t(now);
-    std::stringstream ss;
-    ss<<std::ctime(&time);
-    std::string timestamp=ss.str();
-    timestamp.pop_back();
+    std::string timestamp=ctime_safe(time);
     entries.push_back({opName, cellsAffected, rowsBefore, rowsAfter, timestamp});
   }
   void clear(){entries.clear();}
