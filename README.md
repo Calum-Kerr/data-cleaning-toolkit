@@ -1,6 +1,6 @@
 # Data Cleaning Toolkit
 
-A transparent, privacy-first data cleaning toolkit built in C++ with WebAssembly for offline use.
+A transparent, privacy-first data cleaning toolkit built in C++ with an offline-capable web frontend.
 
 **Try the live toolkit: [tidy.calumkerr.com/app](https://tidy.calumkerr.com/app)**
 
