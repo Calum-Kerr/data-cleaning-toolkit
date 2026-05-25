@@ -51,7 +51,7 @@ double calculateSimilarity(const std::string& s1, const std::string& s2){
   std::string norm2=normalizeForComparison(s2);
   if(norm1==norm2) return 1.0;
   int distance=levenshteinDistance(norm1,norm2);
-  int maxLen=std::max(norm1.length(),norm2.length());
+  int maxLen=static_cast<int>(std::max(norm1.length(),norm2.length()));
   if(maxLen==0) return 1.0;
   return 1.0-(double)distance/maxLen;
 }
