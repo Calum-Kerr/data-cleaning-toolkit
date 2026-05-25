@@ -3,6 +3,7 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include "time_safe.h"
 
 std::string getTimestamp() {
   auto now=std::chrono::system_clock::now();
