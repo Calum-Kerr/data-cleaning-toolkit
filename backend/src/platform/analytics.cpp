@@ -16,7 +16,8 @@ void writeAnalyticsSummary() {
   auto now = std::chrono::system_clock::now();
   auto time = std::chrono::system_clock::to_time_t(now);
   std::stringstream ss;
-  ss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
+  std::tm tm = localtime_safe(time);
+  ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
   file << "ANALYTICS SUMMARY " << ss.str() << "\n";
   for (const auto& pair : endpointCalls) {
     file << pair.first << ": " << pair.second << " calls\n";
