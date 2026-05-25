@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include "time_safe.h"
 
 struct PageMetrics {
   int statusCode;
