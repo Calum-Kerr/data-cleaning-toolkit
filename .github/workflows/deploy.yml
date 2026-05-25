@@ -96,9 +96,17 @@ jobs:
               echo "[stopping:no-pidfile] skipping PID-based kill"
             fi
             echo "[stopping:before-pkill] $(date -Iseconds)"
-            pkill -f "/root/data-cleaning-toolkit/backend/build/Toolkit" || echo "[stopping:pkill-exit] $?"
+            pkill -f "Toolkit$" || echo "[stopping:pkill-exit] $?"
             echo "[stopping:after-pkill] $(date -Iseconds)"
             echo "[stopping:end] $(date -Iseconds)"
+
+            echo "[stopping:final-check]"
+            if pgrep -f "Toolkit$" > /dev/null; then
+              echo "ERROR: Toolkit still running after kill attempts, refusing to start new instance"
+              pgrep -f "Toolkit$" | xargs ps -p 2>/dev/null
+              exit 1
+            fi
+            echo "[stopping:confirmed-dead]"
 
             # start new binary
             echo "=== Starting Toolkit ==="
