@@ -19,7 +19,8 @@ void createBackup() {
   auto now = std::chrono::system_clock::now();
   auto time = std::chrono::system_clock::to_time_t(now);
   std::stringstream ss;
-  ss << std::put_time(std::localtime(&time), "%Y%m%d_%H%M%S");
+  std::tm tm = localtime_safe(time);
+  ss << std::put_time(&tm, "%Y%m%d_%H%M%S");
 
   std::string backupDir = getBackupDirectory();
   std::string backupName = backupDir + "/backup_" + ss.str() + ".tar.gz";
