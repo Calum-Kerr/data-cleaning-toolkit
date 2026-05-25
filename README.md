@@ -100,16 +100,41 @@ cd build && cmake --build . && cd ..
 ## Project Structure
 
 ```
-├── src/
-│   ├── main.cpp              # Backend server
-│   ├── algorithms.cpp        # C++ algorithms
-│   └── algorithms-wasm.cpp   # WASM-compatible functions
+data-cleaning-toolkit/
+├── backend/
+│   ├── src/
+│   │   ├── core/                # cleaning algorithms (deduplication, clustering, etc.)
+│   │   ├── routes/              # HTTP route handlers
+│   │   ├── parsers/             # CSV parser and serialiser
+│   │   ├── text/                # text normalisation and domain cleaners
+│   │   ├── platform/            # logging, rate limiting, audit, analytics
+│   │   └── main.cpp
+│   ├── vendor/
+│   │   └── crow_all.h           # Crow HTTP framework (header-only)
+│   └── CMakeLists.txt
 ├── frontend/
-│   ├── index.html            # Web interface
-│   ├── algorithms.js         # WASM loader
-│   └── algorithms.wasm       # Compiled WebAssembly
-├── .github/                  # Issue templates, PR template
-└── build/                    # Build output
+│   ├── index.html               # main app
+│   ├── home.html                # landing page
+│   ├── features.html
+│   ├── honours-project.html
+│   ├── privacy.html
+│   ├── offline.html
+│   ├── css/
+│   │   └── tokens.css
+│   ├── js/
+│   │   ├── app/                 # app-specific modules
+│   │   ├── vendor/              # jsPDF (vendored, not from CDN)
+│   │   ├── service-worker.js
+│   │   └── register-sw.js
+│   ├── samples/                 # example datasets
+│   ├── robots.txt
+│   ├── sitemap.xml
+│   └── manifest.json
+├── vcpkg/                       # C++ dependency manager (not committed)
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+└── README.md
 ```
 
 ## API Endpoints
