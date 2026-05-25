@@ -18,7 +18,7 @@ This toolkit helps you clean CSV data by detecting and fixing common data qualit
 - **Privacy-First**: data is processed in memory only, never stored or shared. Client-side WebAssembly processing is in active development.
 - **No Coding Required**: Simple web interface for uploading and cleaning CSV files
 - **Reproducible**: Same input always produces same output
-- **Hybrid Mode**: Works offline (WASM) or online (API) with automatic fallback
+- **Offline-Capable Shell**: the app interface loads and stays usable offline; cleaning operations require a server connection.
 
 ## Features
 
