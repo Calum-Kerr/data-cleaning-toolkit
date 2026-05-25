@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <filesystem>
 #include <cstdlib>
+#include "time_safe.h"
 
 namespace fs = std::filesystem;
 
