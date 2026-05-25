@@ -16,10 +16,18 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             set -e
+            set -x
+            exec > >(tee -a /var/log/toolkit-deploy.log) 2>&1
+
+            trap 'echo "[trap] script exiting with code $? at $(date -Iseconds)"' EXIT
+            trap 'echo "[trap] received SIGTERM at $(date -Iseconds)"' TERM
+            trap 'echo "[trap] received SIGHUP at $(date -Iseconds)"' HUP
+
             cd /root/data-cleaning-toolkit
 
             # fetch and stage code
             echo "=== Fetching code ==="
+            echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
             git fetch origin main
             CHANGED_FILES=$(git diff HEAD origin/main --name-only)
             git reset --hard origin/main
@@ -27,6 +35,7 @@ jobs:
 
             # install vcpkg dependencies (idempotent, cached by vcpkg)
             echo "=== Installing dependencies ==="
+            echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
             ./vcpkg/vcpkg install --x-manifest-root=. --x-install-root=./vcpkg_installed
 
             # decide if rebuild is needed
@@ -44,6 +53,7 @@ jobs:
             # rebuild if needed
             if [ "$NEEDS_REBUILD" = true ]; then
               echo "=== Building ==="
+              echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
               cd /root/data-cleaning-toolkit/backend
               rm -rf build && mkdir -p build && cd build
               cmake .. -DCMAKE_TOOLCHAIN_FILE=../../vcpkg/scripts/buildsystems/vcpkg.cmake
@@ -59,24 +69,36 @@ jobs:
 
             # stop existing toolkit process
             echo "=== Stopping existing process ==="
+            echo "[stopping:start] $(date -Iseconds)"
             if [ -f /var/run/toolkit.pid ]; then
+              echo "[stopping:pidfile-exists] reading PID file"
               OLD_PID=$(cat /var/run/toolkit.pid)
+              echo "[stopping:old-pid] $OLD_PID"
               if kill -0 "$OLD_PID" 2>/dev/null; then
-                kill "$OLD_PID" || true
+                echo "[stopping:process-alive] attempting graceful kill"
+                kill "$OLD_PID" || echo "[stopping:kill-exit] $?"
                 sleep 1
                 if kill -0 "$OLD_PID" 2>/dev/null; then
-                  kill -9 "$OLD_PID" || true
+                  echo "[stopping:process-still-alive] attempting -9"
+                  kill -9 "$OLD_PID" || echo "[stopping:kill-9-exit] $?"
                   sleep 1
                 fi
+              else
+                echo "[stopping:process-dead] PID $OLD_PID not found"
               fi
+              echo "[stopping:removing-pidfile]"
               rm -f /var/run/toolkit.pid
+            else
+              echo "[stopping:no-pidfile] skipping PID-based kill"
             fi
-            # belt and braces: catch any orphan Toolkit (only matches the absolute path)
-            pkill -f "/root/data-cleaning-toolkit/backend/build/Toolkit" || true
-            echo "process stopped"
+            echo "[stopping:before-pkill] $(date -Iseconds)"
+            pkill -f "/root/data-cleaning-toolkit/backend/build/Toolkit" || echo "[stopping:pkill-exit] $?"
+            echo "[stopping:after-pkill] $(date -Iseconds)"
+            echo "[stopping:end] $(date -Iseconds)"
 
             # start new binary
             echo "=== Starting Toolkit ==="
+            echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
             cd /root/data-cleaning-toolkit/backend/build
             # must launch from backend/build so getFrontendDir() resolves ../../frontend correctly
             nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
@@ -85,6 +107,10 @@ jobs:
 
             # verify server is responding
             echo "=== Verifying server ==="
+            echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
+            echo "[verify:before-curl] $(date -Iseconds)"
+            ps auxf | grep -i toolkit | grep -v grep || true
+            netstat -tlnp 2>/dev/null | grep :8080 || ss -tlnp 2>/dev/null | grep :8080 || echo "[verify:no-listener] port 8080 not listening"
             if curl -fsS http://localhost:8080/ > /dev/null 2>&1; then
               echo "deployment successful, server responding"
             else
