@@ -28,7 +28,7 @@ std::vector<int> detectOutliers(const std::vector<std::vector<std::string>>& dat
     for(size_t row=1;row<data.size();row++){
       if(col<data[row].size()&&isNumeric(data[row][col])){
         values.push_back(std::stod(data[row][col]));
-        rowIndices.push_back(row);
+        rowIndices.push_back(static_cast<int>(row));
       }
     }
     if(values.size()<4) continue;
