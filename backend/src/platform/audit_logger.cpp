@@ -32,9 +32,10 @@ private:
 
     std::string get_iso_timestamp() {
         time_t now = time(nullptr);
+        std::tm tm = gmtime_safe(now);
         char buffer[30];
         strftime(buffer, sizeof(buffer),
-                 "%Y-%m-%dT%H:%M:%SZ", gmtime(&now));
+                 "%Y-%m-%dT%H:%M:%SZ", &tm);
         return std::string(buffer);
     }
 
