@@ -153,12 +153,9 @@ data-cleaning-toolkit/
 
 ## Documentation
 
-- [Getting Started](wiki/Getting-Started.md)
-- [Usage Guide](wiki/Usage-Guide.md)
-- [API Reference](wiki/API-Reference.md)
-- [Algorithms](wiki/Algorithms.md)
-- [FAQ](wiki/FAQ.md)
-- [Troubleshooting](wiki/Troubleshooting.md)
+The research context, methodology, and design decisions behind this toolkit are documented at [tidy.calumkerr.com/honours-project](https://tidy.calumkerr.com/honours-project).
+
+The source code is self-documenting where possible — see comments in `backend/src/` for implementation notes.
 
 ## Contributing
 
