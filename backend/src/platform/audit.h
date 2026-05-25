@@ -4,6 +4,7 @@
 #include <string>
 #include <chrono>
 #include <sstream>
+#include "time_safe.h"
 
 struct AuditLogEntry {
   std::string operationName;
