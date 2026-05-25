@@ -20,7 +20,8 @@ void writeLoadTestReport(const LoadTestResult& result) {
   auto now = std::chrono::system_clock::now();
   auto time = std::chrono::system_clock::to_time_t(now);
   std::stringstream ss;
-  ss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
+  std::tm tm = localtime_safe(time);
+  ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
   file << "LOAD TEST REPORT " << ss.str() << "\n";
   file << "Total Requests: " << result.totalRequests << "\n";
   file << "Successful Requests: " << result.successfulRequests << "\n";
