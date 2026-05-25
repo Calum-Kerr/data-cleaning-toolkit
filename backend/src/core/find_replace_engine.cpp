@@ -27,7 +27,7 @@ FindReplaceResult applyFindReplace(const std::vector<std::vector<std::string>>& 
   int colIndex = -1;
   if(column != "*") {
     for(size_t i = 0; i < headers.size(); i++) {
-      if(headers[i] == column) { colIndex = i; break; }
+      if(headers[i] == column) { colIndex = static_cast<int>(i); break; }
     }
     if(colIndex == -1) { result.data = data; return result; }
   }
