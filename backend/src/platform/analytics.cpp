@@ -3,6 +3,7 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include "time_safe.h"
 
 static std::map<std::string, int> endpointCalls;
 
