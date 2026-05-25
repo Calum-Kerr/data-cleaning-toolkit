@@ -12,7 +12,15 @@ namespace fs = std::filesystem;
 // resolve frontend directory: environment variable, probed paths, or fallback.
 // tries in order: ../frontend, ../../frontend, ../../../frontend, ../../../../frontend, frontend.
 std::string getFrontendDir() {
+  // getenv result captured immediately into std::string below, no dangling pointer risk.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4996)
+#endif
   const char* env = std::getenv("FRONTEND_DIR");
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
   if (env) {std::string d(env); if (!d.empty() && d.back() == '/') d.pop_back(); return d;}
   for (const auto& path : {"../frontend", "../../frontend", "../../../frontend", "../../../../frontend", "frontend"})
     if (fs::exists(path)) return path;
