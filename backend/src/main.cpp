@@ -39,7 +39,7 @@ int main(){
     recordEndpointCall("/api/parse");
     auto parsed=parseCSV(req.body);
     crow::json::wvalue result;
-    result["rows"]=(int)parsed.size();
+    result["rows"]=static_cast<int>(parsed.size());
     logRequest("POST", "/api/parse", 200);
     return crow::response(result);
   });
