@@ -8,7 +8,7 @@ std::vector<std::vector<std::string>> removeOutliers(
   std::set<int> outlierSet(outlierRows.begin(),outlierRows.end());
   std::vector<std::vector<std::string>> result;
   for(size_t i=0;i<data.size();i++){
-    if(outlierSet.find(i)==outlierSet.end()) result.push_back(data[i]);
+    if(outlierSet.find(static_cast<int>(i))==outlierSet.end()) result.push_back(data[i]);
   }
   return result;
 }
