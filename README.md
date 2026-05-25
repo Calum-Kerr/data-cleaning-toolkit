@@ -2,7 +2,7 @@
 
 A transparent, privacy-first data cleaning toolkit built in C++ with WebAssembly for offline use.
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://www.calumkerr.com/app)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://tidy.calumkerr.com/app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## About
@@ -18,7 +18,7 @@ This toolkit helps you clean CSV data by detecting and fixing common data qualit
 
 ## Live Demo
 
-Try it now: **https://www.calumkerr.com/app**
+Try it now: **https://tidy.calumkerr.com/app**
 
 ## Features
 
@@ -34,7 +34,7 @@ Try it now: **https://www.calumkerr.com/app**
 
 ### Option 1: Use the Live Demo
 
-1. Go to https://www.calumkerr.com/app
+1. Go to https://tidy.calumkerr.com/app
 2. Upload a CSV file
 3. Click detection buttons to find issues
 4. Click cleaning buttons to fix issues
