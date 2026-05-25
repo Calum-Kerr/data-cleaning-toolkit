@@ -97,20 +97,6 @@ cd build && cmake --build . && cd ..
 ./build/Debug/Toolkit.exe
 ```
 
-## Building WebAssembly (Optional)
-
-For offline mode, build the WASM version:
-
-```bash
-# Install Emscripten first
-git clone https://github.com/emscripten-core/emsdk.git ../emsdk
-cd ../emsdk && ./emsdk install latest && ./emsdk activate latest && cd ../data-cleaning-toolkit
-
-# Build WASM
-source ../emsdk/emsdk_env.sh
-bash build-wasm.sh
-```
-
 ## Project Structure
 
 ```
