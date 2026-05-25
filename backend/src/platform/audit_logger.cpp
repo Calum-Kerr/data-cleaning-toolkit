@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include "time_safe.h"
 
 namespace audit {
     struct transformation_record {
