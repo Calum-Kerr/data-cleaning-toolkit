@@ -7,7 +7,7 @@ ClusterResult detectClusters(const std::vector<std::vector<std::string>>& data,
   ClusterResult result;
   int colIndex = -1;
   for(size_t i = 0; i < headers.size(); i++) {
-    if(headers[i] == column) { colIndex = i; break; }
+    if(headers[i] == column) { colIndex = static_cast<int>(i); break; }
   }
   if(colIndex < 0) return result;
   std::map<std::string, int> valueFreq;
