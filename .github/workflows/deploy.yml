@@ -19,6 +19,10 @@ jobs:
             set -x
             exec > >(tee -a /var/log/toolkit-deploy.log) 2>&1
 
+            echo "================================================================"
+            echo "DEPLOY RUN START: $(date -Iseconds) PID=$$"
+            echo "================================================================"
+
             trap 'echo "[trap] script exiting with code $? at $(date -Iseconds)"' EXIT
             trap 'echo "[trap] received SIGTERM at $(date -Iseconds)"' TERM
             trap 'echo "[trap] received SIGHUP at $(date -Iseconds)"' HUP
