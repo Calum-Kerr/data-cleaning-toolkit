@@ -12,7 +12,7 @@ std::vector<std::vector<std::string>> applyClustering(
   const std::vector<std::string>& headers) {
   int colIndex = -1;
   for(size_t i = 0; i < headers.size(); i++) {
-    if(headers[i] == column) { colIndex = i; break; }
+    if(headers[i] == column) { colIndex = static_cast<int>(i); break; }
   }
   std::vector<std::vector<std::string>> result = data;
   if(colIndex < 0) return result;
