@@ -9,7 +9,8 @@ std::string getTimestamp() {
   auto now=std::chrono::system_clock::now();
   auto t=std::chrono::system_clock::to_time_t(now);
   std::stringstream ss;
-  ss << std::put_time(std::localtime(&t), "%Y-%m-%d %H:%M:%S");
+  std::tm tm=localtime_safe(t);
+  ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
   return ss.str();
 }
 
