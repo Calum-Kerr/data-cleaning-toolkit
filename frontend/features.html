@@ -130,15 +130,9 @@
 
         <div class=cols>
           <section>
-            <h2>offline-first mode (privacy)</h2>
-            <p>the app tries to run locally first using webassembly. webassembly is a browser feature that lets compiled code run inside the page, so the cleaning logic can run without sending data away.</p>
-            <p>when offline mode is active, your csv stays on your device. this matters if you are working with sensitive data.</p>
-          </section>
-
-          <section>
-            <h2>api fallback mode (compatibility)</h2>
-            <p>if webassembly is not available, the app can fall back to calling the server api to run the same style of operations. this keeps the tool usable in more environments.</p>
-            <p class=muted>if you are privacy-conscious, prefer offline mode and double check the mode shown in the app.</p>
+            <h2>how files are handled</h2>
+            <p>when you upload a file and run a cleaning operation, it is sent to our server over https, processed in memory, and returned to you. the file contents are never written to disk, never logged, never stored, and never shared with any third party. once the cleaning operation completes, the file is discarded from server memory.</p>
+            <p>the app interface itself loads and stays usable offline once you have visited it, so you can return to the page without a connection. but cleaning operations always require a server connection.</p>
           </section>
         </div>
 
