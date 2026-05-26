@@ -115,11 +115,11 @@
 
           <section>
             <h2>technical approach</h2>
-            <p>the core algorithms are implemented in c++. for offline mode, they are compiled to webassembly. for online mode, they run on the server via simple api endpoints.</p>
+            <p>the core algorithms are implemented in c++ and currently run on the server via simple api endpoints. webassembly compilation for browser-based offline processing is the next major piece of work.</p>
             <ul>
-              <li>same overall steps across modes.</li>
-              <li>deterministic behaviour where possible.</li>
-              <li>minimal user interface on purpose.</li>
+              <li>deterministic behaviour where possible, so results are repeatable and auditable.</li>
+              <li>minimal user interface on purpose, so cleaning decisions remain visible and explainable.</li>
+              <li>algorithms and source code are open, so the logic can be inspected and verified.</li>
             </ul>
           </section>
         </div>
