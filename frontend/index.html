@@ -180,15 +180,15 @@
             <button class=secondary-button onclick="backToHome()">clean another file</button>
         </div>
     </div>
-    <div class=panel id=unstructuredSection style="display:none;">
+    <div class="panel section-hidden" id=unstructuredSection>
         <h2 class=section-title>text cleaner</h2>
-        <div class=upload-area id=textUploadArea ondragover="handleTextDragOver(event)" ondragleave="handleTextDragLeave(event)" ondrop="handleTextDrop(event)" style="margin:12px 0;">
+        <div class=upload-area id=textUploadArea ondragover="handleTextDragOver(event)" ondragleave="handleTextDragLeave(event)" ondrop="handleTextDrop(event)">
             <p>drag and drop your text file here</p>
             <div class=upload-options>
                 <button class=upload-option onclick="document.getElementById('textFileInput').click()">choose file</button>
                 <button class=upload-option onclick="pasteTextFromClipboard()">paste from clipboard</button>
             </div>
-            <input type=file id=textFileInput accept=.txt onchange="handleTextFileUpload(event)" style="display:none;">
+            <input type=file id=textFileInput accept=.txt onchange="handleTextFileUpload(event)" class=file-input-hidden>
         </div>
     </div>
     <div class=panel id=unstructuredResults style="display:none;">
