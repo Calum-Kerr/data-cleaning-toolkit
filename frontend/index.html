@@ -136,29 +136,29 @@
             </div>
         </div>
     </div>
-    <div class=panel id=semiStructuredSection style="display:none;">
+    <div class="panel section-hidden" id=semiStructuredSection>
         <h2 class=section-title>json & xml cleaner</h2>
         <div style="margin-bottom:20px;">
             <div style="margin-bottom:12px;">
-                <strong style="font-size:14px;">upload json file</strong>
-                <div class=upload-area id=jsonUploadArea ondragover="handleJsonDragOver(event)" ondragleave="handleJsonDragLeave(event)" ondrop="handleJsonDrop(event)" style="margin:12px 0;">
+                <strong>upload json file</strong>
+                <div class=upload-area id=jsonUploadArea ondragover="handleJsonDragOver(event)" ondragleave="handleJsonDragLeave(event)" ondrop="handleJsonDrop(event)">
                     <p>drag and drop your json file here</p>
                     <div class=upload-options>
                         <button class=upload-option onclick="document.getElementById('jsonFileInput').click()">choose file</button>
                         <button class=upload-option onclick="pasteJsonFromClipboard()">paste from clipboard</button>
                     </div>
-                    <input type=file id=jsonFileInput accept=.json onchange="handleJsonFileUpload(event)" style="display:none;">
+                    <input type=file id=jsonFileInput accept=.json onchange="handleJsonFileUpload(event)" class=file-input-hidden>
                 </div>
             </div>
             <div>
-                <strong style="font-size:14px;">upload xml file</strong>
-                <div class=upload-area id=xmlUploadArea ondragover="handleXmlDragOver(event)" ondragleave="handleXmlDragLeave(event)" ondrop="handleXmlDrop(event)" style="margin:12px 0;">
+                <strong>upload xml file</strong>
+                <div class=upload-area id=xmlUploadArea ondragover="handleXmlDragOver(event)" ondragleave="handleXmlDragLeave(event)" ondrop="handleXmlDrop(event)">
                     <p>drag and drop your xml file here</p>
                     <div class=upload-options>
                         <button class=upload-option onclick="document.getElementById('xmlFileInput').click()">choose file</button>
                         <button class=upload-option onclick="pasteXmlFromClipboard()">paste from clipboard</button>
                     </div>
-                    <input type=file id=xmlFileInput accept=.xml onchange="handleXmlFileUpload(event)" style="display:none;">
+                    <input type=file id=xmlFileInput accept=.xml onchange="handleXmlFileUpload(event)" class=file-input-hidden>
                 </div>
             </div>
         </div>
