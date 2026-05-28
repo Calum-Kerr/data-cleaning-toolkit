@@ -173,6 +173,205 @@ p {
 
 /* app-specific styles */
 
+.welcome-section {
+  text-align: center;
+}
+
+.info-box {
+  background: #f9f9f9;
+  border-left: 4px solid var(--colour-accent);
+  padding: var(--space-2);
+  margin: var(--space-2) 0;
+}
+
+.info-box h3 {
+  margin: 0 0 var(--space-1) 0;
+  font-size: 16px;
+}
+
+.info-box ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+.result-box {
+  padding: 16px;
+  background: #f0f7ff;
+  border-left: 4px solid var(--colour-accent);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.result-box h3 {
+  margin: 0 0 10px 0;
+  color: var(--colour-text);
+  font-size: 14px;
+}
+
+.sample-data-box {
+  margin-top: 20px;
+  padding: 14px;
+  background: #fafafa;
+  border: 1px solid var(--colour-border);
+}
+
+.sample-data-box h3 {
+  margin: 0 0 10px 0;
+  color: var(--colour-text);
+  font-size: 14px;
+}
+
+.sample-data-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.faq-section {
+  margin-top: 32px;
+}
+
+.faq-section h2 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+}
+
+.faq-item {
+  margin-bottom: 16px;
+}
+
+.faq-item h3 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.faq-item p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--colour-text-muted);
+}
+
+.centered-content {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.results-section {
+  margin: 20px 0;
+}
+
+.audit-log {
+  font-size: 13px;
+  color: #333;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.output-box {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: #f9f9f9;
+  padding: 12px;
+  border: 1px solid var(--colour-border);
+  overflow-x: auto;
+}
+
+.output-text {
+  white-space: pre-wrap;
+}
+
+.centered-buttons {
+  text-align: center;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.centered-buttons button {
+  margin: 4px;
+  padding: 8px 16px;
+  background: var(--colour-accent);
+  color: #fff;
+  cursor: pointer;
+  border: none;
+}
+
+.centered-buttons button:hover {
+  background: #0000cc;
+}
+
+.secondary-button {
+  background: #fff;
+  border: 1px solid var(--colour-border);
+  color: var(--colour-text);
+}
+
+.secondary-button:hover {
+  background: #f0f0f0;
+  border-color: #0000cc;
+}
+
+.progress-info {
+  margin-bottom: 15px;
+}
+
+.progress-text {
+  font-size: 13px;
+  color: var(--colour-text-muted);
+  margin-bottom: 4px;
+}
+
+.progress-text strong {
+  font-weight: bold;
+}
+
+.game-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.game-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--colour-accent);
+  transition: width 0.3s ease;
+}
+
+.game-board {
+  margin-top: 20px;
+}
+
+.game-instructions {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--colour-text-muted);
+}
+
+.preview-section {
+  margin: 20px 0;
+}
+
+.preview-section h3 {
+  margin: 0 0 10px 0;
+  color: var(--colour-text);
+  font-size: 14px;
+}
+
+.section-hidden {
+  display: none;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
 .cta-buttons {
   display: flex;
   justify-content: center;
