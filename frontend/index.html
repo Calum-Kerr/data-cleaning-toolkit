@@ -163,21 +163,21 @@
             </div>
         </div>
     </div>
-    <div class=panel id=semiStructuredResults style="display:none;">
+    <div class="panel section-hidden" id=semiStructuredResults>
         <h2 class=section-title>cleaned data</h2>
-        <div style="padding:16px;background:#f0f7ff;border-left:4px solid #0000ee;border-radius:4px;margin-bottom:20px;">
-            <h3 style="margin:0 0 10px 0;color:#111;font-size:14px;">cleaning operations</h3>
-            <div id=jsonAuditSection style="font-size:13px;"></div>
-            <div id=xmlAuditSection style="font-size:13px;"></div>
+        <div class=result-box>
+            <h3>cleaning operations</h3>
+            <div id=jsonAuditSection></div>
+            <div id=xmlAuditSection></div>
         </div>
         <div style="margin-bottom:20px;">
-            <pre id=jsonOutput style="margin:0;font-family:monospace;font-size:12px;background:#f9f9f9;padding:12px;border:1px solid #d9d9d9;overflow-x:auto;"></pre>
-            <pre id=xmlOutput style="margin:0;font-family:monospace;font-size:12px;background:#f9f9f9;padding:12px;border:1px solid #d9d9d9;overflow-x:auto;"></pre>
+            <pre id=jsonOutput class=output-box></pre>
+            <pre id=xmlOutput class=output-box></pre>
         </div>
-        <div style="text-align:center;padding:12px;background:#fafafa;border-radius:4px;">
-            <button onclick="downloadSemiStructured()" style="margin:4px;padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;">download json</button>
-            <button onclick="downloadXml()" style="margin:4px;padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;">download xml</button>
-            <button onclick="backToHome()" style="margin:4px;padding:8px 16px;background:#fff;border:1px solid #d9d9d9;cursor:pointer;">clean another file</button>
+        <div class=centered-buttons>
+            <button onclick="downloadSemiStructured()">download json</button>
+            <button onclick="downloadXml()">download xml</button>
+            <button class=secondary-button onclick="backToHome()">clean another file</button>
         </div>
     </div>
     <div class=panel id=unstructuredSection style="display:none;">
