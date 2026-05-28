@@ -116,22 +116,22 @@
         </div>
         <div id=completeSection class=section-hidden>
             <h2 class=section-title>data cleaned & ready</h2>
-            <div style="margin:20px 0;">
-                <div style="padding:16px;background:#f0f7ff;border-left:4px solid #0000ee;border-radius:4px;margin-bottom:20px;">
-                    <h3 style="margin:0 0 10px 0;color:#111;font-size:14px;cursor:pointer;" onclick="document.getElementById('auditLogDisplay').style.maxHeight=document.getElementById('auditLogDisplay').style.maxHeight==='none'?'400px':'none';">cleaning operations ↓</h3>
-                    <div id=auditLogDisplay style="font-size:13px;color:#333;max-height:400px;overflow-y:auto;"></div>
+            <div class=results-section>
+                <div class=result-box>
+                    <h3 onclick="document.getElementById('auditLogDisplay').style.maxHeight=document.getElementById('auditLogDisplay').style.maxHeight==='none'?'400px':'none';" style="cursor:pointer;">cleaning operations ↓</h3>
+                    <div id=auditLogDisplay class=audit-log></div>
                 </div>
-                <div style="margin-bottom:20px;">
-                    <h3 style="margin:0 0 10px 0;color:#111;font-size:14px;">preview</h3>
-                    <div id=dataTableContainer class=data-table-container style="max-height:400px;overflow-y:auto;border:1px solid var(--line);border-radius:4px;"></div>
-                    <div class=table-pagination style="margin-top:8px;text-align:center;font-size:13px;">
-                        <button id=prevPageBtn onclick="previousPage()" style="padding:4px 8px;">← previous</button>
+                <div class=preview-section>
+                    <h3>preview</h3>
+                    <div id=dataTableContainer class=data-table-container style="max-height:400px;overflow-y:auto;border-radius:4px;"></div>
+                    <div class=table-pagination>
+                        <button id=prevPageBtn onclick="previousPage()">← previous</button>
                         <span id=pageInfo>page 1</span>
-                        <button id=nextPageBtn onclick="nextPage()" style="padding:4px 8px;">next →</button>
+                        <button id=nextPageBtn onclick="nextPage()">next →</button>
                     </div>
                 </div>
-                <div style="text-align:center;padding:12px;background:#fafafa;border-radius:4px;">
-                    <button onclick="startNewSession()" style="margin:4px;padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;">clean another file</button>
+                <div class=centered-buttons>
+                    <button onclick="startNewSession()">clean another file</button>
                 </div>
             </div>
         </div>
