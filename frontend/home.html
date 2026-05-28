@@ -31,76 +31,39 @@
     <link rel=apple-touch-icon href=/apple-touch-icon.png></link>
     <link rel=manifest href=/manifest.json></link>
 
-    <style>
-      :root{
-        /* 60 / 30 / 10 colour rule: background / panels / accents */
-        --c60:#f4f4f4;
-        --c30:#ffffff;
-        --c10:#0000ee;
-        --t:#000;
-        --muted:#666;
-        --line:#d9d9d9;
-      }
-      body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
-      a{color:var(--c10);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
-      a:focus{outline:2px dotted #000;outline-offset:2px}
-      .wrap{max-width:980px;margin:0 auto;padding:16px}
-      .box{background:var(--c30);border:1px solid var(--line);padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
-      .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
-      h1{font-size:24px;margin:0 0 8px 0}
-      h2{font-size:16px;margin:16px 0 8px 0}
-      p{margin:0 0 10px 0}
-      .muted{color:var(--muted)}
-      .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-      .btn-group{display:flex;gap:10px;flex-wrap:wrap}
-      .btn-group+.btn-group{margin-top:8px}
-      .btn{display:inline-block;padding:10px 16px;border:1px solid var(--line);background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.05);min-height:44px;display:flex;align-items:center}
-      .btn:hover{background:#f0f0f0;border-color:#0000cc}
-      .btn:active{background:#e8e8e8}
-      .btn:focus-visible{outline:2px solid var(--c10);outline-offset:2px}
-      .btn.primary{border-color:var(--c10);background:var(--c10);color:#fff}
-      .btn.primary:hover{background:#0000cc}
-      .cols{display:grid;grid-template-columns:1fr;gap:14px}
-      @media (min-width:840px){.cols{grid-template-columns:1fr 1fr}}
-      ul{margin:6px 0 10px 18px;padding:0}
-      li{margin:0 0 4px 0}
-      hr{border:none;border-top:1px solid var(--line);margin:14px 0}
-      footer{font-size:13px;color:#333}
-      code{font-family:Consolas,Monaco,monospace;font-size:12px}
-      @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-    </style>
+    <link rel=stylesheet href=/css/site.css></link>
   </head>
   <body>
     <div class=wrap>
-      <main class=box role=main>
-        <div class=top>
-          <div>
-            <h1>data cleaning toolkit</h1>
-	            <p class=muted>privacy-first csv cleaning with transparent algorithms, built in c++.</p>
-            <div class=btns>
-              <a class="btn primary" href=/app>open the app</a>
-	              <a class=btn href=/features>features</a>
-	              <a class=btn href=/honours-project>honours project</a>
-              <a class=btn href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>github</a>
-              <a class=btn href=https://www.linkedin.com/in/kerr-x-calum/ rel=noopener target=_blank>linkedin</a>
-              <a class=btn href=https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose rel=noopener target=_blank>report a bug / request a feature</a>
-              <a class=btn href=https://github.com/Calum-Kerr/data-cleaning-toolkit/discussions rel=noopener target=_blank>discussions (forum)</a>
-            </div>
-          </div>
-          <div class=muted>
-            <p><strong>status</strong></p>
-            <p>structured csv: working</p>
-            <p>semi-structured: coming soon</p>
-            <p>unstructured: coming soon</p>
-          </div>
+      <div class=panel>
+        <nav class=topnav aria-label=site>
+          <a href=/>home</a>
+          <a href=/app>app</a>
+          <a href=/features>features</a>
+          <a href=/honours-project>honours project</a>
+          <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>github</a>
+          <a href=https://www.linkedin.com/in/kerr-x-calum/ rel=noopener target=_blank>linkedin</a>
+        </nav>
+      </div>
+
+      <main role=main>
+        <h1>data cleaning toolkit</h1>
+        <p>privacy-first csv cleaning with transparent algorithms, built in c++.</p>
+
+        <div style=display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;>
+          <button class=btn-primary onclick=location.href='/app'>open the app</button>
+          <button class=btn-secondary onclick=location.href='/features'>features</button>
+          <button class=btn-secondary onclick=location.href='/honours-project'>honours project</button>
+          <a class=btn-secondary style=text-decoration:none; href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>github</a>
+          <a class=btn-secondary style=text-decoration:none; href=https://www.linkedin.com/in/kerr-x-calum/ rel=noopener target=_blank>linkedin</a>
+          <a class=btn-secondary style=text-decoration:none; href=https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose rel=noopener target=_blank>report a bug / request a feature</a>
+          <a class=btn-secondary style=text-decoration:none; href=https://github.com/Calum-Kerr/data-cleaning-toolkit/discussions rel=noopener target=_blank>discussions (forum)</a>
         </div>
 
-        <hr></hr>
-
-        <div class=cols>
+        <div class=content-cols>
           <section>
             <h2>what it does</h2>
-            <p>this tool helps you clean csv files quickly and repeatably. it is aimed at people who want results they can understand and trust, without their files being kept by a third party.</p>
+            <p class=justify>this tool helps you clean csv files quickly and repeatably. it is aimed at people who want results they can understand and trust, without their files being kept by a third party.</p>
             <ul>
               <li>detect missing values</li>
               <li>detect and remove duplicate rows</li>
@@ -112,15 +75,15 @@
 
           <section>
             <h2>why i built it</h2>
-            <p>i built this because many cleaning tools are either slow and manual (lots of clicking) or they require coding. i also wanted a tool that is honest about what it changes, and that does not keep files in any log, database, or storage after the cleaning is done.</p>
-            <p class=muted>this is part of my honours work on transparent, auditable data cleaning and its impact on downstream machine learning fairness.</p>
+            <p class=justify>i built this because many cleaning tools are either slow and manual (lots of clicking) or they require coding. i also wanted a tool that is honest about what it changes, and that does not keep files in any log, database, or storage after the cleaning is done.</p>
+            <p class=muted style=font-size:14px;>this is part of my honours work on transparent, auditable data cleaning and its impact on downstream machine learning fairness.</p>
           </section>
         </div>
 
-        <div class=cols>
+        <div class=content-cols>
           <section>
             <h2>how transparency is achieved</h2>
-            <p>i try to make every cleaning step clear and repeatable.</p>
+            <p class=justify>i try to make every cleaning step clear and repeatable.</p>
             <ul>
               <li><strong>open source:</strong> the algorithms are in the public github repo</li>
               <li><strong>deterministic steps:</strong> same input should give the same output</li>
@@ -131,15 +94,15 @@
 
           <section>
             <h2>privacy and offline</h2>
-            <p>the app interface loads and stays usable offline once you have visited it once, so you can return to the page without a connection. cleaning operations send your file to our server, process it in memory, and return the cleaned file. nothing about your file is written to disk, logged, or shared.</p>
-            <p>client-side processing through webassembly, so cleaning could happen on your device without any server contact, is on the roadmap.</p>
+            <p class=justify>the app interface loads and stays usable offline once you have visited it once, so you can return to the page without a connection. cleaning operations send your file to our server, process it in memory, and return the cleaned file. nothing about your file is written to disk, logged, or shared.</p>
+            <p class=justify>client-side processing through webassembly, so cleaning could happen on your device without any server contact, is on the roadmap.</p>
           </section>
         </div>
 
-        <div class=cols>
+        <div class=content-cols>
           <section>
             <h2>feature requests and support</h2>
-            <p>if you find a bug, or you have a good idea, please post it on github. i use it as a simple "featurebase" so ideas are public, searchable, and easy to track.</p>
+            <p class=justify>if you find a bug, or you have a good idea, please post it on github. i use it as a simple "featurebase" so ideas are public, searchable, and easy to track.</p>
             <ul>
               <li>bugs and feature requests: <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose rel=noopener target=_blank>github issues</a></li>
               <li>questions and discussion: <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit/discussions rel=noopener target=_blank>github discussions</a></li>
@@ -150,8 +113,8 @@
             <h2>quick links</h2>
             <ul>
               <li><a href=/app>open the app</a></li>
-	              <li><a href=/features>features</a></li>
-	              <li><a href=/honours-project>honours project</a></li>
+              <li><a href=/features>features</a></li>
+              <li><a href=/honours-project>honours project</a></li>
               <li><a href=https://stats.uptimerobot.com/XFEpE5rs9n rel=noopener target=_blank>status</a></li>
               <li><a href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>source code</a></li>
               <li><a href=https://www.linkedin.com/in/kerr-x-calum/ rel=noopener target=_blank>linkedin</a></li>
@@ -161,12 +124,11 @@
           </section>
         </div>
 
-        <hr></hr>
-        <footer>
+        <footer class=site-footer>
           <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
         </footer>
       </main>
     </div>
-    <script src="/js/register-sw.js"></script>
+    <script src=/js/register-sw.js></script>
   </body>
 </html>
