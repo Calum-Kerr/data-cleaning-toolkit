@@ -84,37 +84,37 @@
             </div>
 
         </div>
-        <div id=cleaningSection style="display:none;">
+        <div id=cleaningSection class=section-hidden>
             <h2 class=section-title>choose cleaning method</h2>
-            <div style="text-align: center; margin-top: 20px;">
+            <div class=centered-content>
                 <button onclick="performQuickClean()">clean & standardise to uppercase</button>
             </div>
         </div>
-        <div id=progressSection style="display:none;">
+        <div id=progressSection class=section-hidden>
             <h2 class=section-title>cleaning in progress</h2>
-            <div id=progressText style="text-align: center; margin: 20px 0; font-size: 16px;">starting...</div>
+            <div id=progressText class=centered-content>starting...</div>
         </div>
-        <div id=mergeGameSection style="display:none;">
+        <div id=mergeGameSection class=section-hidden>
             <h2 class=section-title>merge by first letter</h2>
-            <div style="margin:20px 0;">
-                <div style="margin-bottom:15px;">
-                    <div style="font-size:13px;color:#666;margin-bottom:4px;">
+            <div class=results-section>
+                <div class=progress-info>
+                    <div class=progress-text>
                         <strong id=columnProgress>column 1 of 1</strong>
                     </div>
-                    <div style="font-size:13px;color:#666;margin-bottom:8px;">
+                    <div class=progress-text>
                         <strong id=gameProgress>0 of 0 groups</strong>
                     </div>
-                    <div style="width:100%;height:6px;background:#e0e0e0;border-radius:2px;overflow:hidden;">
-                        <div id=gameProgressBar style="width:0%;height:100%;background:#0000ee;transition:width 0.3s ease;"></div>
+                    <div class=game-progress-bar>
+                        <div id=gameProgressBar class=game-bar></div>
                     </div>
                 </div>
-                <div id=gameBoard style="margin-top:20px;"></div>
-                <div style="text-align:center;margin-top:20px;font-size:13px;color:#666;">
+                <div id=gameBoard class=game-board></div>
+                <div class=game-instructions>
                     <kbd>enter</kbd> continue
                 </div>
             </div>
         </div>
-        <div id=completeSection style="display:none;">
+        <div id=completeSection class=section-hidden>
             <h2 class=section-title>data cleaned & ready</h2>
             <div style="margin:20px 0;">
                 <div style="padding:16px;background:#f0f7ff;border-left:4px solid #0000ee;border-radius:4px;margin-bottom:20px;">
