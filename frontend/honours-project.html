@@ -1,174 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>honours project | data cleaning toolkit</title>
+  <meta name="description" content="Honours project context for the Data Cleaning Toolkit: why transparency and privacy matter in data cleaning, and how the toolkit is designed and evaluated for auditability and repeatable results.">
+  <link rel="canonical" href="https://tidy.calumkerr.com/honours-project">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+  <meta name="theme-color" content="#f5f5f4">
 
-<html lang=en-GB>
-  <head>
-    <meta charset=utf-8></meta>
-    <meta name=viewport content=width=device-width, initial-scale=1></meta>
-    <title>honours project | data cleaning toolkit</title>
-    <meta name=description content=Honours project context for the Data Cleaning Toolkit: why transparency and privacy matter in data cleaning, and how the toolkit is designed and evaluated for auditability and repeatable results.></meta>
-    <link rel=canonical href=https://tidy.calumkerr.com/honours-project></link>
-    <meta name=robots content=index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1></meta>
-    <meta name=theme-color content=#f4f4f4></meta>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Honours project | Data Cleaning Toolkit">
+  <meta property="og:site_name" content="Calum Kerr">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:description" content="Why i built a transparent, privacy-first data cleaning toolkit, and how it is evaluated.">
+  <meta property="og:url" content="https://tidy.calumkerr.com/honours-project">
+  <meta property="og:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Data Cleaning Toolkit app icon">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Honours project | Data Cleaning Toolkit">
+  <meta name="twitter:description" content="Why i built a transparent, privacy-first data cleaning toolkit, and how it is evaluated.">
+  <meta name="twitter:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+  <meta name="twitter:image:alt" content="Data Cleaning Toolkit app icon">
 
-    <meta property=og:type content=website></meta>
-    <meta property=og:title content=Honours project | Data Cleaning Toolkit></meta>
-    <meta property=og:site_name content=Calum Kerr></meta>
-    <meta property=og:locale content=en_GB></meta>
-    <meta property=og:description content=Why i built a transparent, privacy-first data cleaning toolkit, and how it is evaluated.></meta>
-    <meta property=og:url content=https://tidy.calumkerr.com/honours-project></meta>
-    <meta property=og:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
-    <meta property=og:image:width content=512></meta>
-    <meta property=og:image:height content=512></meta>
-    <meta property=og:image:alt content=Data Cleaning Toolkit app icon></meta>
-    <meta name=twitter:card content=summary></meta>
-    <meta name=twitter:title content=Honours project | Data Cleaning Toolkit></meta>
-    <meta name=twitter:description content=Why i built a transparent, privacy-first data cleaning toolkit, and how it is evaluated.></meta>
-    <meta name=twitter:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
-    <meta name=twitter:image:alt content=Data Cleaning Toolkit app icon></meta>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
 
-    <link rel=icon href=/favicon.ico></link>
-    <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png></link>
-    <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png></link>
-    <link rel=apple-touch-icon href=/apple-touch-icon.png></link>
-    <link rel=manifest href=/manifest.json></link>
-
-    <style>
-      :root{
-        /* 60 / 30 / 10 colour rule: background / panels / accents */
-        --c60:#f4f4f4;
-        --c30:#ffffff;
-        --c10:#0000ee;
-        --t:#000;
-        --muted:#666;
-        --line:#d9d9d9;
-      }
-      body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
-      a{color:var(--c10);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
-      a:focus{outline:2px dotted #000;outline-offset:2px}
-      .wrap{max-width:980px;margin:0 auto;padding:16px}
-      .box{background:var(--c30);border:1px solid var(--line);padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
-      .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
-      h1{font-size:24px;margin:0 0 8px 0}
-      h2{font-size:16px;margin:16px 0 8px 0}
-      p{margin:0 0 10px 0}
-      .muted{color:var(--muted)}
-      .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-      .btn-group{display:flex;gap:10px;flex-wrap:wrap}
-      .btn-group+.btn-group{margin-top:8px}
-      .btn{display:inline-block;padding:10px 16px;border:1px solid var(--line);background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.05);min-height:44px;display:flex;align-items:center}
-      .btn:hover{background:#f0f0f0;border-color:#0000cc}
-      .btn:active{background:#e8e8e8}
-      .btn:focus-visible{outline:2px solid var(--c10);outline-offset:2px}
-      .btn.primary{border-color:var(--c10);background:var(--c10);color:#fff}
-      .btn.primary:hover{background:#0000cc}
-      .cols{display:grid;grid-template-columns:1fr;gap:14px}
-      @media (min-width:840px){.cols{grid-template-columns:1fr 1fr}}
-      ul{margin:6px 0 10px 18px;padding:0}
-      li{margin:0 0 4px 0}
-      hr{border:none;border-top:1px solid var(--line);margin:14px 0}
-      footer{font-size:13px;color:#333}
-      code{font-family:Consolas,Monaco,monospace;font-size:12px}
-      @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-    </style>
-  </head>
-  <body>
-    <div class=wrap>
-      <main class=box role=main>
-        <div class=top>
-          <div>
-            <h1>honours project</h1>
-            <p class=muted>the research angle behind the toolkit, and why it is built this way.</p>
-            <div class=btns>
-              <a class="btn primary" href=/app>open the app</a>
-              <a class=btn href=/>home</a>
-              <a class=btn href=/features>features</a>
-              <a class=btn href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>github</a>
-            </div>
-          </div>
-          <div class=muted>
-            <p><strong>theme</strong></p>
-            <p>transparency, privacy-first design, and repeatable cleaning results.</p>
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+  <div class="wrap">
+    <main class="panel" role="main">
+      <div class="top">
+        <div>
+          <h1>honours project</h1>
+          <p class="muted">the research angle behind the toolkit, and why it is built this way.</p>
+          <div class="btns">
+            <a class="btn primary" href="/app">open the app</a>
+            <a class="btn" href="/">home</a>
+            <a class="btn" href="/features">features</a>
+            <a class="btn" href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">github</a>
           </div>
         </div>
-
-        <hr></hr>
-
-        <div class=cols>
-          <section>
-            <h2>what i am building</h2>
-            <p>i am building a data cleaning toolkit that aims to be fast, transparent about what it changes, and honest about how data is handled. the purpose is not only to clean data, but to make cleaning decisions easier to explain and audit.</p>
-            <p>in many real workflows, cleaning is not a small step. it can change which rows survive, which values are treated as missing, and what patterns a model learns later on.</p>
-          </section>
-
-          <section>
-            <h2>why transparency matters</h2>
-            <p>a lot of data cleaning happens as a mix of clicks and judgement calls. that can make it hard to reproduce and hard to justify, especially when a dataset feeds into machine learning.</p>
-            <p>my goal is to keep cleaning behaviour simple and inspectable. if the tool changes your data, you should be able to say what changed, how it changed, and why you chose that step.</p>
-          </section>
+        <div class="muted">
+          <p><strong>theme</strong></p>
+          <p>transparency, privacy-first design, and repeatable cleaning results.</p>
         </div>
+      </div>
 
-        <div class=cols>
-          <section>
-            <h2>privacy-first by design</h2>
-            <p>files are sent to our server over https, processed in memory (never written to disk), and discarded immediately after cleaning completes. nothing is logged, stored, or shared with any third party.</p>
-            <p>the app interface itself loads and stays usable offline once you have visited it, so you can return to the page without a connection. but cleaning operations always require a server connection.</p>
-          </section>
+      <hr>
 
-          <section>
-            <h2>technical approach</h2>
-            <p>the core algorithms are implemented in c++ and currently run on the server via simple api endpoints. webassembly compilation for browser-based offline processing is the next major piece of work.</p>
-            <ul>
-              <li>deterministic behaviour where possible, so results are repeatable and auditable.</li>
-              <li>minimal user interface on purpose, so cleaning decisions remain visible and explainable.</li>
-              <li>algorithms and source code are open, so the logic can be inspected and verified.</li>
-            </ul>
-          </section>
-        </div>
+      <div class="content-cols">
+        <section>
+          <h2>what i am building</h2>
+          <p>i am building a data cleaning toolkit that aims to be fast, transparent about what it changes, and honest about how data is handled. the purpose is not only to clean data, but to make cleaning decisions easier to explain and audit.</p>
+          <p>in many real workflows, cleaning is not a small step. it can change which rows survive, which values are treated as missing, and what patterns a model learns later on.</p>
+        </section>
 
-        <div class=cols>
-          <section>
-            <h2>evaluation plan</h2>
-            <p>i test the toolkit using real benchmark datasets with known quality issues (for example, cleanml datasets). i compare workflow and output against tools like openrefine and python-based cleaning scripts.</p>
-            <p>when i report results, the aim is to report what i actually ran, including timing and before/after counts, rather than just claims.</p>
-          </section>
+        <section>
+          <h2>why transparency matters</h2>
+          <p>a lot of data cleaning happens as a mix of clicks and judgement calls. that can make it hard to reproduce and hard to justify, especially when a dataset feeds into machine learning.</p>
+          <p>my goal is to keep cleaning behaviour simple and inspectable. if the tool changes your data, you should be able to say what changed, how it changed, and why you chose that step.</p>
+        </section>
+      </div>
 
-          <section>
-            <h2>ethics and fairness</h2>
-            <p>cleaning can change data distributions. if a cleaning rule removes a lot of rows from one group, it can affect fairness and downstream decisions.</p>
-            <p>this project treats transparency as a practical safety feature. it makes it easier to spot when cleaning steps have unintended effects.</p>
-          </section>
-        </div>
+      <div class="content-cols">
+        <section>
+          <h2>privacy-first by design</h2>
+          <p>files are sent to our server over https, processed in memory (never written to disk), and discarded immediately after cleaning completes. nothing is logged, stored, or shared with any third party.</p>
+          <p>the app interface itself loads and stays usable offline once you have visited it, so you can return to the page without a connection. but cleaning operations always require a server connection.</p>
+        </section>
 
-        <div class=cols>
-          <section>
-            <h2>academic context</h2>
-            <p>this toolkit is a final-year honours project at edinburgh napier university, supervised by dr. lynn langit. the dissertation examines how transparency in data cleaning design affects auditability and downstream fairness in machine learning workflows.</p>
-            <p>the research question drives the design: can a data cleaning tool that makes every step explicit and repeatable help practitioners identify and prevent unintended changes to data distributions?</p>
-          </section>
+        <section>
+          <h2>technical approach</h2>
+          <p>the core algorithms are implemented in c++ and currently run on the server via simple api endpoints. webassembly compilation for browser-based offline processing is the next major piece of work.</p>
+          <ul>
+            <li>deterministic behaviour where possible, so results are repeatable and auditable.</li>
+            <li>minimal user interface on purpose, so cleaning decisions remain visible and explainable.</li>
+            <li>algorithms and source code are open, so the logic can be inspected and verified.</li>
+          </ul>
+        </section>
+      </div>
 
-          <section>
-            <h2>links</h2>
-            <ul>
-              <li><a href=/>home</a></li>
-              <li><a href=/features>features</a></li>
-              <li><a href=/app>open the app</a></li>
-              <li><a href=https://stats.uptimerobot.com/XFEpE5rs9n rel=noopener target=_blank>status</a></li>
-              <li><a href=/privacy>privacy policy</a> and <a href=/terms>terms of service</a></li>
-              <li><a href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>source code (github)</a></li>
-            </ul>
-          </section>
+      <div class="content-cols">
+        <section>
+          <h2>evaluation plan</h2>
+          <p>i test the toolkit using real benchmark datasets with known quality issues (for example, cleanml datasets). i compare workflow and output against tools like openrefine and python-based cleaning scripts.</p>
+          <p>when i report results, the aim is to report what i actually ran, including timing and before/after counts, rather than just claims.</p>
+        </section>
 
-          <section>
-            <h2>notes</h2>
-            <p>if you are reading this page because you found it through search, the interactive tool is at <a href=/app>/app</a>. the homepage is at <a href=/>/</a>.</p>
-          </section>
-        </div>
+        <section>
+          <h2>ethics and fairness</h2>
+          <p>cleaning can change data distributions. if a cleaning rule removes a lot of rows from one group, it can affect fairness and downstream decisions.</p>
+          <p>this project treats transparency as a practical safety feature. it makes it easier to spot when cleaning steps have unintended effects.</p>
+        </section>
+      </div>
 
-        <hr></hr>
-        <footer>
-          <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
-        </footer>
-      </main>
-    </div>
-    <script src="/js/register-sw.js"></script>
-  </body>
+      <div class="content-cols">
+        <section>
+          <h2>academic context</h2>
+          <p>this toolkit is a final-year honours project at edinburgh napier university, supervised by dr. lynn langit. the dissertation examines how transparency in data cleaning design affects auditability and downstream fairness in machine learning workflows.</p>
+          <p>the research question drives the design: can a data cleaning tool that makes every step explicit and repeatable help practitioners identify and prevent unintended changes to data distributions?</p>
+        </section>
+
+        <section>
+          <h2>links</h2>
+          <ul>
+            <li><a href="/">home</a></li>
+            <li><a href="/features">features</a></li>
+            <li><a href="/app">open the app</a></li>
+            <li><a href="https://stats.uptimerobot.com/XFEpE5rs9n" rel="noopener" target="_blank">status</a></li>
+            <li><a href="/privacy">privacy policy</a> and <a href="/terms">terms of service</a></li>
+            <li><a href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">source code (github)</a></li>
+          </ul>
+        </section>
+      </div>
+
+      <section>
+        <h2>notes</h2>
+        <p>if you are reading this page because you found it through search, the interactive tool is at <a href="/app">/app</a>. the homepage is at <a href="/">/</a>.</p>
+      </section>
+
+      <hr>
+      <footer>
+        <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
+      </footer>
+    </main>
+  </div>
+  <script src="/js/register-sw.js"></script>
+</body>
 </html>

@@ -1,130 +1,130 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>data cleaning toolkit | privacy-first csv cleaning</title>
+  <meta name="description" content="A transparent CSV cleaning tool. Files are processed in memory and discarded immediately, never stored or shared.">
+  <link rel="canonical" href="https://tidy.calumkerr.com/">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+  <meta name="theme-color" content="#f5f5f4">
 
-<html lang=en-GB>
-  <head>
-    <meta charset=utf-8></meta>
-    <meta name=viewport content=width=device-width, initial-scale=1></meta>
-    <title>data cleaning toolkit | privacy-first csv cleaning</title>
-    <meta name=description content="A transparent CSV cleaning tool. Files are processed in memory and discarded immediately, never stored or shared."></meta>
-    <link rel=canonical href=https://tidy.calumkerr.com/></link>
-    <meta name=robots content=index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1></meta>
-    <meta name=theme-color content=#f4f4f4></meta>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Data Cleaning Toolkit | Calum Kerr">
+  <meta property="og:site_name" content="Calum Kerr">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:description" content="Transparent CSV cleaning. Files are processed briefly on our server and discarded. Nothing is kept.">
+  <meta property="og:url" content="https://tidy.calumkerr.com/">
+  <meta property="og:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Data Cleaning Toolkit app icon">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Data Cleaning Toolkit | Calum Kerr">
+  <meta name="twitter:description" content="Transparent CSV cleaning. Files are processed briefly on our server and discarded. Nothing is kept.">
+  <meta name="twitter:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+  <meta name="twitter:image:alt" content="Data Cleaning Toolkit app icon">
 
-    <meta property=og:type content=website></meta>
-    <meta property=og:title content=Data Cleaning Toolkit | Calum Kerr></meta>
-    <meta property=og:site_name content=Calum Kerr></meta>
-    <meta property=og:locale content=en_GB></meta>
-    <meta property=og:description content="Transparent CSV cleaning. Files are processed briefly on our server and discarded. Nothing is kept."></meta>
-    <meta property=og:url content=https://tidy.calumkerr.com/></meta>
-    <meta property=og:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
-    <meta property=og:image:width content=512></meta>
-    <meta property=og:image:height content=512></meta>
-    <meta property=og:image:alt content=Data Cleaning Toolkit app icon></meta>
-    <meta name=twitter:card content=summary></meta>
-    <meta name=twitter:title content=Data Cleaning Toolkit | Calum Kerr></meta>
-    <meta name=twitter:description content="Transparent CSV cleaning. Files are processed briefly on our server and discarded. Nothing is kept."></meta>
-    <meta name=twitter:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
-    <meta name=twitter:image:alt content=Data Cleaning Toolkit app icon></meta>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
 
-    <link rel=icon href=/favicon.ico></link>
-    <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png></link>
-    <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png></link>
-    <link rel=apple-touch-icon href=/apple-touch-icon.png></link>
-    <link rel=manifest href=/manifest.json></link>
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <nav class="topnav" aria-label="site">
+        <a href="/">home</a>
+        <a href="/app">app</a>
+        <a href="/features">features</a>
+        <a href="/honours-project">honours project</a>
+        <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">github</a>
+        <a href="https://www.linkedin.com/in/kerr-x-calum/" rel="noopener" target="_blank">linkedin</a>
+      </nav>
 
-    <link rel=stylesheet href=/css/site.css></link>
-  </head>
-  <body>
-    <div class=wrap>
-      <div class=panel>
-        <nav class=topnav aria-label=site>
-          <a href=/>home</a>
-          <a href=/app>app</a>
-          <a href=/features>features</a>
-          <a href=/honours-project>honours project</a>
-          <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>github</a>
-          <a href=https://www.linkedin.com/in/kerr-x-calum/ rel=noopener target=_blank>linkedin</a>
-        </nav>
+      <main role="main">
+        <h1>data cleaning toolkit</h1>
+        <p class="muted">privacy-first csv cleaning with transparent algorithms, built in c++.</p>
 
-        <main role=main>
-          <h1>data cleaning toolkit</h1>
-          <p>privacy-first csv cleaning with transparent algorithms, built in c++.</p>
+        <div class="btns" style="margin-bottom: var(--space-5);">
+          <a href="/app" class="btn primary">open the app</a>
+          <a href="/features" class="btn">features</a>
+          <a href="/honours-project" class="btn">honours project</a>
+        </div>
 
-          <div style=display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;>
-            <button class=btn-primary onclick=location.href='/app'>open the app</button>
-            <button class=btn-secondary onclick=location.href='/features'>features</button>
-            <button class=btn-secondary onclick=location.href='/honours-project'>honours project</button>
-          </div>
+        <div class="content-cols">
+          <section>
+            <h2>what it does</h2>
+            <p class="justify">this tool helps you clean csv files quickly and repeatably. it is aimed at people who want results they can understand and trust, without their files being kept by a third party.</p>
+            <ul>
+              <li>detect missing values</li>
+              <li>detect and remove duplicate rows</li>
+              <li>standardise common null values (for example, "n/a", "null")</li>
+              <li>download a cleaned csv</li>
+              <li>files are sent to our server, processed in memory, and discarded straight after</li>
+            </ul>
+          </section>
 
-          <div class=content-cols>
-            <section>
-              <h2>what it does</h2>
-              <p class=justify>this tool helps you clean csv files quickly and repeatably. it is aimed at people who want results they can understand and trust, without their files being kept by a third party.</p>
-              <ul>
-                <li>detect missing values</li>
-                <li>detect and remove duplicate rows</li>
-                <li>standardise common null values (for example, "n/a", "null")</li>
-                <li>download a cleaned csv</li>
-                <li>files are sent to our server, processed in memory, and discarded straight after</li>
-              </ul>
-            </section>
+          <section>
+            <h2>why i built it</h2>
+            <p class="justify">i built this because many cleaning tools are either slow and manual (lots of clicking) or they require coding. i also wanted a tool that is honest about what it changes, and that does not keep files in any log, database, or storage after the cleaning is done.</p>
+            <p class="muted" style="font-size: 14px;">this is part of my honours work on transparent, auditable data cleaning and its impact on downstream machine learning fairness.</p>
+          </section>
+        </div>
 
-            <section>
-              <h2>why i built it</h2>
-              <p class=justify>i built this because many cleaning tools are either slow and manual (lots of clicking) or they require coding. i also wanted a tool that is honest about what it changes, and that does not keep files in any log, database, or storage after the cleaning is done.</p>
-              <p class=muted style=font-size:14px;>this is part of my honours work on transparent, auditable data cleaning and its impact on downstream machine learning fairness.</p>
-            </section>
-          </div>
+        <div class="content-cols">
+          <section>
+            <h2>how transparency is achieved</h2>
+            <p class="justify">i try to make every cleaning step clear and repeatable.</p>
+            <ul>
+              <li><strong>open source:</strong> the algorithms are in the public github repo</li>
+              <li><strong>deterministic steps:</strong> same input should give the same output</li>
+              <li><strong>simple logic:</strong> no hidden "black box" cleaning rules</li>
+              <li><strong>traceable changes:</strong> the goal is to show what changed and how many values were affected</li>
+            </ul>
+          </section>
 
-          <div class=content-cols>
-            <section>
-              <h2>how transparency is achieved</h2>
-              <p class=justify>i try to make every cleaning step clear and repeatable.</p>
-              <ul>
-                <li><strong>open source:</strong> the algorithms are in the public github repo</li>
-                <li><strong>deterministic steps:</strong> same input should give the same output</li>
-                <li><strong>simple logic:</strong> no hidden "black box" cleaning rules</li>
-                <li><strong>traceable changes:</strong> the goal is to show what changed and how many values were affected</li>
-              </ul>
-            </section>
+          <section>
+            <h2>privacy and offline</h2>
+            <p class="justify">the app interface loads and stays usable offline once you have visited it once, so you can return to the page without a connection. cleaning operations send your file to our server, process it in memory, and return the cleaned file. nothing about your file is written to disk, logged, or shared.</p>
+            <p class="justify">client-side processing through webassembly, so cleaning could happen on your device without any server contact, is on the roadmap.</p>
+          </section>
+        </div>
 
-            <section>
-              <h2>privacy and offline</h2>
-              <p class=justify>the app interface loads and stays usable offline once you have visited it once, so you can return to the page without a connection. cleaning operations send your file to our server, process it in memory, and return the cleaned file. nothing about your file is written to disk, logged, or shared.</p>
-              <p class=justify>client-side processing through webassembly, so cleaning could happen on your device without any server contact, is on the roadmap.</p>
-            </section>
-          </div>
+        <div class="content-cols">
+          <section>
+            <h2>feature requests and support</h2>
+            <p class="justify">if you find a bug, or you have a good idea, please post it on github. i use it as a simple "featurebase" so ideas are public, searchable, and easy to track.</p>
+            <ul>
+              <li>bugs and feature requests: <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose" rel="noopener" target="_blank">github issues</a></li>
+              <li>questions and discussion: <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit/discussions" rel="noopener" target="_blank">github discussions</a></li>
+            </ul>
+          </section>
 
-          <div class=content-cols>
-            <section>
-              <h2>feature requests and support</h2>
-              <p class=justify>if you find a bug, or you have a good idea, please post it on github. i use it as a simple "featurebase" so ideas are public, searchable, and easy to track.</p>
-              <ul>
-                <li>bugs and feature requests: <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose rel=noopener target=_blank>github issues</a></li>
-                <li>questions and discussion: <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit/discussions rel=noopener target=_blank>github discussions</a></li>
-              </ul>
-            </section>
+          <section>
+            <h2>quick links</h2>
+            <ul>
+              <li><a href="/app">open the app</a></li>
+              <li><a href="/features">features</a></li>
+              <li><a href="/honours-project">honours project</a></li>
+              <li><a href="https://stats.uptimerobot.com/XFEpE5rs9n" rel="noopener" target="_blank">status</a></li>
+              <li><a href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">source code</a></li>
+              <li><a href="https://www.linkedin.com/in/kerr-x-calum/" rel="noopener" target="_blank">linkedin</a></li>
+              <li><a href="/privacy">privacy policy</a> and <a href="/terms">terms of service</a></li>
+              <li><a href="/sitemap.xml">sitemap</a> and <a href="/robots.txt">robots.txt</a></li>
+            </ul>
+          </section>
+        </div>
 
-            <section>
-              <h2>quick links</h2>
-              <ul>
-                <li><a href=/app>open the app</a></li>
-                <li><a href=/features>features</a></li>
-                <li><a href=/honours-project>honours project</a></li>
-                <li><a href=https://stats.uptimerobot.com/XFEpE5rs9n rel=noopener target=_blank>status</a></li>
-                <li><a href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>source code</a></li>
-                <li><a href=https://www.linkedin.com/in/kerr-x-calum/ rel=noopener target=_blank>linkedin</a></li>
-                <li><a href=/privacy>privacy policy</a> and <a href=/terms>terms of service</a></li>
-                <li><a href=/sitemap.xml>sitemap</a> and <a href=/robots.txt>robots.txt</a></li>
-              </ul>
-            </section>
-          </div>
-
-          <footer class=site-footer>
-            <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
-          </footer>
-        </main>
-      </div>
+        <footer class="site-footer">
+          <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
+        </footer>
+      </main>
     </div>
-    <script src=/js/register-sw.js></script>
-  </body>
+  </div>
+  <script src="/js/register-sw.js"></script>
+</body>
 </html>

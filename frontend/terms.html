@@ -1,195 +1,160 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>terms of service | data cleaning toolkit</title>
+  <meta name="description" content="Terms of service for the Data Cleaning Toolkit. Free research prototype, provided as-is, no warranty, governed by Scottish law.">
+  <link rel="canonical" href="https://tidy.calumkerr.com/terms">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+  <meta name="theme-color" content="#f5f5f4">
 
-<html lang=en-GB>
-  <head>
-    <meta charset=utf-8></meta>
-    <meta name=viewport content=width=device-width, initial-scale=1></meta>
-    <title>terms of service | data cleaning toolkit</title>
-    <meta name=description content=Terms of service for the Data Cleaning Toolkit. Free research prototype, provided as-is, no warranty, governed by Scottish law.></meta>
-    <link rel=canonical href=https://tidy.calumkerr.com/terms></link>
-    <meta name=robots content=index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1></meta>
-    <meta name=theme-color content=#f4f4f4></meta>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Terms of Service | Data Cleaning Toolkit">
+  <meta property="og:site_name" content="Calum Kerr">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:description" content="Terms of service for the Data Cleaning Toolkit.">
+  <meta property="og:url" content="https://tidy.calumkerr.com/terms">
+  <meta property="og:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Data Cleaning Toolkit app icon">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Terms of Service | Data Cleaning Toolkit">
+  <meta name="twitter:description" content="Terms of service for the Data Cleaning Toolkit.">
+  <meta name="twitter:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+  <meta name="twitter:image:alt" content="Data Cleaning Toolkit app icon">
 
-    <meta property=og:type content=website></meta>
-    <meta property=og:title content=Terms of Service | Data Cleaning Toolkit></meta>
-    <meta property=og:site_name content=Calum Kerr></meta>
-    <meta property=og:locale content=en_GB></meta>
-    <meta property=og:description content=Terms of service for the Data Cleaning Toolkit.></meta>
-    <meta property=og:url content=https://tidy.calumkerr.com/terms></meta>
-    <meta property=og:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
-    <meta property=og:image:width content=512></meta>
-    <meta property=og:image:height content=512></meta>
-    <meta property=og:image:alt content=Data Cleaning Toolkit app icon></meta>
-    <meta name=twitter:card content=summary></meta>
-    <meta name=twitter:title content=Terms of Service | Data Cleaning Toolkit></meta>
-    <meta name=twitter:description content=Terms of service for the Data Cleaning Toolkit.></meta>
-    <meta name=twitter:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
-    <meta name=twitter:image:alt content=Data Cleaning Toolkit app icon></meta>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
 
-    <link rel=icon href=/favicon.ico></link>
-    <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png></link>
-    <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png></link>
-    <link rel=apple-touch-icon href=/apple-touch-icon.png></link>
-    <link rel=manifest href=/manifest.json></link>
-
-    <style>
-      :root{
-        /* 60 / 30 / 10 colour rule: background / panels / accents */
-        --c60:#f4f4f4;
-        --c30:#ffffff;
-        --c10:#0000ee;
-        --t:#000;
-        --muted:#666;
-        --line:#d9d9d9;
-      }
-      body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
-      a{color:var(--c10);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
-      a:focus{outline:2px dotted #000;outline-offset:2px}
-      .wrap{max-width:980px;margin:0 auto;padding:16px}
-      .box{background:var(--c30);border:1px solid var(--line);padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
-      .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
-      h1{font-size:24px;margin:0 0 8px 0}
-      h2{font-size:16px;margin:16px 0 8px 0}
-      p{margin:0 0 10px 0}
-      .muted{color:var(--muted)}
-      .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-      .btn{display:inline-block;padding:10px 16px;border:1px solid var(--line);background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.05);min-height:44px;display:flex;align-items:center}
-      .btn:hover{background:#f0f0f0;border-color:#0000cc}
-      .btn:active{background:#e8e8e8}
-      .btn:focus-visible{outline:2px solid var(--c10);outline-offset:2px}
-      .btn.primary{border-color:var(--c10);background:var(--c10);color:#fff}
-      .btn.primary:hover{background:#0000cc}
-      .cols{display:grid;grid-template-columns:1fr;gap:14px}
-      @media (min-width:840px){.cols{grid-template-columns:1fr 1fr}}
-      ul{margin:6px 0 10px 18px;padding:0}
-      li{margin:0 0 4px 0}
-      hr{border:none;border-top:1px solid var(--line);margin:14px 0}
-      footer{font-size:13px;color:#333}
-      code{font-family:Consolas,Monaco,monospace;font-size:12px}
-      @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-    </style>
-  </head>
-  <body>
-    <div class=wrap>
-      <main class=box role=main>
-        <div class=top>
-          <div>
-            <h1>terms of service</h1>
-            <p class=muted>last updated: 25 may 2026</p>
-            <div class=btns>
-              <a class="btn primary" href=/app>open the app</a>
-              <a class=btn href=/>home</a>
-              <a class=btn href=/features>features</a>
-            </div>
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+  <div class="wrap">
+    <main class="panel" role="main">
+      <div class="top">
+        <div>
+          <h1>terms of service</h1>
+          <p class="muted">last updated: 25 may 2026</p>
+          <div class="btns">
+            <a class="btn primary" href="/app">open the app</a>
+            <a class="btn" href="/">home</a>
+            <a class="btn" href="/features">features</a>
           </div>
         </div>
+      </div>
 
-        <hr></hr>
+      <hr>
 
+      <section>
+        <p>by using this website (tidy.calumkerr.com) and the data cleaning toolkit, you agree to the following terms. if you do not agree, please do not use the service.</p>
+      </section>
+
+      <section>
+        <h2>what this service is</h2>
+        <p>the data cleaning toolkit is a free web-based tool for cleaning structured data files (csv, json, xml, and plain text). it is operated by calum kerr as the deployed artefact of a final-year honours research project at edinburgh napier university. a conference paper based on this work is in preparation.</p>
+        <p>this is a research prototype provided as a public service. it is not a commercial product, has no service level agreement, and may be modified, restricted, or shut down at any time without notice.</p>
+      </section>
+
+      <section>
+        <h2>free of charge</h2>
+        <p>the service is provided free of charge. no payment is required, no account is needed, and no contact details are collected. you do not owe us anything for using the toolkit.</p>
+      </section>
+
+      <section>
+        <h2>your responsibilities</h2>
+        <p>when using the service, you agree:</p>
+        <ul>
+          <li>not to upload data you do not have the legal right to process - including data that infringes copyright, breaches confidentiality, or violates third-party privacy rights.</li>
+          <li>not to upload content that is illegal under united kingdom law, including but not limited to material that is defamatory, obscene, or constitutes incitement.</li>
+          <li>not to use the service for any unlawful purpose.</li>
+          <li>not to attempt to overload, attack, or disrupt the service - including denial-of-service attempts, automated scraping, or attempts to exhaust server resources.</li>
+          <li>not to attempt to gain unauthorised access to the server, the source code, or any other part of the infrastructure.</li>
+          <li>not to use the service to process highly sensitive personal data such as health records, financial records, or other special-category data without first satisfying yourself that the service meets your specific requirements.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>no warranty</h2>
+        <p>the service is provided "as is" and "as available." we make no warranties or representations about the service, including but not limited to:</p>
+        <ul>
+          <li>that the service will be available at any particular time.</li>
+          <li>that the cleaning operations will be free from errors.</li>
+          <li>that the results will be fit for any particular purpose.</li>
+          <li>that uploaded data will be processed without loss or corruption.</li>
+        </ul>
+        <p>always verify the results of any cleaning operation before relying on them for any important purpose. always keep a backup of your original data.</p>
+      </section>
+
+      <section>
+        <h2>limitation of liability</h2>
+        <p>to the fullest extent permitted by law, we will not be liable for any loss or damage arising from your use of the service, including but not limited to:</p>
+        <ul>
+          <li>loss of data</li>
+          <li>loss of business, profits, or revenue</li>
+          <li>interruption to your activities</li>
+          <li>any indirect, consequential, or special damages</li>
+        </ul>
+        <p>nothing in these terms excludes or limits any liability that cannot be excluded or limited by law, including liability for death or personal injury caused by negligence.</p>
+      </section>
+
+      <section>
+        <h2>intellectual property</h2>
+        <p>the source code for the toolkit is published on github at github.com/Calum-Kerr/data-cleaning-toolkit and is licensed under the mit license. you are free to use, modify, and redistribute the source code under the terms of that licence.</p>
+        <p>the deployed website (tidy.calumkerr.com), its content, and its branding remain the property of the operator. you may reference, link to, or describe the toolkit, but you may not reproduce the deployed service or pass it off as your own.</p>
+      </section>
+
+      <section>
+        <h2>research and academic use</h2>
+        <p>this toolkit is the deployed artefact of an honours research project that has been examined and is no longer in active assessment. use of the toolkit does not make you a participant in any research study, and no data about toolkit users is used in the research.</p>
+        <p>if you wish to cite or reference the toolkit in academic work, please contact us for citation details.</p>
+      </section>
+
+      <section>
+        <h2>changes to the service</h2>
+        <p>we may change, add to, or remove features from the service at any time. we may also suspend or terminate the service entirely without notice. we are not obliged to retain any data you have processed through the service - indeed, our practice is to discard it immediately after processing (see our <a href="/privacy">privacy policy</a> for details).</p>
+      </section>
+
+      <section>
+        <h2>changes to these terms</h2>
+        <p>if we materially change these terms, we will update the "last updated" date at the top. continued use of the service after a change constitutes acceptance of the new terms.</p>
+      </section>
+
+      <section>
+        <h2>governing law</h2>
+        <p>these terms are governed by the laws of scotland. any dispute arising from these terms or from your use of the service will be subject to the exclusive jurisdiction of the scottish courts.</p>
+      </section>
+
+      <section>
+        <h2>contact</h2>
+        <p>for any questions about these terms, contact: <a href="mailto:calumxkerr@gmail.com">calumxkerr@gmail.com</a>.</p>
+        <p>for privacy-related questions, see our <a href="/privacy">privacy policy</a>.</p>
+      </section>
+
+      <div class="content-cols">
         <section>
-          <p>by using this website (tidy.calumkerr.com) and the data cleaning toolkit, you agree to the following terms. if you do not agree, please do not use the service.</p>
-        </section>
-
-        <section>
-          <h2>what this service is</h2>
-          <p>the data cleaning toolkit is a free web-based tool for cleaning structured data files (csv, json, xml, and plain text). it is operated by calum kerr as the deployed artefact of a final-year honours research project at edinburgh napier university. a conference paper based on this work is in preparation.</p>
-          <p>this is a research prototype provided as a public service. it is not a commercial product, has no service level agreement, and may be modified, restricted, or shut down at any time without notice.</p>
-        </section>
-
-        <section>
-          <h2>free of charge</h2>
-          <p>the service is provided free of charge. no payment is required, no account is needed, and no contact details are collected. you do not owe us anything for using the toolkit.</p>
-        </section>
-
-        <section>
-          <h2>your responsibilities</h2>
-          <p>when using the service, you agree:</p>
+          <h2>links</h2>
           <ul>
-            <li>not to upload data you do not have the legal right to process — including data that infringes copyright, breaches confidentiality, or violates third-party privacy rights.</li>
-            <li>not to upload content that is illegal under united kingdom law, including but not limited to material that is defamatory, obscene, or constitutes incitement.</li>
-            <li>not to use the service for any unlawful purpose.</li>
-            <li>not to attempt to overload, attack, or disrupt the service — including denial-of-service attempts, automated scraping, or attempts to exhaust server resources.</li>
-            <li>not to attempt to gain unauthorised access to the server, the source code, or any other part of the infrastructure.</li>
-            <li>not to use the service to process highly sensitive personal data such as health records, financial records, or other special-category data without first satisfying yourself that the service meets your specific requirements.</li>
+            <li><a href="/">home</a></li>
+            <li><a href="/app">open the app</a></li>
+            <li><a href="/features">features</a></li>
+            <li><a href="/honours-project">honours project</a></li>
+            <li><a href="/privacy">privacy policy</a></li>
+            <li><a href="/sitemap.xml">sitemap</a> and <a href="/robots.txt">robots.txt</a></li>
           </ul>
         </section>
+      </div>
 
-        <section>
-          <h2>no warranty</h2>
-          <p>the service is provided "as is" and "as available." we make no warranties or representations about the service, including but not limited to:</p>
-          <ul>
-            <li>that the service will be available at any particular time.</li>
-            <li>that the cleaning operations will be free from errors.</li>
-            <li>that the results will be fit for any particular purpose.</li>
-            <li>that uploaded data will be processed without loss or corruption.</li>
-          </ul>
-          <p>always verify the results of any cleaning operation before relying on them for any important purpose. always keep a backup of your original data.</p>
-        </section>
-
-        <section>
-          <h2>limitation of liability</h2>
-          <p>to the fullest extent permitted by law, we will not be liable for any loss or damage arising from your use of the service, including but not limited to:</p>
-          <ul>
-            <li>loss of data</li>
-            <li>loss of business, profits, or revenue</li>
-            <li>interruption to your activities</li>
-            <li>any indirect, consequential, or special damages</li>
-          </ul>
-          <p>nothing in these terms excludes or limits any liability that cannot be excluded or limited by law, including liability for death or personal injury caused by negligence.</p>
-        </section>
-
-        <section>
-          <h2>intellectual property</h2>
-          <p>the source code for the toolkit is published on github at github.com/Calum-Kerr/data-cleaning-toolkit and is licensed under the mit license. you are free to use, modify, and redistribute the source code under the terms of that licence.</p>
-          <p>the deployed website (tidy.calumkerr.com), its content, and its branding remain the property of the operator. you may reference, link to, or describe the toolkit, but you may not reproduce the deployed service or pass it off as your own.</p>
-        </section>
-
-        <section>
-          <h2>research and academic use</h2>
-          <p>this toolkit is the deployed artefact of an honours research project that has been examined and is no longer in active assessment. use of the toolkit does not make you a participant in any research study, and no data about toolkit users is used in the research.</p>
-          <p>if you wish to cite or reference the toolkit in academic work, please contact us for citation details.</p>
-        </section>
-
-        <section>
-          <h2>changes to the service</h2>
-          <p>we may change, add to, or remove features from the service at any time. we may also suspend or terminate the service entirely without notice. we are not obliged to retain any data you have processed through the service — indeed, our practice is to discard it immediately after processing (see our <a href=/privacy>privacy policy</a> for details).</p>
-        </section>
-
-        <section>
-          <h2>changes to these terms</h2>
-          <p>if we materially change these terms, we will update the "last updated" date at the top. continued use of the service after a change constitutes acceptance of the new terms.</p>
-        </section>
-
-        <section>
-          <h2>governing law</h2>
-          <p>these terms are governed by the laws of scotland. any dispute arising from these terms or from your use of the service will be subject to the exclusive jurisdiction of the scottish courts.</p>
-        </section>
-
-        <section>
-          <h2>contact</h2>
-          <p>for any questions about these terms, contact: <a href=mailto:calumxkerr@gmail.com>calumxkerr@gmail.com</a>.</p>
-          <p>for privacy-related questions, see our <a href=/privacy>privacy policy</a>.</p>
-        </section>
-
-        <div class=cols>
-          <section>
-            <h2>links</h2>
-            <ul>
-              <li><a href=/>home</a></li>
-              <li><a href=/app>open the app</a></li>
-              <li><a href=/features>features</a></li>
-              <li><a href=/honours-project>honours project</a></li>
-              <li><a href=/privacy>privacy policy</a></li>
-              <li><a href=/sitemap.xml>sitemap</a> and <a href=/robots.txt>robots.txt</a></li>
-            </ul>
-          </section>
-        </div>
-
-        <hr></hr>
-        <footer>
-          <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
-        </footer>
-      </main>
-    </div>
-    <script src="/js/register-sw.js"></script>
-  </body>
+      <hr>
+      <footer>
+        <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
+      </footer>
+    </main>
+  </div>
+  <script src="/js/register-sw.js"></script>
+</body>
 </html>
