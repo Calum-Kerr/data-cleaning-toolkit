@@ -1,243 +1,262 @@
-
-<html lang=en-GB>
+<!doctype html>
+<html lang="en-GB">
 <head>
-    <meta charset=UTF-8>
-    <meta name=viewport content=width=device-width, initial-scale=1.0>
-	    <meta name=description content="Free online CSV cleaner. Remove duplicates, fix missing values, clean spreadsheets in your browser. Files are processed briefly on our server and discarded. No sign-up required.">
-	    <meta name=robots content=index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1>
-		    <meta name=theme-color content=#f4f4f4>
-	    <title>free csv cleaner | clean spreadsheets online | data cleaning toolkit</title>
-	    <link rel=canonical href=https://tidy.calumkerr.com/app>
-	    <meta property=og:type content=website>
-	    <meta property=og:title content=Free CSV Cleaner | Clean Spreadsheets Online>
-	    <meta property=og:site_name content=Data Cleaning Toolkit>
-	    <meta property=og:locale content=en_GB>
-	    <meta property=og:description content="Free online CSV cleaner. Remove duplicates, fix missing values, clean spreadsheets. Files are processed briefly on our server and discarded.">
-	    <meta property=og:url content=https://tidy.calumkerr.com/app>
-	    <meta property=og:image content=https://www.calumkerr.com/android-chrome-512x512.png>
-	    <meta property=og:image:width content=512>
-	    <meta property=og:image:height content=512>
-	    <meta property=og:image:alt content=Data Cleaning Toolkit app icon>
-	    <meta name=twitter:card content=summary>
-	    <meta name=twitter:title content=Free CSV Cleaner | Clean Spreadsheets Online>
-	    <meta name=twitter:description content="Free online CSV cleaner. Remove duplicates, fix missing values, clean spreadsheets. Files are processed briefly on our server and discarded.">
-	    <meta name=twitter:image content=https://www.calumkerr.com/android-chrome-512x512.png>
-	    <meta name=twitter:image:alt content=Data Cleaning Toolkit app icon>
-	    <link rel=icon href=/favicon.ico>
-	    <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-	    <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
-	    <link rel=apple-touch-icon href=/apple-touch-icon.png>
-	    <script type=application/ld+json>{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Data Cleaning Toolkit","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Free online CSV cleaner and spreadsheet cleaning tool. Remove duplicates, fix missing values, and clean data instantly. Privacy-first, offline-capable.","url":"https://www.calumkerr.com/app","creator":{"@type":"Person","name":"Calum Kerr","url":"https://www.calumkerr.com"},"offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},"keywords":"CSV cleaner, spreadsheet cleaner, data cleaning, remove duplicates, clean CSV, online data cleaner"}</script>
-	    <link rel=manifest href=/manifest.json>
-	    <link rel=stylesheet href=/css/site.css>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free online CSV cleaner. Remove duplicates, fix missing values, clean spreadsheets in your browser. Files are processed briefly on our server and discarded. No sign-up required.">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+  <meta name="theme-color" content="#ffffff">
+  <title>free csv cleaner | clean spreadsheets online | data cleaning toolkit</title>
+  <link rel="canonical" href="https://tidy.calumkerr.com/app">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Free CSV Cleaner | Clean Spreadsheets Online">
+  <meta property="og:site_name" content="Data Cleaning Toolkit">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:description" content="Free online CSV cleaner. Remove duplicates, fix missing values, clean spreadsheets. Files are processed briefly on our server and discarded.">
+  <meta property="og:url" content="https://tidy.calumkerr.com/app">
+  <meta property="og:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Data Cleaning Toolkit app icon">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Free CSV Cleaner | Clean Spreadsheets Online">
+  <meta name="twitter:description" content="Free online CSV cleaner. Remove duplicates, fix missing values, clean spreadsheets. Files are processed briefly on our server and discarded.">
+  <meta name="twitter:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+  <meta name="twitter:image:alt" content="Data Cleaning Toolkit app icon">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Data Cleaning Toolkit","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Free online CSV cleaner and spreadsheet cleaning tool. Remove duplicates, fix missing values, and clean data instantly. Privacy-first, offline-capable.","url":"https://www.calumkerr.com/app","creator":{"@type":"Person","name":"Calum Kerr","url":"https://www.calumkerr.com"},"offers":{"@type":"Offer","price":"0","priceCurrency":"GBP"},"keywords":"CSV cleaner, spreadsheet cleaner, data cleaning, remove duplicates, clean CSV, online data cleaner"}</script>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/css/site.css?v=quiet-3">
 </head>
-	<body>
-	  <div class=wrap>
-	    <nav class=topnav aria-label=site>
-	      <a href=/>home</a>
-		      <a href=/features>features</a>
-		      <a href=/honours-project>honours project</a>
-	      <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>github</a>
-	      <a href=https://www.linkedin.com/in/kerr-x-calum/ rel=noopener target=_blank>linkedin</a>
-	      <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose rel=noopener target=_blank>report a bug / request a feature</a>
-	      <a href=https://github.com/Calum-Kerr/data-cleaning-toolkit/discussions rel=noopener target=_blank>discussions</a>
-	    </nav>
-	    <h1>free online csv cleaner & spreadsheet cleaning tool</h1>
-	    <main role=main>
-	    <div class=welcome-section panel id=welcomeSection>
-        <h2>clean your data instantly</h2>
-        <p>remove duplicates, fix missing values, and clean spreadsheets online. no sign-up required. files are processed briefly on our server and discarded.</p>
-        <div class=cta-buttons>
-            <button class="cta-button primary" onclick="selectStructured()">structured data</button>
-            <button class=cta-button onclick="selectSemiStructured()">semi-structured</button>
-            <button class=cta-button onclick="selectUnstructured()">unstructured</button>
+<body class="app-page">
+  <div class="wrap">
+    <header class="site-masthead">
+      <nav class="topnav" aria-label="site">
+        <a href="/">home</a>
+        <a href="/features">features</a>
+        <a href="/honours-project">honours project</a>
+        <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">github</a>
+        <a href="https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose" rel="noopener" target="_blank">bugs</a>
+      </nav>
+      <div class="title-row">
+        <div>
+          <p class="eyebrow">data-cleaning-toolkit / app</p>
+          <h1>free online csv cleaner</h1>
         </div>
-    </div>
-    <div class="panel info-box">
-        <h3>why use our csv cleaner?</h3>
-        <ul>
-            <li>remove duplicate rows instantly</li>
-            <li>fix missing values and standardise data</li>
-            <li>files are sent to our server, processed in memory, and discarded straight after</li>
-            <li>privacy-first: files are never written to disk, logged, or shared</li>
-            <li>free online data cleaning tool - no sign-up needed</li>
-        </ul>
-    </div>
-	    <div class=structured-section panel id=structuredSection>
-        <div id=uploadSection>
-            <h2 class=section-title>upload csv file</h2>
-            <div class=upload-area id=uploadArea ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
-                <p>drag and drop your file here, or use paste from clipboard</p>
-                <div class=upload-options>
-                    <button class=upload-option onclick="document.getElementById('fileInput').click()">choose file</button>
-                    <button class=upload-option onclick="pasteFromClipboard()">paste from clipboard</button>
-                </div>
-                <input type=file id=fileInput accept=.csv onchange="handleFileUpload(event)" aria-label=Upload CSV file style="display: none;">
-            </div>
-            <div class=sample-data-box>
-                <h3>or try a real dataset:</h3>
-                <div class=sample-data-buttons>
-                    <button class=upload-option onclick="loadSampleDataset('airbnb')">airbnb listings</button>
-                    <button class=upload-option onclick="loadSampleDataset('credit')">credit card data</button>
-                    <button class=upload-option onclick="loadSampleDataset('titanic')">titanic passengers</button>
-                </div>
-            </div>
+        <p class="classified-tag">no sign-up</p>
+      </div>
+    </header>
 
+    <main role="main">
+      <section class="panel welcome-section" id="welcomeSection">
+        <h2>clean your data</h2>
+        <p class="lede">remove duplicates, fix missing values, and clean spreadsheets online.</p>
+        <div class="cta-buttons" aria-label="data type">
+          <button class="cta-button primary" onclick="selectStructured()">csv</button>
+          <button class="cta-button" onclick="selectSemiStructured()">json / xml</button>
+          <button class="cta-button" onclick="selectUnstructured()">text</button>
         </div>
-        <div id=cleaningSection class=section-hidden>
-            <h2 class=section-title>choose cleaning method</h2>
-            <div class=centered-content>
-                <button onclick="performQuickClean()">clean & standardise to uppercase</button>
+      </section>
+
+      <section class="panel notice-board" aria-label="quick notes">
+        <ul class="classified-list">
+          <li>files are processed in memory and discarded straight after</li>
+          <li>download the cleaned result when finished</li>
+          <li>free to use</li>
+        </ul>
+      </section>
+
+      <section class="panel structured-section" id="structuredSection">
+        <div id="uploadSection">
+          <div class="section-heading">
+            <span class="section-kicker">csv</span>
+            <h2 class="section-title">upload file</h2>
+          </div>
+          <div class="upload-area" id="uploadArea" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+            <p>drag and drop your csv here</p>
+            <div class="upload-options">
+              <button class="upload-option" onclick="document.getElementById('fileInput').click()">choose file</button>
+              <button class="upload-option" onclick="pasteFromClipboard()">paste data</button>
             </div>
-        </div>
-        <div id=progressSection class=section-hidden>
-            <h2 class=section-title>cleaning in progress</h2>
-            <div id=progressText class=centered-content>starting...</div>
-        </div>
-        <div id=mergeGameSection class=section-hidden>
-            <h2 class=section-title>merge by first letter</h2>
-            <div class=results-section>
-                <div class=progress-info>
-                    <div class=progress-text>
-                        <strong id=columnProgress>column 1 of 1</strong>
-                    </div>
-                    <div class=progress-text>
-                        <strong id=gameProgress>0 of 0 groups</strong>
-                    </div>
-                    <div class=game-progress-bar>
-                        <div id=gameProgressBar class=game-bar></div>
-                    </div>
-                </div>
-                <div id=gameBoard class=game-board></div>
-                <div class=game-instructions>
-                    <kbd>enter</kbd> continue
-                </div>
+            <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)" aria-label="Upload CSV file" class="file-input-hidden">
+          </div>
+          <div class="sample-data-box">
+            <h3>try sample data</h3>
+            <div class="sample-data-buttons">
+              <button class="upload-option" onclick="loadSampleDataset('airbnb')">airbnb</button>
+              <button class="upload-option" onclick="loadSampleDataset('credit')">credit</button>
+              <button class="upload-option" onclick="loadSampleDataset('titanic')">titanic</button>
             </div>
+          </div>
         </div>
-        <div id=completeSection class=section-hidden>
-            <h2 class=section-title>data cleaned & ready</h2>
-            <div class=results-section>
-                <div class=result-box>
-                    <h3 onclick="document.getElementById('auditLogDisplay').style.maxHeight=document.getElementById('auditLogDisplay').style.maxHeight==='none'?'400px':'none';" style="cursor:pointer;">cleaning operations ↓</h3>
-                    <div id=auditLogDisplay class=audit-log></div>
-                </div>
-                <div class=preview-section>
-                    <h3>preview</h3>
-                    <div id=dataTableContainer class=data-table-container style="max-height:400px;overflow-y:auto;border-radius:4px;"></div>
-                    <div class=table-pagination>
-                        <button id=prevPageBtn onclick="previousPage()">← previous</button>
-                        <span id=pageInfo>page 1</span>
-                        <button id=nextPageBtn onclick="nextPage()">next →</button>
-                    </div>
-                </div>
-                <div class=centered-buttons>
-                    <button onclick="startNewSession()">clean another file</button>
-                </div>
+
+        <div id="cleaningSection" class="section-hidden">
+          <div class="section-heading">
+            <span class="section-kicker">method</span>
+            <h2 class="section-title">cleaning method</h2>
+          </div>
+          <div class="centered-content">
+            <button class="cta-button primary" onclick="performQuickClean()">clean & standardise to uppercase</button>
+          </div>
+        </div>
+
+        <div id="progressSection" class="section-hidden">
+          <div class="section-heading">
+            <span class="section-kicker">running</span>
+            <h2 class="section-title">cleaning</h2>
+          </div>
+          <div id="progressText" class="centered-content">starting...</div>
+        </div>
+
+        <div id="mergeGameSection" class="section-hidden">
+          <div class="section-heading">
+            <span class="section-kicker">review</span>
+            <h2 class="section-title">merge by first letter</h2>
+          </div>
+          <div class="results-section">
+            <div class="progress-info">
+              <div class="progress-text"><strong id="columnProgress">column 1 of 1</strong></div>
+              <div class="progress-text"><strong id="gameProgress">0 of 0 groups</strong></div>
+              <div class="game-progress-bar"><div id="gameProgressBar" class="game-bar"></div></div>
             </div>
+            <div id="gameBoard" class="game-board"></div>
+            <div class="game-instructions"><kbd>enter</kbd> continue</div>
+          </div>
         </div>
-    </div>
-    <div class="panel section-hidden" id=semiStructuredSection>
-        <h2 class=section-title>json & xml cleaner</h2>
-        <div style="margin-bottom:20px;">
-            <div style="margin-bottom:12px;">
-                <strong>upload json file</strong>
-                <div class=upload-area id=jsonUploadArea ondragover="handleJsonDragOver(event)" ondragleave="handleJsonDragLeave(event)" ondrop="handleJsonDrop(event)">
-                    <p>drag and drop your json file here</p>
-                    <div class=upload-options>
-                        <button class=upload-option onclick="document.getElementById('jsonFileInput').click()">choose file</button>
-                        <button class=upload-option onclick="pasteJsonFromClipboard()">paste from clipboard</button>
-                    </div>
-                    <input type=file id=jsonFileInput accept=.json onchange="handleJsonFileUpload(event)" class=file-input-hidden>
-                </div>
+
+        <div id="completeSection" class="section-hidden">
+          <div class="section-heading">
+            <span class="section-kicker">done</span>
+            <h2 class="section-title">cleaned data</h2>
+          </div>
+          <div class="results-section">
+            <div class="result-box">
+              <h3 onclick="document.getElementById('auditLogDisplay').style.maxHeight=document.getElementById('auditLogDisplay').style.maxHeight==='none'?'400px':'none';">operations</h3>
+              <div id="auditLogDisplay" class="audit-log"></div>
             </div>
-            <div>
-                <strong>upload xml file</strong>
-                <div class=upload-area id=xmlUploadArea ondragover="handleXmlDragOver(event)" ondragleave="handleXmlDragLeave(event)" ondrop="handleXmlDrop(event)">
-                    <p>drag and drop your xml file here</p>
-                    <div class=upload-options>
-                        <button class=upload-option onclick="document.getElementById('xmlFileInput').click()">choose file</button>
-                        <button class=upload-option onclick="pasteXmlFromClipboard()">paste from clipboard</button>
-                    </div>
-                    <input type=file id=xmlFileInput accept=.xml onchange="handleXmlFileUpload(event)" class=file-input-hidden>
-                </div>
+            <div class="preview-section">
+              <h3>preview</h3>
+              <div id="dataTableContainer" class="data-table-container"></div>
+              <div class="table-pagination">
+                <button id="prevPageBtn" onclick="previousPage()">previous</button>
+                <span id="pageInfo">page 1</span>
+                <button id="nextPageBtn" onclick="nextPage()">next</button>
+              </div>
             </div>
-        </div>
-    </div>
-    <div class="panel section-hidden" id=semiStructuredResults>
-        <h2 class=section-title>cleaned data</h2>
-        <div class=result-box>
-            <h3>cleaning operations</h3>
-            <div id=jsonAuditSection></div>
-            <div id=xmlAuditSection></div>
-        </div>
-        <div style="margin-bottom:20px;">
-            <pre id=jsonOutput class=output-box></pre>
-            <pre id=xmlOutput class=output-box></pre>
-        </div>
-        <div class=centered-buttons>
-            <button onclick="downloadSemiStructured()">download json</button>
-            <button onclick="downloadXml()">download xml</button>
-            <button class=secondary-button onclick="backToHome()">clean another file</button>
-        </div>
-    </div>
-    <div class="panel section-hidden" id=unstructuredSection>
-        <h2 class=section-title>text cleaner</h2>
-        <div class=upload-area id=textUploadArea ondragover="handleTextDragOver(event)" ondragleave="handleTextDragLeave(event)" ondrop="handleTextDrop(event)">
-            <p>drag and drop your text file here</p>
-            <div class=upload-options>
-                <button class=upload-option onclick="document.getElementById('textFileInput').click()">choose file</button>
-                <button class=upload-option onclick="pasteTextFromClipboard()">paste from clipboard</button>
+            <div class="centered-buttons">
+              <button onclick="startNewSession()">clean another file</button>
             </div>
-            <input type=file id=textFileInput accept=.txt onchange="handleTextFileUpload(event)" class=file-input-hidden>
+          </div>
         </div>
-    </div>
-    <div class=panel id=unstructuredResults style="display:none;">
-        <h2 class=section-title>cleaned text</h2>
-        <div style="padding:16px;background:#f0f7ff;border-left:4px solid #0000ee;border-radius:4px;margin-bottom:20px;">
-            <h3 style="margin:0 0 10px 0;color:#111;font-size:14px;">cleaning operations</h3>
-            <div id=textAuditSection style="font-size:13px;"></div>
+      </section>
+
+      <section class="panel section-hidden" id="semiStructuredSection">
+        <div class="section-heading">
+          <span class="section-kicker">json / xml</span>
+          <h2 class="section-title">upload data</h2>
         </div>
-        <div style="margin-bottom:20px;">
-            <pre id=textOutput style="margin:0;font-family:monospace;font-size:12px;background:#f9f9f9;padding:12px;border:1px solid #d9d9d9;overflow-x:auto;white-space:pre-wrap;"></pre>
+        <div class="split-stack">
+          <div>
+            <h3>json file</h3>
+            <div class="upload-area" id="jsonUploadArea" ondragover="handleJsonDragOver(event)" ondragleave="handleJsonDragLeave(event)" ondrop="handleJsonDrop(event)">
+              <p>drag and drop json here</p>
+              <div class="upload-options">
+                <button class="upload-option" onclick="document.getElementById('jsonFileInput').click()">choose file</button>
+                <button class="upload-option" onclick="pasteJsonFromClipboard()">paste data</button>
+              </div>
+              <input type="file" id="jsonFileInput" accept=".json" onchange="handleJsonFileUpload(event)" class="file-input-hidden">
+            </div>
+          </div>
+          <div>
+            <h3>xml file</h3>
+            <div class="upload-area" id="xmlUploadArea" ondragover="handleXmlDragOver(event)" ondragleave="handleXmlDragLeave(event)" ondrop="handleXmlDrop(event)">
+              <p>drag and drop xml here</p>
+              <div class="upload-options">
+                <button class="upload-option" onclick="document.getElementById('xmlFileInput').click()">choose file</button>
+                <button class="upload-option" onclick="pasteXmlFromClipboard()">paste data</button>
+              </div>
+              <input type="file" id="xmlFileInput" accept=".xml" onchange="handleXmlFileUpload(event)" class="file-input-hidden">
+            </div>
+          </div>
         </div>
-        <div style="text-align:center;padding:12px;background:#fafafa;border-radius:4px;">
-            <button onclick="downloadText()" style="margin:4px;padding:8px 16px;background:#0000ee;color:#fff;cursor:pointer;">download text</button>
-            <button onclick="backToHome()" style="margin:4px;padding:8px 16px;background:#fff;border:1px solid #d9d9d9;cursor:pointer;">clean another file</button>
+      </section>
+
+      <section class="panel section-hidden" id="semiStructuredResults">
+        <div class="section-heading">
+          <span class="section-kicker">output</span>
+          <h2 class="section-title">cleaned data</h2>
         </div>
-    </div>
-    <div class=panel style="margin-top:32px;">
-        <h2 style="margin:0 0 16px 0;font-size:18px;">frequently asked questions</h2>
-        <div style="margin-bottom:16px;">
-            <h3 style="margin:0 0 4px 0;font-size:14px;font-weight:bold;">how do i clean my csv file?</h3>
-            <p style="margin:0;font-size:14px;color:#666;">upload your csv file or paste data directly. our tool will detect issues like duplicates and missing values, then clean your spreadsheet instantly.</p>
+        <div class="result-box">
+          <h3>operations</h3>
+          <div id="jsonAuditSection"></div>
+          <div id="xmlAuditSection"></div>
         </div>
-        <div style="margin-bottom:16px;">
-            <h3 style="margin:0 0 4px 0;font-size:14px;font-weight:bold;">is my data private when i clean spreadsheets?</h3>
-            <p style="margin:0;font-size:14px;color:#666;">files are sent to our server, processed in memory, and returned to you. nothing is written to disk, logged, or shared with any third party. for the full details, see the <a href="/privacy">privacy policy</a>.</p>
+        <pre id="jsonOutput" class="output-box"></pre>
+        <pre id="xmlOutput" class="output-box"></pre>
+        <div class="centered-buttons">
+          <button onclick="downloadSemiStructured()">download json</button>
+          <button onclick="downloadXml()">download xml</button>
+          <button class="secondary-button" onclick="backToHome()">clean another file</button>
         </div>
-        <div style="margin-bottom:16px;">
-            <h3 style="margin:0 0 4px 0;font-size:14px;font-weight:bold;">can i remove duplicates from my spreadsheet?</h3>
-            <p style="margin:0;font-size:14px;color:#666;">yes. our duplicate remover identifies and removes duplicate rows while keeping the first occurrence.</p>
+      </section>
+
+      <section class="panel section-hidden" id="unstructuredSection">
+        <div class="section-heading">
+          <span class="section-kicker">text</span>
+          <h2 class="section-title">upload text</h2>
         </div>
-        <div style="margin-bottom:16px;">
-            <h3 style="margin:0 0 4px 0;font-size:14px;font-weight:bold;">do i need to sign up to clean data?</h3>
-            <p style="margin:0;font-size:14px;color:#666;">no sign-up required. this free online data cleaning tool works immediately without registration.</p>
+        <div class="upload-area" id="textUploadArea" ondragover="handleTextDragOver(event)" ondragleave="handleTextDragLeave(event)" ondrop="handleTextDrop(event)">
+          <p>drag and drop text here</p>
+          <div class="upload-options">
+            <button class="upload-option" onclick="document.getElementById('textFileInput').click()">choose file</button>
+            <button class="upload-option" onclick="pasteTextFromClipboard()">paste data</button>
+          </div>
+          <input type="file" id="textFileInput" accept=".txt" onchange="handleTextFileUpload(event)" class="file-input-hidden">
         </div>
-    </div>
-	    </main>
-	  </div>
-    <script src="/js/register-sw.js"></script>
-    <script src="js/app/init.js"></script>
-    <script src="js/app/utils.js"></script>
-    <script src="js/app/file-ops.js"></script>
-    <script src="js/app/ui.js"></script>
-    <script src="js/app/table.js"></script>
-    <script src="js/app/cleaning.js"></script>
-    <script src="js/app/interactive.js"></script>
-    <script src="js/app/workflow.js"></script>
-    <script src="js/app/game.js"></script>
-    <script src="js/app/json-processor.js"></script>
-    <script src="js/app/xml-processor.js"></script>
-    <script src="js/app/text-processor.js"></script>
+      </section>
+
+      <section class="panel section-hidden" id="unstructuredResults">
+        <div class="section-heading">
+          <span class="section-kicker">output</span>
+          <h2 class="section-title">cleaned text</h2>
+        </div>
+        <div class="result-box">
+          <h3>operations</h3>
+          <div id="textAuditSection"></div>
+        </div>
+        <pre id="textOutput" class="output-box output-text"></pre>
+        <div class="centered-buttons">
+          <button onclick="downloadText()">download text</button>
+          <button class="secondary-button" onclick="backToHome()">clean another file</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <nav class="footnav" aria-label="footer">
+        <a href="/privacy">privacy policy</a>
+        <a href="/terms">terms of service</a>
+        <a href="https://www.linkedin.com/in/calum-x-kerr/" rel="noopener" target="_blank">linkedin</a>
+      </nav>
+    </footer>
+
+  </div>
+
+  <script src="/js/register-sw.js"></script>
+  <script src="js/app/init.js"></script>
+  <script src="js/app/utils.js"></script>
+  <script src="js/app/file-ops.js"></script>
+  <script src="js/app/ui.js?v=quiet-3"></script>
+  <script src="js/app/table.js"></script>
+  <script src="js/app/cleaning.js"></script>
+  <script src="js/app/interactive.js"></script>
+  <script src="js/app/workflow.js"></script>
+  <script src="js/app/game.js"></script>
+  <script src="js/app/json-processor.js"></script>
+  <script src="js/app/xml-processor.js"></script>
+  <script src="js/app/text-processor.js"></script>
 </body>
 </html>

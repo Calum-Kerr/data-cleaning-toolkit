@@ -1,6 +1,7 @@
-function selectStructured(){document.getElementById('welcomeSection').classList.add('hidden');document.getElementById('structuredSection').style.display='block';}
-function selectSemiStructured(){document.getElementById('welcomeSection').classList.add('hidden');document.getElementById('semiStructuredSection').style.display='block';}
-function selectUnstructured(){document.getElementById('welcomeSection').classList.add('hidden');document.getElementById('unstructuredSection').style.display='block';}
+function selectDataMode(sectionId){['structuredSection','semiStructuredSection','unstructuredSection'].forEach(id=>{document.getElementById(id).style.display=id===sectionId?'block':'none';});document.getElementById('welcomeSection').classList.add('hidden');}
+function selectStructured(){selectDataMode('structuredSection');}
+function selectSemiStructured(){selectDataMode('semiStructuredSection');}
+function selectUnstructured(){selectDataMode('unstructuredSection');}
 function backToHome(){location.reload();}
 function showComingSoon(type){alert(`${type} data cleaning is coming soon! please select "structured data" for now.`);}
 function startNewSession(){location.reload();}

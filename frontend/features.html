@@ -1,171 +1,152 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>features | data cleaning toolkit</title>
+<meta name="description" content="Features in the Data Cleaning Toolkit: CSV cleaning, duplicate detection, missing value handling, JSON/XML cleaning, text cleaning, privacy-first processing, and audit-friendly output.">
+<link rel="canonical" href="https://tidy.calumkerr.com/features">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Features | Data Cleaning Toolkit">
+<meta property="og:site_name" content="Data Cleaning Toolkit">
+<meta property="og:locale" content="en_GB">
+<meta property="og:description" content="CSV cleaning, duplicate detection, missing value handling, JSON/XML cleaning, text cleaning, and privacy-first processing.">
+<meta property="og:url" content="https://tidy.calumkerr.com/features">
+<meta property="og:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="Data Cleaning Toolkit app icon">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Features | Data Cleaning Toolkit">
+<meta name="twitter:description" content="CSV cleaning, duplicate detection, missing value handling, JSON/XML cleaning, text cleaning, and privacy-first processing.">
+<meta name="twitter:image" content="https://www.calumkerr.com/android-chrome-512x512.png">
+<meta name="twitter:image:alt" content="Data Cleaning Toolkit app icon">
+<link rel="icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="/css/site.css?v=quiet-5">
+</head>
+<body>
+<div class="wrap">
+<header class="site-masthead">
+<nav class="topnav" aria-label="site">
+<a href="/">home</a>
+<a href="/app">app</a>
+<a href="/honours-project">honours project</a>
+<a href="https://github.com/Calum-Kerr/data-cleaning-toolkit" rel="noopener" target="_blank">github</a>
+<a href="https://github.com/Calum-Kerr/data-cleaning-toolkit/issues/new/choose" rel="noopener" target="_blank">bugs</a>
+</nav>
+<div class="title-row">
+<div>
+<p class="eyebrow">data-cleaning-toolkit / features</p>
+<h1>features</h1>
+</div>
+<p class="classified-tag">plain tools</p>
+</div>
+</header>
 
-<html lang=en-GB>
-  <head>
-    <meta charset=utf-8></meta>
-    <meta name=viewport content=width=device-width, initial-scale=1></meta>
-    <title>features | data cleaning toolkit</title>
-    <meta name=description content=Features of the Data Cleaning Toolkit: missing value detection, duplicate detection and removal, null standardisation, repeatable results, and privacy-first server-based processing.></meta>
-    <link rel=canonical href=https://tidy.calumkerr.com/features></link>
-    <meta name=robots content=index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1></meta>
-    <meta name=theme-color content=#f4f4f4></meta>
+<main role="main">
+<section class="panel welcome-section page-intro">
+<h2>what it does</h2>
+<p class="lede">small, direct tools for cleaning messy files without turning the page into a dashboard.</p>
+<div class="cta-buttons">
+<a class="cta-button primary" href="/app">open the app</a>
+<a class="cta-button" href="/honours-project">honours project</a>
+</div>
+</section>
 
-    <meta property=og:type content=website></meta>
-    <meta property=og:title content=Features | Data Cleaning Toolkit></meta>
-    <meta property=og:site_name content=Calum Kerr></meta>
-    <meta property=og:locale content=en_GB></meta>
-    <meta property=og:description content=What the Data Cleaning Toolkit can detect and clean, and how files are handled securely.></meta>
-    <meta property=og:url content=https://tidy.calumkerr.com/features></meta>
-    <meta property=og:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
-    <meta property=og:image:width content=512></meta>
-    <meta property=og:image:height content=512></meta>
-    <meta property=og:image:alt content=Data Cleaning Toolkit app icon></meta>
-    <meta name=twitter:card content=summary></meta>
-    <meta name=twitter:title content=Features | Data Cleaning Toolkit></meta>
-    <meta name=twitter:description content=What the Data Cleaning Toolkit can detect and clean, and how files are handled securely.></meta>
-    <meta name=twitter:image content=https://www.calumkerr.com/android-chrome-512x512.png></meta>
-    <meta name=twitter:image:alt content=Data Cleaning Toolkit app icon></meta>
+<section class="panel notice-board" aria-label="quick feature notes">
+<ul class="classified-list">
+<li>csv, json/xml, and text workflows</li>
+<li>audit-friendly output where possible</li>
+<li>files are processed in memory and discarded</li>
+</ul>
+</section>
 
-    <link rel=icon href=/favicon.ico></link>
-    <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png></link>
-    <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png></link>
-    <link rel=apple-touch-icon href=/apple-touch-icon.png></link>
-    <link rel=manifest href=/manifest.json></link>
+<section class="panel">
+<div class="section-heading">
+<span class="section-kicker">csv</span>
+<h2 class="section-title">spreadsheet cleaning</h2>
+</div>
+<div class="content-cols">
+<section>
+<h3>duplicates and missing values</h3>
+<p>upload a csv, paste data, or try a sample dataset. the toolkit is built around common spreadsheet cleanup jobs: duplicate rows, missing values, and simple standardisation.</p>
+<ul>
+<li>detect duplicate rows</li>
+<li>handle common missing-value markers</li>
+<li>preview cleaned output before download</li>
+</ul>
+</section>
+<section>
+<h3>plain review flow</h3>
+<p>the interface stays deliberately simple. it shows the cleaning step, the output preview, and the operations log without hiding the work behind a decorative interface.</p>
+<ul>
+<li>sample datasets for quick testing</li>
+<li>downloadable cleaned files</li>
+<li>repeatable cleaning behaviour</li>
+</ul>
+</section>
+</div>
+</section>
 
-    <style>
-      :root{
-        /* 60 / 30 / 10 colour rule: background / panels / accents */
-        --c60:#f4f4f4;
-        --c30:#ffffff;
-        --c10:#0000ee;
-        --t:#000;
-        --muted:#666;
-        --line:#d9d9d9;
-      }
-      body{margin:0;background:var(--c60);color:var(--t);font:14px/1.45 Arial,Helvetica,sans-serif}
-      a{color:var(--c10);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
-      a:focus{outline:2px dotted #000;outline-offset:2px}
-      .wrap{max-width:980px;margin:0 auto;padding:16px}
-      .box{background:var(--c30);border:1px solid var(--line);padding:14px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
-      .top{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
-      h1{font-size:24px;margin:0 0 8px 0}
-      h2{font-size:16px;margin:16px 0 8px 0}
-      p{margin:0 0 10px 0}
-      .muted{color:var(--muted)}
-      .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-      .btn-group{display:flex;gap:10px;flex-wrap:wrap}
-      .btn-group+.btn-group{margin-top:8px}
-      .btn{display:inline-block;padding:10px 16px;border:1px solid var(--line);background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.05);min-height:44px;display:flex;align-items:center}
-      .btn:hover{background:#f0f0f0;border-color:#0000cc}
-      .btn:active{background:#e8e8e8}
-      .btn:focus-visible{outline:2px solid var(--c10);outline-offset:2px}
-      .btn.primary{border-color:var(--c10);background:var(--c10);color:#fff}
-      .btn.primary:hover{background:#0000cc}
-      .cols{display:grid;grid-template-columns:1fr;gap:14px}
-      @media (min-width:840px){.cols{grid-template-columns:1fr 1fr}}
-      ul{margin:6px 0 10px 18px;padding:0}
-      li{margin:0 0 4px 0}
-      hr{border:none;border-top:1px solid var(--line);margin:14px 0}
-      footer{font-size:13px;color:#333}
-      code{font-family:Consolas,Monaco,monospace;font-size:12px}
-      @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-    </style>
-  </head>
-  <body>
-    <div class=wrap>
-      <main class=box role=main>
-        <div class=top>
-          <div>
-            <h1>features</h1>
-            <p class=muted>a clear list of what the tool can do, with plain limits and behaviour.</p>
-            <div class=btns>
-              <a class="btn primary" href=/app>open the app</a>
-              <a class=btn href=/>home</a>
-              <a class=btn href=/honours-project>honours project</a>
-              <a class=btn href=https://github.com/Calum-Kerr/data-cleaning-toolkit rel=noopener target=_blank>github</a>
-            </div>
-          </div>
-          <div class=muted>
-            <p><strong>goal</strong></p>
-            <p>fast cleaning, repeatable results, and no mystery behaviour.</p>
-          </div>
-        </div>
+<section class="panel">
+<div class="section-heading">
+<span class="section-kicker">formats</span>
+<h2 class="section-title">json, xml, and text</h2>
+</div>
+<div class="content-cols">
+<section>
+<h3>semi-structured files</h3>
+<p>json and xml workflows are kept separate from csv so the tool does not pretend every file is a spreadsheet. upload or paste the data and inspect the cleaned result.</p>
+<ul>
+<li>json upload and paste support</li>
+<li>xml upload and paste support</li>
+<li>download cleaned output</li>
+</ul>
+</section>
+<section>
+<h3>text cleanup</h3>
+<p>the text workflow is for simple unstructured cleaning jobs. it follows the same plain pattern: input, clean, inspect, download.</p>
+<ul>
+<li>text file upload</li>
+<li>clipboard paste</li>
+<li>cleaned text preview</li>
+</ul>
+</section>
+</div>
+</section>
 
-        <hr></hr>
+<section class="panel">
+<div class="section-heading">
+<span class="section-kicker">design</span>
+<h2 class="section-title">privacy and transparency</h2>
+</div>
+<div class="content-cols">
+<section>
+<h3>privacy-first handling</h3>
+<p>files are sent to the server, processed in memory, and discarded straight after cleaning. they are not written to disk, logged, or shared with third parties.</p>
+</section>
+<section>
+<h3>auditable changes</h3>
+<p>the project favours simple, inspectable algorithms over hidden magic. the aim is to make cleaning decisions easier to repeat and explain.</p>
+</section>
+</div>
+</section>
+</main>
 
-        <div class=cols>
-          <section>
-            <h2>supported input</h2>
-            <p>the current focus is structured csv files: rows and columns with commas separating values. that covers most simple datasets used in spreadsheets, basic analytics, and machine learning demos.</p>
-            <p>if your data is messy text, mixed formats, or deeply nested structures, that is in the future roadmap (semi-structured and unstructured).</p>
-          </section>
-
-          <section>
-            <h2>how you use it</h2>
-            <p>you can upload a csv or paste csv text. then you run detection to see what issues exist, and run cleaning steps to produce a cleaned file you can download.</p>
-            <p>it is designed so you can explain what you did in plain english, for example: you removed duplicate rows and standardised null values.</p>
-          </section>
-        </div>
-
-        <div class=cols>
-          <section>
-            <h2>detection</h2>
-            <p>detection measures issues without changing data. this makes it easier to justify changes and compare before and after.</p>
-            <ul>
-              <li><strong>missing value detection:</strong> counts empty cells and missing entries.</li>
-              <li><strong>duplicate detection:</strong> identifies duplicated rows.</li>
-            </ul>
-            <p class=muted>these are deliberately simple and deterministic so results are stable and easy to audit.</p>
-          </section>
-
-          <section>
-            <h2>cleaning</h2>
-            <p>cleaning applies a known change, and the output is a new csv.</p>
-            <ul>
-              <li><strong>remove duplicate rows:</strong> keeps the first occurrence of each row and removes later duplicates.</li>
-              <li><strong>standardise common null values:</strong> converts text like <code>n/a</code>, <code>null</code>, or <code>none</code> into a consistent missing representation.</li>
-              <li><strong>download cleaned csv:</strong> exports the cleaned result for reuse.</li>
-            </ul>
-          </section>
-        </div>
-
-        <div class=cols>
-          <section>
-            <h2>how files are handled</h2>
-            <p>when you upload a file and run a cleaning operation, it is sent to our server over https, processed in memory, and returned to you. the file contents are never written to disk, never logged, never stored, and never shared with any third party. once the cleaning operation completes, the file is discarded from server memory.</p>
-            <p>the app interface itself loads and stays usable offline once you have visited it, so you can return to the page without a connection. but cleaning operations always require a server connection.</p>
-          </section>
-        </div>
-
-        <div class=cols>
-          <section>
-            <h2>limits and non-goals</h2>
-            <p>this is not a spreadsheet replacement and it is not an enterprise pipeline tool. it is a focused toolkit that keeps the behaviour understandable and visible.</p>
-            <ul>
-              <li>no hidden smart cleaning rules.</li>
-              <li>no automatic changes without you choosing the operation.</li>
-              <li>no requirement to sign in.</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2>links</h2>
-            <ul>
-              <li><a href=/>home</a></li>
-              <li><a href=/app>open the app</a></li>
-              <li><a href=/honours-project>honours project</a></li>
-              <li><a href=https://stats.uptimerobot.com/XFEpE5rs9n rel=noopener target=_blank>status</a></li>
-              <li><a href=/privacy>privacy policy</a> and <a href=/terms>terms of service</a></li>
-              <li><a href=/sitemap.xml>sitemap</a> and <a href=/robots.txt>robots.txt</a></li>
-            </ul>
-          </section>
-        </div>
-
-        <hr></hr>
-        <footer>
-          <p>made by calum kerr. simple design on purpose. if something feels unclear, that is a bug.</p>
-        </footer>
-      </main>
-    </div>
-    <script src="/js/register-sw.js"></script>
-  </body>
+<footer class="site-footer">
+<nav class="footnav" aria-label="footer">
+<a href="/privacy">privacy policy</a>
+<a href="/terms">terms of service</a>
+<a href="https://www.linkedin.com/in/calum-x-kerr/" rel="noopener" target="_blank">linkedin</a>
+</nav>
+</footer>
+</div>
+<script src="/js/register-sw.js"></script>
+</body>
 </html>
