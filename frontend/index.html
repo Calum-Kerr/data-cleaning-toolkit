@@ -74,9 +74,9 @@
                 </div>
                 <input type=file id=fileInput accept=.csv onchange="handleFileUpload(event)" aria-label=Upload CSV file style="display: none;">
             </div>
-            <div style="margin-top: 20px; padding: 14px; background: #fafafa; border: 1px solid #d9d9d9;">
-                <h3 style="margin: 0 0 10px 0; color: #111; font-size: 14px;">or try a real dataset:</h3>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <div class=sample-data-box>
+                <h3>or try a real dataset:</h3>
+                <div class=sample-data-buttons>
                     <button class=upload-option onclick="loadSampleDataset('airbnb')">airbnb listings</button>
                     <button class=upload-option onclick="loadSampleDataset('credit')">credit card data</button>
                     <button class=upload-option onclick="loadSampleDataset('titanic')">titanic passengers</button>
