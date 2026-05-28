@@ -1,5 +1,13 @@
 {
+  "scripts": {
+    "dev": "serve frontend -l 3000",
+    "start": "serve frontend -l 3000"
+  },
+  "dependencies": {
+    "serve": "^14.2.6"
+  },
   "devDependencies": {
     "@playwright/test": "^1.58.2"
   }
+}
 }
