@@ -1,0 +1,186 @@
+/* design system: colours, typography, spacing, components */
+
+:root {
+  /* colours */
+  --colour-bg-page: #f4f4f4;
+  --colour-panel: #ffffff;
+  --colour-text: #111111;
+  --colour-text-muted: #555555;
+  --colour-border: #d9d9d9;
+  --colour-accent: #0000ee;
+
+  /* typography */
+  --font-family: Arial, Helvetica, sans-serif;
+  --font-mono: Consolas, Monaco, monospace;
+
+  /* spacing scale */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 48px;
+}
+
+/* base styles */
+
+body {
+  margin: 0;
+  background-color: var(--colour-bg-page);
+  color: var(--colour-text);
+  font-family: var(--font-family);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+a {
+  color: var(--colour-accent);
+  text-decoration: underline;
+}
+
+.wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 var(--space-2);
+}
+
+.panel {
+  background-color: var(--colour-panel);
+  border: 1px solid var(--colour-border);
+  padding: var(--space-3);
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--colour-text);
+  margin: 0 0 var(--space-1) 0;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--colour-text);
+  margin: 0 0 var(--space-2) 0;
+}
+
+h3 {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--colour-text);
+  margin: 0 0 var(--space-1) 0;
+}
+
+p {
+  margin: 0 0 var(--space-2) 0;
+}
+
+.prose p,
+.justify {
+  text-align: justify;
+}
+
+/* navigation */
+
+.topnav {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--colour-border);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.topnav a {
+  padding: 10px 14px;
+  border: 1px solid var(--colour-border);
+  background-color: var(--colour-panel);
+  color: var(--colour-text);
+  text-decoration: none;
+  font-size: 14px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-family);
+}
+
+.topnav a:hover {
+  background-color: var(--colour-bg-page);
+}
+
+/* buttons */
+
+.btn-primary,
+.btn-secondary {
+  min-height: 44px;
+  font-size: 15px;
+  padding: 12px 20px;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+}
+
+.btn-primary {
+  background-color: var(--colour-accent);
+  color: #ffffff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0000cc;
+}
+
+.btn-secondary {
+  background-color: var(--colour-panel);
+  color: var(--colour-text);
+  border: 1px solid var(--colour-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--colour-bg-page);
+  border-color: #0000cc;
+}
+
+/* footer */
+
+.site-footer {
+  font-size: 13px;
+  color: var(--colour-text-muted);
+  border-top: 1px solid var(--colour-border);
+  padding-top: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* responsive */
+
+@media (max-width: 760px) {
+  .content-cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+}
+
+@media (min-width: 761px) {
+  .content-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 15px;
+  }
+
+  .topnav {
+    gap: var(--space-1);
+  }
+
+  .topnav a {
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+}
