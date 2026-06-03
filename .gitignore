@@ -45,3 +45,9 @@ ruvector.db
 scratch/
 vcpkg/
 vcpkg_installed/
+backlog-dispatcher.yaml
+deep-reviewer.yaml
+end-to-end-verifier.yaml
+pair-reviewer.yaml
+pr-author.yaml
+pr-risk-reviewer.yaml
