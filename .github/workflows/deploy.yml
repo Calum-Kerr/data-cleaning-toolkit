@@ -12,7 +12,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_HOST }}
-          username: root
+          username: deploy
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
             set -e
