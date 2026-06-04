@@ -10,6 +10,7 @@ static std::map<std::string, int> endpointCalls;
 static std::mutex analyticsMutex;
 
 void recordEndpointCall(const std::string& endpoint) {
+  std::lock_guard<std::mutex> lock(analyticsMutex);
   endpointCalls[endpoint]++;
 }
 
