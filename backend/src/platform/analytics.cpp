@@ -22,8 +22,11 @@ void writeAnalyticsSummary() {
   std::tm tm = localtime_safe(time);
   ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
   file << "ANALYTICS SUMMARY " << ss.str() << "\n";
-  for (const auto& pair : endpointCalls) {
-    file << pair.first << ": " << pair.second << " calls\n";
+  {
+    std::lock_guard<std::mutex> lock(analyticsMutex);
+    for (const auto& pair : endpointCalls) {
+      file << pair.first << ": " << pair.second << " calls\n";
+    }
   }
   file << "\n";
 }
