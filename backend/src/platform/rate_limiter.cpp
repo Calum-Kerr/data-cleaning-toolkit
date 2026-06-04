@@ -1,11 +1,13 @@
 #include "rate_limiter.h"
 #include <map>
 #include <chrono>
+#include <mutex>
 
 const int WINDOW_SECONDS=60;
 const int MAX_REQUESTS=100;
 std::map<std::string, int> requestCounts;
 std::map<std::string, std::chrono::steady_clock::time_point> lastReset;
+static std::mutex rateLimiterMutex;
 
 void resetIfNeeded(const std::string& ip) {
   auto now=std::chrono::steady_clock::now();
