@@ -173,6 +173,6 @@ int main(){
   registerCleaningRoutes(app);
   registerFrontendRoutes(app);
   logFrontendDirStartup();
-  app.port(8080).concurrency(16).run();
+  app.bindaddr("127.0.0.1").port(8080).concurrency(16).run();
 }
 
