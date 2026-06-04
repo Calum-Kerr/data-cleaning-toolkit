@@ -24,6 +24,7 @@ void resetIfNeeded(const std::string& ip) {
 }
 
 bool checkRateLimit(const std::string& ip) {
+  std::lock_guard<std::mutex> lock(rateLimiterMutex);
   resetIfNeeded(ip);
   if (requestCounts[ip]>=MAX_REQUESTS) return false;
   requestCounts[ip]++;
