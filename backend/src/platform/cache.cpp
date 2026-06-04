@@ -27,6 +27,7 @@ void setCachedFile(const std::string& filepath, const std::string& content) {
 }
 
 bool isCacheValid(const std::string& filepath) {
+  std::lock_guard<std::mutex> lock(cacheMutex);
   auto it = fileCache.find(filepath);
   if (it == fileCache.end()) return false;
   auto now = std::chrono::system_clock::now();
