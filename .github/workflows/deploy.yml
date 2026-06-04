@@ -43,7 +43,7 @@ jobs:
             ./vcpkg/vcpkg install --x-manifest-root=. --x-install-root=./vcpkg_installed
 
             # decide if rebuild is needed
-            BINARY_PATH="/root/data-cleaning-toolkit/backend/build/Toolkit"
+            BINARY_PATH="/root/data-cleaning-toolkit/build/Toolkit"
             NEEDS_REBUILD=false
 
             if [ ! -f "$BINARY_PATH" ]; then
