@@ -43,6 +43,7 @@ void createBackup() {
   }
   globfree(&glob_result);
 
+  bool tarOk = false;
   if (tarArgs.size() > 3) {
     // build char* argv array for execv
     std::vector<char*> argv;
@@ -60,9 +61,17 @@ void createBackup() {
       // parent: wait for tar to finish
       int status;
       waitpid(pid, &status, 0);
+      tarOk = WIFEXITED(status) && WEXITSTATUS(status) == 0;
     }
   }
 
   std::ofstream manifest(backupDir + "/manifest.txt", std::ios::app);
-  manifest << "Backup created: " << ss.str() << " at " << backupName << "\n";
+  if (tarOk) {
+    manifest << "Backup created: " << ss.str() << " at " << backupName << "\n";
+  } else if (tarArgs.size() == 3) {
+    manifest << "Backup skipped (no log files found): " << ss.str() << "\n";
+  } else {
+    manifest << "Backup FAILED: " << ss.str() << " at " << backupName << "\n";
+    std::cerr << "toolkit backup failed at " << ss.str() << "\n";
+  }
 }
