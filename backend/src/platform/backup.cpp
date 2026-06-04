@@ -27,8 +27,40 @@ void createBackup() {
   std::string backupDir = getBackupDirectory();
   std::string backupName = backupDir + "/backup_" + ss.str() + ".tar.gz";
 
-  std::string cmd = "tar -czf " + backupName + " /tmp/toolkit*.log 2>/dev/null";
-  system(cmd.c_str());
+  // expand the glob for log files and build argv for execv
+  glob_t glob_result;
+  std::vector<std::string> tarArgs;
+  tarArgs.push_back("tar");
+  tarArgs.push_back("-czf");
+  tarArgs.push_back(backupName);
+
+  int gl = glob("/tmp/toolkit*.log", GLOB_NOSORT, nullptr, &glob_result);
+  if (gl == 0) {
+    for (size_t i = 0; i < glob_result.gl_pathc; i++) {
+      tarArgs.push_back(glob_result.gl_pathv[i]);
+    }
+  }
+  globfree(&glob_result);
+
+  if (tarArgs.size() > 3) {
+    // build char* argv array for execv
+    std::vector<char*> argv;
+    for (auto& a : tarArgs) {
+      argv.push_back(&a[0]);
+    }
+    argv.push_back(nullptr);
+
+    pid_t pid = fork();
+    if (pid == 0) {
+      // child: execute tar directly, no shell
+      execv("/bin/tar", argv.data());
+      _exit(1);
+    } else if (pid > 0) {
+      // parent: wait for tar to finish
+      int status;
+      waitpid(pid, &status, 0);
+    }
+  }
 
   std::ofstream manifest(backupDir + "/manifest.txt", std::ios::app);
   manifest << "Backup created: " << ss.str() << " at " << backupName << "\n";
