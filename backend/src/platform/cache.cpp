@@ -6,6 +6,7 @@ static std::mutex cacheMutex;
 static const int CACHE_TTL_SECONDS = 3600;
 
 std::string getCachedFile(const std::string& filepath) {
+  std::lock_guard<std::mutex> lock(cacheMutex);
   auto it = fileCache.find(filepath);
   if (it != fileCache.end()) {
     auto now = std::chrono::system_clock::now();
