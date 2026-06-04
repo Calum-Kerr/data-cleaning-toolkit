@@ -27,7 +27,7 @@ jobs:
             trap 'echo "[trap] received SIGTERM at $(date -Iseconds)"' TERM
             trap 'echo "[trap] received SIGHUP at $(date -Iseconds)"' HUP
 
-            cd /root/data-cleaning-toolkit
+            cd /opt/toolkit
 
             # fetch and stage code
             echo "=== Fetching code ==="
@@ -43,7 +43,7 @@ jobs:
             ./vcpkg/vcpkg install --x-manifest-root=. --x-install-root=./vcpkg_installed
 
             # decide if rebuild is needed
-            BINARY_PATH="/root/data-cleaning-toolkit/build/Toolkit"
+            BINARY_PATH="/opt/toolkit/build/Toolkit"
             NEEDS_REBUILD=false
 
             if [ ! -f "$BINARY_PATH" ]; then
@@ -58,7 +58,7 @@ jobs:
             if [ "$NEEDS_REBUILD" = true ]; then
               echo "=== Building ==="
               echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
-              cd /root/data-cleaning-toolkit
+              cd /opt/toolkit
               rm -rf build && mkdir -p build && cd build
               cmake ../backend -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
               make -j$(nproc)
