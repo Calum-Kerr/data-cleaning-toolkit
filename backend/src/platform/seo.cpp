@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include <mutex>
 #include "time_safe.h"
 
 struct PageMetrics {
@@ -13,6 +14,7 @@ struct PageMetrics {
 };
 
 static std::map<std::string, PageMetrics> pageMetrics;
+static std::mutex seoMutex;
 
 void recordPageMetric(const std::string& path, int statusCode, long responseTime) {
   PageMetrics metric;
