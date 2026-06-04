@@ -17,6 +17,7 @@ static std::map<std::string, PageMetrics> pageMetrics;
 static std::mutex seoMutex;
 
 void recordPageMetric(const std::string& path, int statusCode, long responseTime) {
+  std::lock_guard<std::mutex> lock(seoMutex);
   PageMetrics metric;
   metric.statusCode = statusCode;
   metric.responseTime = responseTime;
