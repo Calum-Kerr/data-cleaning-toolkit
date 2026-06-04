@@ -17,7 +17,7 @@ jobs:
           script: |
             set -e
             set -x
-            exec > >(tee -a /var/log/toolkit-deploy.log) 2>&1
+            exec > >(tee -a /home/deploy/deploy.log) 2>&1
 
             echo "================================================================"
             echo "DEPLOY RUN START: $(date -Iseconds) PID=$$"
