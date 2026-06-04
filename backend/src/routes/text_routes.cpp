@@ -43,6 +43,7 @@ void registerTextRoutes(crow::SimpleApp& app){
   CROW_ROUTE(app,"/api/natural-sort/<int>").methods("POST"_method)
   ([](const crow::request& req, int colIndex){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/natural-sort", 429); return crow::response(429);}
+    if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
     auto parsed=parseCSV(req.body);
     auto sorted=naturalSort(parsed,colIndex);
     crow::json::wvalue result;
