@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <glob.h>
+#include <vector>
 #include "time_safe.h"
 
 namespace fs = std::filesystem;
