@@ -33,6 +33,17 @@ jobs:
             echo "=== Fetching code ==="
             echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
             git fetch origin main
+
+            # abort if server has uncommitted changes
+            if ! git diff --quiet || ! git diff --cached --quiet; then
+              echo "ERROR: Deploy aborted — uncommitted changes on server."
+              echo "  unstaged:"
+              git diff --stat
+              echo "  staged:"
+              git diff --cached --stat
+              exit 1
+            fi
+
             CHANGED_FILES=$(git diff HEAD origin/main --name-only)
             git reset --hard origin/main
             git submodule update --init --recursive
