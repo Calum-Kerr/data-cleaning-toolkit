@@ -58,9 +58,9 @@ jobs:
             if [ "$NEEDS_REBUILD" = true ]; then
               echo "=== Building ==="
               echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
-              cd /root/data-cleaning-toolkit/backend
+              cd /root/data-cleaning-toolkit
               rm -rf build && mkdir -p build && cd build
-              cmake .. -DCMAKE_TOOLCHAIN_FILE=../../vcpkg/scripts/buildsystems/vcpkg.cmake
+              cmake ../backend -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
               make -j$(nproc)
               if [ ! -f Toolkit ]; then
                 echo "ERROR: build failed, Toolkit binary not created"
