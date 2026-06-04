@@ -71,51 +71,11 @@ jobs:
               echo "no rebuild needed, restarting existing binary"
             fi
 
-            # stop existing toolkit process
-            echo "=== Stopping existing process ==="
-            echo "[stopping:start] $(date -Iseconds)"
-            if [ -f /var/run/toolkit.pid ]; then
-              echo "[stopping:pidfile-exists] reading PID file"
-              OLD_PID=$(cat /var/run/toolkit.pid)
-              echo "[stopping:old-pid] $OLD_PID"
-              if kill -0 "$OLD_PID" 2>/dev/null; then
-                echo "[stopping:process-alive] attempting graceful kill"
-                kill "$OLD_PID" || echo "[stopping:kill-exit] $?"
-                sleep 1
-                if kill -0 "$OLD_PID" 2>/dev/null; then
-                  echo "[stopping:process-still-alive] attempting -9"
-                  kill -9 "$OLD_PID" || echo "[stopping:kill-9-exit] $?"
-                  sleep 1
-                fi
-              else
-                echo "[stopping:process-dead] PID $OLD_PID not found"
-              fi
-              echo "[stopping:removing-pidfile]"
-              rm -f /var/run/toolkit.pid
-            else
-              echo "[stopping:no-pidfile] skipping PID-based kill"
-            fi
-            echo "[stopping:before-pkill] $(date -Iseconds)"
-            pkill -f "Toolkit$" || echo "[stopping:pkill-exit] $?"
-            echo "[stopping:after-pkill] $(date -Iseconds)"
-            echo "[stopping:end] $(date -Iseconds)"
-
-            echo "[stopping:final-check]"
-            if pgrep -f "Toolkit$" > /dev/null; then
-              echo "ERROR: Toolkit still running after kill attempts, refusing to start new instance"
-              pgrep -f "Toolkit$" | xargs ps -p 2>/dev/null
-              exit 1
-            fi
-            echo "[stopping:confirmed-dead]"
-
-            # start new binary
-            echo "=== Starting Toolkit ==="
+            # restart via systemd
+            echo "=== Restarting toolkit service ==="
             echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
-            cd /root/data-cleaning-toolkit/backend/build
-            # must launch from backend/build so getFrontendDir() resolves ../../frontend correctly
-            nohup ./Toolkit >/var/log/toolkit.log 2>&1 &
-            echo $! > /var/run/toolkit.pid
-            sleep 3
+            systemctl restart toolkit.service
+            sleep 2
 
             # verify server is responding
             echo "=== Verifying server ==="
