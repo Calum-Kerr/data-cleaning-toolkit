@@ -19,6 +19,7 @@ std::string getCachedFile(const std::string& filepath) {
 }
 
 void setCachedFile(const std::string& filepath, const std::string& content) {
+  std::lock_guard<std::mutex> lock(cacheMutex);
   CachedFile cached;
   cached.content = content;
   cached.timestamp = std::chrono::system_clock::now();
