@@ -74,7 +74,7 @@ jobs:
             # restart via systemd
             echo "=== Restarting toolkit service ==="
             echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
-            systemctl restart toolkit.service
+            sudo systemctl restart toolkit.service
             sleep 2
 
             # verify server is responding
