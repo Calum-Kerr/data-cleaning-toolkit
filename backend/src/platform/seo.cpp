@@ -33,8 +33,11 @@ void writeSeoReport() {
   std::tm tm = localtime_safe(time);
   ss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
   file << "SEO REPORT " << ss.str() << "\n";
-  for (const auto& pair : pageMetrics) {
-    file << pair.first << " Status: " << pair.second.statusCode << " ResponseTime: " << pair.second.responseTime << "ms\n";
+  {
+    std::lock_guard<std::mutex> lock(seoMutex);
+    for (const auto& pair : pageMetrics) {
+      file << pair.first << " Status: " << pair.second.statusCode << " ResponseTime: " << pair.second.responseTime << "ms\n";
+    }
   }
   file << "\n";
 }
