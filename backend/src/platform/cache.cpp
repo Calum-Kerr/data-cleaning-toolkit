@@ -1,6 +1,8 @@
 #include "cache.h"
+#include <mutex>
 
 static std::map<std::string, CachedFile> fileCache;
+static std::mutex cacheMutex;
 static const int CACHE_TTL_SECONDS = 3600;
 
 std::string getCachedFile(const std::string& filepath) {
