@@ -3,9 +3,11 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include <mutex>
 #include "time_safe.h"
 
 static std::map<std::string, int> endpointCalls;
+static std::mutex analyticsMutex;
 
 void recordEndpointCall(const std::string& endpoint) {
   endpointCalls[endpoint]++;
