@@ -4,7 +4,9 @@
 #include <chrono>
 #include <iomanip>
 #include <filesystem>
-#include <cstdlib>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <glob.h>
 #include "time_safe.h"
 
 namespace fs = std::filesystem;
