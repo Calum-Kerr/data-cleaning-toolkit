@@ -34,6 +34,48 @@ int main(){
     logRequest("GET", "/api/health", 200);
     crow::json::wvalue result; result["status"]="ok"; return crow::response(result);
   });
+  CROW_ROUTE(app,"/health").methods("GET"_method)
+  ([](const crow::request&){
+    crow::json::wvalue result;
+
+    // check disk space on /tmp
+    std::error_code diskEc;
+    auto space=std::filesystem::space("/tmp",diskEc);
+    if(!diskEc){
+      double freePct=(static_cast<double>(space.free)/space.capacity)*100.0;
+      result["disk_free_percent"]=static_cast<int>(freePct);
+      if(freePct<10.0){
+        result["status"]="unhealthy";
+        result["reason"]="disk space critical on /tmp";
+        auto resp=crow::response(503,result);
+        resp.set_header("Content-Type","application/json");
+        return resp;
+      }
+    } else {
+      result["disk_free_percent"]=-1;
+      result["disk_error"]=diskEc.message();
+    }
+
+    // check last backup age from manifest file mtime
+    std::error_code manifestEc;
+    std::filesystem::path manifestPath("/tmp/toolkit_backups/manifest.txt");
+    if(std::filesystem::exists(manifestPath,manifestEc)){
+      auto mtime=std::filesystem::last_write_time(manifestPath,manifestEc);
+      if(!manifestEc){
+        auto now=std::filesystem::file_time_type::clock::now();
+        auto age=std::chrono::duration_cast<std::chrono::hours>(now-mtime).count();
+        result["last_backup_hours_ago"]=static_cast<int>(age);
+        if(age>192){
+          result["warning"]="last backup is over 8 days old";
+        }
+      }
+    }
+
+    result["status"]="ok";
+    auto resp=crow::response(result);
+    resp.set_header("Content-Type","application/json");
+    return resp;
+  });
   CROW_ROUTE(app,"/api/parse").methods("POST"_method)
   ([](const crow::request& req){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/parse", 429); return crow::response(429);}
