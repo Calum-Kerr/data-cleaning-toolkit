@@ -774,7 +774,7 @@ kbd {
 
 /* keyboard navigation styles for merge game */
 .keyboard-focus {
-  outline: 3px solid #0000ee !important;
+  outline: 3px solid #000099 !important;
   outline-offset: 2px;
   z-index: 2;
   position: relative;
