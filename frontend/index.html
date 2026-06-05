@@ -135,7 +135,7 @@
           </div>
           <div class="results-section">
             <div class="result-box">
-              <h3 onclick="document.getElementById('auditLogDisplay').style.maxHeight=document.getElementById('auditLogDisplay').style.maxHeight==='none'?'400px':'none';">operations</h3>
+              <h3 tabindex="0" role="button" aria-expanded="true" onclick="var d=document.getElementById('auditLogDisplay');var c=d.style.maxHeight==='none';d.style.maxHeight=c?'400px':'none';this.setAttribute('aria-expanded',!c);" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">operations</h3>
               <div id="auditLogDisplay" class="audit-log"></div>
             </div>
             <div class="preview-section">
