@@ -45,6 +45,39 @@ body {
   line-height: 1.45;
 }
 
+/* skip-to-content link — hidden until focused */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  left: 8px;
+  top: 8px;
+  width: auto;
+  height: auto;
+  background: #ffffff;
+  padding: 10px 16px;
+  z-index: 9999;
+  color: #0000ee;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* visually hidden but accessible to screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 a {
   color: var(--colour-link);
   text-decoration: underline;
