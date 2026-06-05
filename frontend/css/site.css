@@ -739,6 +739,19 @@ kbd {
   pointer-events: none;
 }
 
+/* keyboard navigation styles for merge game */
+.keyboard-focus {
+  outline: 3px solid #0000ee !important;
+  outline-offset: 2px;
+  z-index: 2;
+  position: relative;
+}
+
+.keyboard-selected {
+  border: 2px solid #006400 !important;
+  background: #e8f6df !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
