@@ -161,6 +161,15 @@ The source code is self-documenting where possible — see comments in `backend/
 
 Contributions are welcome! Please read the [Contributing Guidelines](CONTRIBUTING.md) first.
 
+## Third-Party Licenses
+
+The frontend bundles the following MIT-licensed libraries (in `frontend/js/vendor/`):
+
+- **jsPDF 4.1.0** — PDF generation library — [github.com/parallax/jsPDF](https://github.com/parallax/jsPDF)
+- **jsPDF AutoTable 5.0.7** — table plugin for jsPDF — [github.com/simonbengtsson/jsPDF-AutoTable](https://github.com/simonbengtsson/jsPDF-AutoTable)
+
+Both are distributed under the MIT license. License headers are preserved in the minified files.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file.
