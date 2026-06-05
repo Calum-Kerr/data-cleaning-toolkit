@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <glob.h>
 #include <vector>
+#include <iostream>
 #include "time_safe.h"
 
 namespace fs = std::filesystem;
