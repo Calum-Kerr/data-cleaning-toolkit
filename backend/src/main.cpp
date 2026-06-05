@@ -14,6 +14,7 @@
 #include "load_test.h"
 #include "database.h"
 #include <iostream>
+#include <filesystem>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
 void registerTextRoutes(crow::SimpleApp& app);
