@@ -23,8 +23,25 @@ void resetIfNeeded(const std::string& ip) {
   }
 }
 
+void pruneStaleEntries() {
+  auto now=std::chrono::steady_clock::now();
+  for (auto it=lastReset.begin(); it!=lastReset.end(); ) {
+    auto elapsed=std::chrono::duration_cast<std::chrono::seconds>(now-it->second);
+    if (elapsed.count()>WINDOW_SECONDS*2) {
+      requestCounts.erase(it->first);
+      it=lastReset.erase(it);
+    } else {
+      ++it;
+    }
+  }
+}
+
 bool checkRateLimit(const std::string& ip) {
   std::lock_guard<std::mutex> lock(rateLimiterMutex);
+  static int callCount=0;
+  if (++callCount%10==0) {
+    pruneStaleEntries();
+  }
   resetIfNeeded(ip);
   if (requestCounts[ip]>=MAX_REQUESTS) return false;
   requestCounts[ip]++;
