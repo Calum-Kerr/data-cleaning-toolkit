@@ -9,6 +9,10 @@ std::map<std::string, int> requestCounts;
 std::map<std::string, std::chrono::steady_clock::time_point> lastReset;
 static std::mutex rateLimiterMutex;
 
+// Per-IP concurrency tracking
+static std::map<std::string, int> activeConnections;
+static std::mutex concurrencyMutex;
+
 void resetIfNeeded(const std::string& ip) {
   auto now=std::chrono::steady_clock::now();
   if (lastReset.find(ip)==lastReset.end()) {
