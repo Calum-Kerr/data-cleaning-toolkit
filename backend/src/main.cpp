@@ -125,6 +125,8 @@ int main(){
   ([](const crow::request& req){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/clean", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(req.remote_ip_address)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(req.remote_ip_address);
     recordEndpointCall("/api/clean");
     AuditLog auditLog;
     auto json=crow::json::load(req.body);
