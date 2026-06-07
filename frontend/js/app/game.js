@@ -17,7 +17,8 @@ async function loadNextColumn(){if(mergeState.currentColumnIdx>=mergeState.allCo
 
 function loadUniqueValuesForColumn(){const lines=cleanedCSV.trim().split('\n');const headers=parseCSVLine(lines[0]);const colIdx=headers.indexOf(mergeState.column);if(colIdx===-1)return;const freq={};for(let i=1;i<lines.length;i++){const cells=parseCSVLine(lines[i]);const val=cells[colIdx];if(val)freq[val]=(freq[val]||0)+1;}mergeState.letterValues={};for(const [val,count] of Object.entries(freq)){const letter=val[0].toUpperCase();if(!mergeState.letterValues[letter])mergeState.letterValues[letter]=[];mergeState.letterValues[letter].push({value:val,count:count,checked:false});}for(const letter in mergeState.letterValues){mergeState.letterValues[letter].sort((a,b)=>a.value.localeCompare(b.value));}}
 
-function advanceToNextLetterWithValues(){const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');const currentIdx=alphabet.indexOf(mergeState.currentLetter);const startIdx=currentIdx===-1?0:currentIdx+1;for(let i=startIdx;i<alphabet.length;i++){const letter=alphabet[i];if(mergeState.letterValues[letter]&&mergeState.letterValues[letter].length>1){mergeState.currentLetter=letter;renderMergeInterface();return;}}mergeState.currentColumnIdx++;loadNextColumn();}
+async function advanceToNextLetterWithValues(){const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');const currentIdx=alphabet.indexOf(mergeState.currentLetter);const startIdx=currentIdx===-1?0:currentIdx+1;for(let i=startIdx;i<alphabet.length;i++){const letter=alphabet[i];if(mergeState.letterValues[letter]&&mergeState.letterValues[letter].length>1){mergeState.currentLetter=letter;renderMergeInterface();return;}}// all letters done — commit merges before moving to next column
+if(mergeState.pendingMerges.length>0){await applyMergesForLetter();}mergeState.currentColumnIdx++;loadNextColumn();}
 
 // --- keyboard helpers --------------------------------------------------
 
