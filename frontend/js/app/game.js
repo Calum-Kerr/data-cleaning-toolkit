@@ -62,7 +62,7 @@ function handleKeyboardMerge(fromIdx,toIdx){
   const toValue=values[toIdx].value;
   const fromCount=values[fromIdx].count;
   mergeState.pendingMerges.push({values:[fromValue],mergeInto:toValue});
-  mergeState.mergeHistory.push({fromIndex:fromIdx,toIndex:toIdx,fromValue,toValue,fromCount});
+  mergeState.mergeHistory.push({fromIndex:fromIdx,toIndex:toIdx,fromValue,toValue,fromCount,letter:mergeState.currentLetter});
   values[toIdx].count+=fromCount;
   values.splice(fromIdx,1);
   // find the new index of the target value after the splice
