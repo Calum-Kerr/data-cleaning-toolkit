@@ -76,13 +76,13 @@
             <span class="section-kicker">csv</span>
             <h2 class="section-title">upload file</h2>
           </div>
-          <div class="upload-area" id="uploadArea" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+          <div class="upload-area" id="uploadArea">
             <p>drag and drop your csv here</p>
             <div class="upload-options">
-              <button class="upload-option" onclick="document.getElementById('fileInput').click()">choose file</button>
-              <button class="upload-option" onclick="pasteFromClipboard()">paste data</button>
+              <button class="upload-option" id="btnCsvFile">choose file</button>
+              <button class="upload-option" id="btnPasteCsv">paste data</button>
             </div>
-            <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)" aria-label="Upload CSV file" class="file-input-hidden">
+            <input type="file" id="fileInput" accept=".csv" aria-label="Upload CSV file" class="file-input-hidden">
           </div>
           <div class="sample-data-box">
             <h3>try sample data</h3>
