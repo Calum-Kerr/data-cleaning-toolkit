@@ -178,24 +178,20 @@ function setupKeyboardNav(board,listDiv,startIdx){
     }
     if((e.ctrlKey&&e.key==='ArrowLeft')||e.key==='PageUp'){
       e.preventDefault();
-      (async()=>{
-        if(mergeState.pendingMerges.length>0){await applyMergesForLetter();}
-        var alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-        var currentIdx=alphabet.indexOf(mergeState.currentLetter);
-        if(currentIdx>0){
-          for(var i=currentIdx-1;i>=0;i--){
-            var prevLetter=alphabet[i];
-            if(mergeState.letterValues[prevLetter]&&mergeState.letterValues[prevLetter].length>=1){
-              mergeState.currentLetter=prevLetter;
-              mergeState.pendingMerges=[];mergeState.mergeHistory=[];
-              keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
-              renderMergeInterface(0);
-              return;
-            }
+      var alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      var currentIdx=alphabet.indexOf(mergeState.currentLetter);
+      if(currentIdx>0){
+        for(var i=currentIdx-1;i>=0;i--){
+          var prevLetter=alphabet[i];
+          if(mergeState.letterValues[prevLetter]&&mergeState.letterValues[prevLetter].length>=1){
+            mergeState.currentLetter=prevLetter;
+            keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
+            renderMergeInterface(0);
+            return;
           }
         }
-        announceKb('no previous letter group');
-      })();
+      }
+      announceKb('no previous letter group');
       return;
     }
   };
