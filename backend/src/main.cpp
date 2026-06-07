@@ -33,12 +33,15 @@ int main(){
   if (prctl(PR_SET_DUMPABLE, 0) == -1) {
     std::cerr << "Warning: prctl(PR_SET_DUMPABLE,0) failed: " << std::strerror(errno) << std::endl;
   }
-  // Privacy hardening: lock all current and future memory mappings to prevent
-  // the kernel from swapping heap pages (which may contain user-uploaded CSV
-  // data) to a swap device under memory pressure.  This is best-effort; if it
-  // fails the application can still run — the warning is logged for ops visibility.
-  if (mlockall(MCL_CURRENT | MCL_FUTURE) == -1) {
-    std::cerr << "Warning: mlockall(MCL_CURRENT|MCL_FUTURE) failed: " << std::strerror(errno) << std::endl;
+  // Privacy hardening: lock existing memory mappings to reduce the likelihood
+  // of the kernel swapping heap pages (which may contain user-uploaded CSV
+  // data) to a swap device under memory pressure.  MCL_FUTURE is deliberately
+  // omitted — it would require every future mmap (including thread stacks) to
+  // be locked, which quickly exhausts RLIMIT_MEMLOCK and causes std::thread
+  // creation to throw std::system_error.  This is best-effort; if it fails the
+  // application can still run — the warning is logged for ops visibility.
+  if (mlockall(MCL_CURRENT) == -1) {
+    std::cerr << "Warning: mlockall(MCL_CURRENT) failed: " << std::strerror(errno) << std::endl;
   }
   crow::SimpleApp app;
   writeStartupAlert();
