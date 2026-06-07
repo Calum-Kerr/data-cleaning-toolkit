@@ -227,7 +227,8 @@ function updateHint(){
 
 // --- end keyboard helpers -----------------------------------------------
 
-function renderMergeInterface(){
+function renderMergeInterface(startFocusIdx){
+  if(typeof startFocusIdx==='undefined')startFocusIdx=mergeState.nextFocusIdx;
   const board=document.getElementById('gameBoard');
   board.innerHTML='';
   const container=document.createElement('div');
