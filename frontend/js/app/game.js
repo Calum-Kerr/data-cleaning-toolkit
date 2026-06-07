@@ -226,7 +226,7 @@ function updateHint(){
       return;
     }
   }
-  hint.textContent='Space to select • Enter to merge • Escape to cancel • Ctrl+←/→ for letter groups';
+  hint.textContent='Space to select • Enter to merge • Escape to cancel • PgUp/PgDn for letter groups';
 }
 
 // --- end keyboard helpers -----------------------------------------------
@@ -387,7 +387,7 @@ function renderMergeInterface(startFocusIdx){
   const kbHint=document.createElement('div');
   kbHint.id='kbHint';
   kbHint.style.cssText='margin-top:12px;padding:8px 12px;background:#f7f7f7;border:1px solid #d6d6d6;font-size:12px;color:#565656;text-align:center;';
-  kbHint.textContent='Space to select • Enter to merge • Escape to cancel • Ctrl+←/→ for letter groups';
+  kbHint.textContent='Space to select • Enter to merge • Escape to cancel • PgUp/PgDn for letter groups';
   container.appendChild(kbHint);
 
   board.appendChild(container);
