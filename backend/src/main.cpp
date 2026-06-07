@@ -28,6 +28,17 @@ void registerCleaningRoutes(crow::SimpleApp& app);
 void registerFrontendRoutes(crow::SimpleApp& app);
 void logFrontendDirStartup();
 
+// Verify the ADMIN_API_KEY environment variable against the Authorization header.
+// If the env var is not set, authentication is skipped for backward compatibility.
+static bool checkAdminAuth(const crow::request& req) {
+  const char* key = std::getenv("ADMIN_API_KEY");
+  if (!key || key[0] == '\0') return true;  // not configured — allow
+  std::string auth = req.get_header_value("authorization");
+  if (auth.empty()) return false;
+  std::string expected = std::string("Bearer ") + key;
+  return auth == expected;
+}
+
 int main(){
   // Privacy hardening: disable core dumps to prevent heap memory (which may
   // contain user-uploaded CSV data) from being written to disk on crash.
