@@ -28,6 +28,18 @@ void registerFrontendRoutes(crow::SimpleApp& app);
 void logFrontendDirStartup();
 
 int main(){
+  // Privacy hardening: disable core dumps to prevent heap memory (which may
+  // contain user-uploaded CSV data) from being written to disk on crash.
+  if (prctl(PR_SET_DUMPABLE, 0) == -1) {
+    std::cerr << "Warning: prctl(PR_SET_DUMPABLE,0) failed: " << std::strerror(errno) << std::endl;
+  }
+  // Privacy hardening: lock all current and future memory mappings to prevent
+  // the kernel from swapping heap pages (which may contain user-uploaded CSV
+  // data) to a swap device under memory pressure.  This is best-effort; if it
+  // fails the application can still run — the warning is logged for ops visibility.
+  if (mlockall(MCL_CURRENT | MCL_FUTURE) == -1) {
+    std::cerr << "Warning: mlockall(MCL_CURRENT|MCL_FUTURE) failed: " << std::strerror(errno) << std::endl;
+  }
   crow::SimpleApp app;
   writeStartupAlert();
   initializeDatabase();
