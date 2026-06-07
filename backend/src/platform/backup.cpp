@@ -6,6 +6,8 @@
 #include <filesystem>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/file.h>
+#include <fcntl.h>
 #include <glob.h>
 #include <vector>
 #include <iostream>
