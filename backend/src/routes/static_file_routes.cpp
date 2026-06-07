@@ -66,7 +66,7 @@ std::string getContentType(const std::string& filepath) {
 void registerFrontendRoutes(crow::SimpleApp& app) {
   // Helper to add security headers
   auto addSecurityHeaders = [](crow::response& res) {
-    res.set_header("Content-Security-Policy", "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'");
+    res.set_header("Content-Security-Policy", "script-src 'self' 'wasm-unsafe-eval'");
     res.set_header("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
     res.set_header("X-Content-Type-Options", "nosniff");
     res.set_header("X-Frame-Options", "DENY");
