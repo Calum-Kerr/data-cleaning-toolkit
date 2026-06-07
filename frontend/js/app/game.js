@@ -346,12 +346,17 @@ function renderMergeInterface(startFocusIdx){
     const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const currentIdx=alphabet.indexOf(mergeState.currentLetter);
     if(currentIdx<=0)return;
-    const prevLetter=alphabet[currentIdx-1];
-    if(!mergeState.letterValues[prevLetter]||mergeState.letterValues[prevLetter].length<2)return;
-    mergeState.currentLetter=prevLetter;
-    mergeState.pendingMerges=[];mergeState.mergeHistory=[];
-    keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
-    renderMergeInterface();
+    // search backwards for the nearest previous letter that has >1 values
+    for(let i=currentIdx-1;i>=0;i--){
+      const prevLetter=alphabet[i];
+      if(mergeState.letterValues[prevLetter]&&mergeState.letterValues[prevLetter].length>1){
+        mergeState.currentLetter=prevLetter;
+        mergeState.pendingMerges=[];mergeState.mergeHistory=[];
+        keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
+        renderMergeInterface(0);
+        return;
+      }
+    }
   };
   buttonsDiv.appendChild(backBtn);
   if(mergeState.mergeHistory.length>0){
