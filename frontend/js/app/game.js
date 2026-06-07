@@ -72,7 +72,7 @@ function handleKeyboardMerge(fromIdx,toIdx){
   renderMergeInterface(mergeState.nextFocusIdx);
 }
 
-function setupKeyboardNav(board,listDiv){
+function setupKeyboardNav(board,listDiv,startIdx){
   keyboardCards=Array.from(listDiv.querySelectorAll('[data-index]'));
   keyboardGrid=getGridLayout(keyboardCards);
   keyboardFocusIdx=-1;
@@ -87,23 +87,22 @@ function setupKeyboardNav(board,listDiv){
     if(document.querySelector('#gameBoard input[type=text]'))return;
 
     const values=mergeState.letterValues[mergeState.currentLetter]||[];
-    // refresh card references in case DOM changed
-    keyboardCards=Array.from(newBoard.querySelectorAll('[data-index]'));
-    if(keyboardCards.length===0)return;
-    keyboardGrid=getGridLayout(keyboardCards);
 
-    // find current position in grid
-    let row=-1,col=-1;
-    if(keyboardFocusIdx>=0){
-      for(let r=0;r<keyboardGrid.length;r++){
-        const c=keyboardGrid[r].indexOf(keyboardFocusIdx);
-        if(c!==-1){row=r;col=c;break;}
-      }
-    }
-
+    // --- arrow key navigation ---
     if(e.key==='ArrowRight'||e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='ArrowDown'){
       e.preventDefault();
+      // refresh card references in case DOM changed
+      keyboardCards=Array.from(newBoard.querySelectorAll('[data-index]'));
       if(keyboardCards.length===0)return;
+
+      // find current position in grid
+      let row=-1,col=-1;
+      if(keyboardFocusIdx>=0){
+        for(let r=0;r<keyboardGrid.length;r++){
+          const c=keyboardGrid[r].indexOf(keyboardFocusIdx);
+          if(c!==-1){row=r;col=c;break;}
+        }
+      }
       if(row===-1||col===-1){focusKeyboardCard(newBoard,0);return;}
 
       let newRow=row,newCol=col;
@@ -117,26 +116,45 @@ function setupKeyboardNav(board,listDiv){
       return;
     }
 
-    if(e.key==='Enter'){
+    // --- space: select / deselect card ---
+    if(e.key===' '||e.code==='Space'){
       e.preventDefault();
       if(keyboardFocusIdx<0||keyboardFocusIdx>=values.length)return;
-      if(keyboardSelectedIdx===-1){
-        // select card
-        keyboardSelectedIdx=keyboardFocusIdx;
-        const card=keyboardCards[keyboardFocusIdx];
-        card.classList.add('keyboard-selected');
-        announceKb('selected '+values[keyboardFocusIdx].value+' — press Enter on another card to merge, Escape to cancel');
-      }else{
-        // attempt merge
-        const fromIdx=keyboardSelectedIdx;
-        const toIdx=keyboardFocusIdx;
-        // clear visual selection before merge
-        if(keyboardCards[fromIdx])keyboardCards[fromIdx].classList.remove('keyboard-selected');
-        handleKeyboardMerge(fromIdx,toIdx);
+      if(keyboardSelectedIdx===keyboardFocusIdx){
+        // deselect
+        if(keyboardCards[keyboardSelectedIdx])keyboardCards[keyboardSelectedIdx].classList.remove('keyboard-selected');
+        keyboardSelectedIdx=-1;
+        announceKb('selection cleared');
+        updateHint();
+        return;
       }
+      // deselect previous if any
+      if(keyboardSelectedIdx>=0&&keyboardCards[keyboardSelectedIdx]){
+        keyboardCards[keyboardSelectedIdx].classList.remove('keyboard-selected');
+      }
+      keyboardSelectedIdx=keyboardFocusIdx;
+      keyboardCards[keyboardFocusIdx].classList.add('keyboard-selected');
+      announceKb('selected '+values[keyboardFocusIdx].value+' — navigate to target and press Enter to merge');
+      updateHint();
       return;
     }
 
+    // --- enter: merge (only when a card is selected and it is different) ---
+    if(e.key==='Enter'){
+      e.preventDefault();
+      if(keyboardFocusIdx<0||keyboardFocusIdx>=values.length)return;
+      if(keyboardSelectedIdx===-1||keyboardSelectedIdx===keyboardFocusIdx){
+        announceKb('select a card first with Space, then press Enter on a different card to merge');
+        return;
+      }
+      const fromIdx=keyboardSelectedIdx;
+      const toIdx=keyboardFocusIdx;
+      if(keyboardCards[fromIdx])keyboardCards[fromIdx].classList.remove('keyboard-selected');
+      handleKeyboardMerge(fromIdx,toIdx);
+      return;
+    }
+
+    // --- escape: cancel selection ---
     if(e.key==='Escape'){
       e.preventDefault();
       if(keyboardSelectedIdx>=0&&keyboardCards[keyboardSelectedIdx]){
@@ -144,6 +162,37 @@ function setupKeyboardNav(board,listDiv){
       }
       keyboardSelectedIdx=-1;
       announceKb('selection cancelled');
+      updateHint();
+      return;
+    }
+
+    // --- ctrl+arrow / page keys: navigate between letter groups ---
+    if((e.ctrlKey&&e.key==='ArrowRight')||e.key==='PageDown'){
+      e.preventDefault();
+      if(mergeState.pendingMerges.length>0){applyMergesForLetter();}
+      mergeState.mergeHistory=[];
+      keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
+      advanceToNextLetterWithValues();
+      return;
+    }
+    if((e.ctrlKey&&e.key==='ArrowLeft')||e.key==='PageUp'){
+      e.preventDefault();
+      // navigate to previous letter group
+      var alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      var currentIdx=alphabet.indexOf(mergeState.currentLetter);
+      if(currentIdx>0){
+        for(var i=currentIdx-1;i>=0;i--){
+          var prevLetter=alphabet[i];
+          if(mergeState.letterValues[prevLetter]&&mergeState.letterValues[prevLetter].length>1){
+            mergeState.currentLetter=prevLetter;
+            mergeState.pendingMerges=[];mergeState.mergeHistory=[];
+            keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
+            renderMergeInterface(0);
+            return;
+          }
+        }
+      }
+      announceKb('no previous letter group');
       return;
     }
   });
@@ -152,9 +201,28 @@ function setupKeyboardNav(board,listDiv){
   newBoard.setAttribute('tabindex','0');
   newBoard.focus();
 
+  // restore focus to the startIdx card if specified
+  if(startIdx>=0&&startIdx<keyboardCards.length){
+    keyboardFocusIdx=startIdx;
+    keyboardCards[startIdx].classList.add('keyboard-focus');
+    keyboardCards[startIdx].scrollIntoView({block:'nearest',behavior:'auto'});
+  }
+
   // update the global gameBoard reference — cloning replaced the DOM node
-  // the renderMergeInterface caller uses document.getElementById('gameBoard')
-  // which still works; but the board variable in this scope is the new node
+}
+
+// update the hint text at the bottom of the board based on selection state
+function updateHint(){
+  var hint=document.getElementById('kbHint');
+  if(!hint)return;
+  if(keyboardSelectedIdx>=0){
+    var values=mergeState.letterValues[mergeState.currentLetter]||[];
+    if(keyboardSelectedIdx<values.length){
+      hint.textContent='card \''+values[keyboardSelectedIdx].value+'\' selected — navigate to target and press Enter to merge';
+      return;
+    }
+  }
+  hint.textContent='Space to select • Enter to merge • Escape to cancel • Ctrl+←/→ for letter groups';
 }
 
 // --- end keyboard helpers -----------------------------------------------
