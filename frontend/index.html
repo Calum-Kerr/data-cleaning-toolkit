@@ -173,13 +173,13 @@
           </div>
           <div>
             <h3>xml file</h3>
-            <div class="upload-area" id="xmlUploadArea" ondragover="handleXmlDragOver(event)" ondragleave="handleXmlDragLeave(event)" ondrop="handleXmlDrop(event)">
+            <div class="upload-area" id="xmlUploadArea">
               <p>drag and drop xml here</p>
               <div class="upload-options">
-                <button class="upload-option" onclick="document.getElementById('xmlFileInput').click()">choose file</button>
-                <button class="upload-option" onclick="pasteXmlFromClipboard()">paste data</button>
+                <button class="upload-option" id="btnXmlFile">choose file</button>
+                <button class="upload-option" id="btnPasteXml">paste data</button>
               </div>
-              <input type="file" id="xmlFileInput" accept=".xml" onchange="handleXmlFileUpload(event)" class="file-input-hidden" aria-label="Upload XML file">
+              <input type="file" id="xmlFileInput" accept=".xml" class="file-input-hidden" aria-label="Upload XML file">
             </div>
           </div>
         </div>
