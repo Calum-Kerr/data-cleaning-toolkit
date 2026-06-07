@@ -162,13 +162,13 @@
         <div class="split-stack">
           <div>
             <h3>json file</h3>
-            <div class="upload-area" id="jsonUploadArea" ondragover="handleJsonDragOver(event)" ondragleave="handleJsonDragLeave(event)" ondrop="handleJsonDrop(event)">
+            <div class="upload-area" id="jsonUploadArea">
               <p>drag and drop json here</p>
               <div class="upload-options">
-                <button class="upload-option" onclick="document.getElementById('jsonFileInput').click()">choose file</button>
-                <button class="upload-option" onclick="pasteJsonFromClipboard()">paste data</button>
+                <button class="upload-option" id="btnJsonFile">choose file</button>
+                <button class="upload-option" id="btnPasteJson">paste data</button>
               </div>
-              <input type="file" id="jsonFileInput" accept=".json" onchange="handleJsonFileUpload(event)" class="file-input-hidden" aria-label="Upload JSON file">
+              <input type="file" id="jsonFileInput" accept=".json" class="file-input-hidden" aria-label="Upload JSON file">
             </div>
           </div>
           <div>
