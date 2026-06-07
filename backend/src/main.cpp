@@ -59,6 +59,7 @@ int main(){
   writeStartupAlert();
   initializeDatabase();
   AuditLog auditLog;
+  // Public health check — returns only status to avoid information disclosure.
   CROW_ROUTE(app,"/api/health").methods("GET"_method)
   ([](const crow::request& req){
     if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/api/health", 429); return crow::response(429);}
@@ -66,11 +67,26 @@ int main(){
     logRequest("GET", "/api/health", 200);
     crow::json::wvalue result; result["status"]="ok"; return crow::response(result);
   });
+  // Public-facing health check — minimal to avoid leaking filesystem paths,
+  // disk metrics, and backup age to unauthenticated callers.
   CROW_ROUTE(app,"/health").methods("GET"_method)
   ([](const crow::request&){
     crow::json::wvalue result;
+    // Quick liveness check — just verify the server can respond.
+    // Detailed diagnostics are behind /admin/health (requires ADMIN_API_KEY).
+    result["status"]="ok";
+    auto resp=crow::response(result);
+    resp.set_header("Content-Type","application/json");
+    return resp;
+  });
+  // Admin-only health check — exposes disk usage, backup age, and other
+  // operational details.  Protected by the ADMIN_API_KEY environment variable.
+  CROW_ROUTE(app,"/admin/health").methods("GET"_method)
+  ([](const crow::request& req){
+    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/admin/health", 429); return crow::response(429);}
+    if (!checkAdminAuth(req)) return crow::response(401);
+    crow::json::wvalue result;
 
-    // check disk space on /tmp
     std::error_code diskEc;
     auto space=std::filesystem::space("/tmp",diskEc);
     if(!diskEc){
@@ -88,7 +104,6 @@ int main(){
       result["disk_error"]=diskEc.message();
     }
 
-    // check last backup age from manifest file mtime
     std::error_code manifestEc;
     std::filesystem::path manifestPath("/tmp/toolkit_backups/manifest.txt");
     if(std::filesystem::exists(manifestPath,manifestEc)){
@@ -104,6 +119,7 @@ int main(){
     }
 
     result["status"]="ok";
+    logRequest("GET", "/admin/health", 200);
     auto resp=crow::response(result);
     resp.set_header("Content-Type","application/json");
     return resp;
