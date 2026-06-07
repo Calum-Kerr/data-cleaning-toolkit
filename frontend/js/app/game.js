@@ -323,7 +323,7 @@ function renderMergeInterface(startFocusIdx){
       const fromValue=values[fromIndex].value;const toValue=values[i].value;
       const fromCount=values[fromIndex].count;
       mergeState.pendingMerges.push({values:[fromValue],mergeInto:toValue});
-      mergeState.mergeHistory.push({fromIndex,toIndex:i,fromValue,toValue,fromCount});
+      mergeState.mergeHistory.push({fromIndex,toIndex:i,fromValue,toValue,fromCount,letter:mergeState.currentLetter});
       values[i].count+=fromCount;values.splice(fromIndex,1);
       itemDiv.style.background='#fff';itemDiv.style.borderColor='#e0e0e0';
       keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
