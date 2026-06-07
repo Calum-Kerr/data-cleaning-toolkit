@@ -209,13 +209,13 @@
           <span class="section-kicker">text</span>
           <h2 class="section-title">upload text</h2>
         </div>
-        <div class="upload-area" id="textUploadArea" ondragover="handleTextDragOver(event)" ondragleave="handleTextDragLeave(event)" ondrop="handleTextDrop(event)">
+        <div class="upload-area" id="textUploadArea">
           <p>drag and drop text here</p>
           <div class="upload-options">
-            <button class="upload-option" onclick="document.getElementById('textFileInput').click()">choose file</button>
-            <button class="upload-option" onclick="pasteTextFromClipboard()">paste data</button>
+            <button class="upload-option" id="btnTextFile">choose file</button>
+            <button class="upload-option" id="btnPasteText">paste data</button>
           </div>
-          <input type="file" id="textFileInput" accept=".txt" onchange="handleTextFileUpload(event)" class="file-input-hidden" aria-label="Upload text file">
+          <input type="file" id="textFileInput" accept=".txt" class="file-input-hidden" aria-label="Upload text file">
         </div>
       </section>
 
