@@ -1,6 +1,6 @@
 // bump this when you change frontend assets, so older cached HTML/CSS is dropped
 // (this helps avoid stale pages still referencing removed resources like Google Fonts)
-const CACHE_VERSION = 'v14-honours-notes';
+const CACHE_VERSION = 'v15-csp-event-refactor';
 const CACHE_NAME = 'data-cleaning-toolkit-' + CACHE_VERSION;
 const WASM_HASH = 'sha384-placeholder-hash-will-be-generated-at-build-time';
 const ALLOWED_ORIGINS = [
