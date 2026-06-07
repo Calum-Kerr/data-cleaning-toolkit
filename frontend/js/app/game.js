@@ -342,14 +342,16 @@ function renderMergeInterface(startFocusIdx){
   const backBtn=document.createElement('button');
   backBtn.style.cssText='padding:8px 16px;background:#f0f0f0;color:#333;border:1px solid #ddd;cursor:pointer;font-size:13px;border-radius:2px;';
   backBtn.textContent='← back';
-  backBtn.onclick=()=>{
+  backBtn.onclick=async()=>{
+    // auto-commit any pending merges before leaving this letter group
+    if(mergeState.pendingMerges.length>0){await applyMergesForLetter();}
     const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const currentIdx=alphabet.indexOf(mergeState.currentLetter);
     if(currentIdx<=0)return;
-    // search backwards for the nearest previous letter that has >1 values
+    // search backwards for the nearest previous letter that has any values
     for(let i=currentIdx-1;i>=0;i--){
       const prevLetter=alphabet[i];
-      if(mergeState.letterValues[prevLetter]&&mergeState.letterValues[prevLetter].length>1){
+      if(mergeState.letterValues[prevLetter]&&mergeState.letterValues[prevLetter].length>=1){
         mergeState.currentLetter=prevLetter;
         mergeState.pendingMerges=[];mergeState.mergeHistory=[];
         keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
