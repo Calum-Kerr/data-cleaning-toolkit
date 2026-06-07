@@ -56,7 +56,7 @@ function focusKeyboardCard(board,idx){
 function handleKeyboardMerge(fromIdx,toIdx){
   const values=mergeState.letterValues[mergeState.currentLetter]||[];
   if(fromIdx<0||fromIdx>=values.length||toIdx<0||toIdx>=values.length)return;
-  if(fromIdx===toIdx){keyboardSelectedIdx=-1;clearKeyboardFocus();focusKeyboardCard(null,toIdx);announceKb('selection cancelled');return;}
+  if(fromIdx===toIdx){keyboardSelectedIdx=-1;clearKeyboardFocus();focusKeyboardCard(null,toIdx);announceKb('selection cancelled');updateHint();return;}
   const fromValue=values[fromIdx].value;
   const toValue=values[toIdx].value;
   const fromCount=values[fromIdx].count;
@@ -64,10 +64,12 @@ function handleKeyboardMerge(fromIdx,toIdx){
   mergeState.mergeHistory.push({fromIndex:fromIdx,toIndex:toIdx,fromValue,toValue,fromCount});
   values[toIdx].count+=fromCount;
   values.splice(fromIdx,1);
+  // find the new index of the target value after the splice
+  mergeState.nextFocusIdx=values.findIndex(v=>v.value===toValue);
   keyboardSelectedIdx=-1;
   keyboardFocusIdx=-1;
   announceKb('merged '+fromValue+' into '+toValue);
-  renderMergeInterface();
+  renderMergeInterface(mergeState.nextFocusIdx);
 }
 
 function setupKeyboardNav(board,listDiv){
