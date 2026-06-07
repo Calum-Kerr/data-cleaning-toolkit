@@ -15,6 +15,11 @@
 #include "database.h"
 #include <iostream>
 #include <filesystem>
+#include <sys/mman.h>
+#include <sys/prctl.h>
+#include <cerrno>
+#include <cstring>
+#include <unistd.h>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
 void registerTextRoutes(crow::SimpleApp& app);
