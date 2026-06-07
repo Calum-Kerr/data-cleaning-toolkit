@@ -1,5 +1,5 @@
 // merge game state
-let mergeState={column:'',allColumns:[],currentColumnIdx:0,letterValues:{},currentLetter:'',pendingMerges:[],mergedCount:0,mergeHistory:[]};
+let mergeState={column:'',allColumns:[],currentColumnIdx:0,letterValues:{},currentLetter:'',pendingMerges:[],mergedCount:0,mergeHistory:[],nextFocusIdx:-1};
 
 // keyboard navigation state
 let keyboardFocusIdx=-1;
