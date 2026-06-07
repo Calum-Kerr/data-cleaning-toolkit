@@ -29,12 +29,26 @@ void createBackup() {
   std::string backupDir = getBackupDirectory();
   std::string backupName = backupDir + "/backup_" + ss.str() + ".tar.gz";
 
+  // Take an advisory lock to prevent concurrent backup runs (TOCTOU defence).
+  // The lock file lives alongside the backups; it is NOT a security boundary,
+  // merely a coordination primitive — processes that ignore it can still race.
+  std::string lockPath = backupDir + "/.backup.lock";
+  int lockFd = open(lockPath.c_str(), O_CREAT | O_RDWR, 0600);
+  if (lockFd == -1 || flock(lockFd, LOCK_EX | LOCK_NB) == -1) {
+    std::cerr << "toolkit backup: could not acquire lock, skipping" << std::endl;
+    if (lockFd != -1) close(lockFd);
+    return;
+  }
+
   // expand the glob for log files and build argv for execv
   glob_t glob_result;
   std::vector<std::string> tarArgs;
   tarArgs.push_back("tar");
   tarArgs.push_back("-czf");
   tarArgs.push_back(backupName);
+  // --no-dereference prevents tar from following symlinks, mitigating
+  // symlink-based TOCTOU attacks between glob() and execv().
+  tarArgs.push_back("--no-dereference");
 
   int gl = glob("/tmp/toolkit*.log", GLOB_NOSORT, nullptr, &glob_result);
   if (gl == 0) {
@@ -45,7 +59,7 @@ void createBackup() {
   globfree(&glob_result);
 
   bool tarOk = false;
-  if (tarArgs.size() > 3) {
+  if (tarArgs.size() > 4) {
     // build char* argv array for execv
     std::vector<char*> argv;
     for (auto& a : tarArgs) {
@@ -69,10 +83,13 @@ void createBackup() {
   std::ofstream manifest(backupDir + "/manifest.txt", std::ios::app);
   if (tarOk) {
     manifest << "Backup created: " << ss.str() << " at " << backupName << "\n";
-  } else if (tarArgs.size() == 3) {
+  } else if (tarArgs.size() == 4) {
     manifest << "Backup skipped (no log files found): " << ss.str() << "\n";
   } else {
     manifest << "Backup FAILED: " << ss.str() << " at " << backupName << "\n";
     std::cerr << "toolkit backup failed at " << ss.str() << "\n";
   }
+
+  // Release lock
+  close(lockFd);
 }
