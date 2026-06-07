@@ -354,20 +354,31 @@ function renderMergeInterface(startFocusIdx){
     }
   };
   buttonsDiv.appendChild(backBtn);
-  if(mergeState.mergeHistory.length>0){
+  if(mergeState.mergeHistory.some(h=>h.letter===mergeState.currentLetter)){
     const undoBtn=document.createElement('button');
     undoBtn.style.cssText='padding:8px 16px;background:#f0f0f0;color:#333;border:1px solid #ddd;cursor:pointer;font-size:13px;border-radius:2px;';
     undoBtn.textContent='undo';
     undoBtn.onclick=()=>{
-      const action=mergeState.mergeHistory.pop();
-      mergeState.pendingMerges.pop();
-      const vals=mergeState.letterValues[mergeState.currentLetter];
-      const targetIdx=vals.findIndex(v=>v.value===action.toValue);
-      if(targetIdx!==-1){vals[targetIdx].count-=action.fromCount;}
-      vals.push({value:action.fromValue,count:action.fromCount,checked:false});
-      vals.sort((a,b)=>a.value.localeCompare(b.value));
-      keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
-      renderMergeInterface();
+      // pop the most recent merge for the current letter
+      for(let i=mergeState.mergeHistory.length-1;i>=0;i--){
+        if(mergeState.mergeHistory[i].letter===mergeState.currentLetter){
+          const action=mergeState.mergeHistory.splice(i,1)[0];
+          // remove the corresponding pending merge (same fromValue/toValue pair)
+          for(let j=mergeState.pendingMerges.length-1;j>=0;j--){
+            if(mergeState.pendingMerges[j].values[0]===action.fromValue&&mergeState.pendingMerges[j].mergeInto===action.toValue){
+              mergeState.pendingMerges.splice(j,1);break;
+            }
+          }
+          const vals=mergeState.letterValues[mergeState.currentLetter];
+          const targetIdx=vals.findIndex(v=>v.value===action.toValue);
+          if(targetIdx!==-1){vals[targetIdx].count-=action.fromCount;}
+          vals.push({value:action.fromValue,count:action.fromCount,checked:false});
+          vals.sort((a,b)=>a.value.localeCompare(b.value));
+          keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
+          renderMergeInterface(mergeState.nextFocusIdx);
+          return;
+        }
+      }
     };
     buttonsDiv.appendChild(undoBtn);
   }
