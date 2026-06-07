@@ -341,9 +341,7 @@ function renderMergeInterface(startFocusIdx){
   const backBtn=document.createElement('button');
   backBtn.style.cssText='padding:8px 16px;background:#f0f0f0;color:#333;border:1px solid #ddd;cursor:pointer;font-size:13px;border-radius:2px;';
   backBtn.textContent='← back';
-  backBtn.onclick=async()=>{
-    // auto-commit any pending merges before leaving this letter group
-    if(mergeState.pendingMerges.length>0){await applyMergesForLetter();}
+  backBtn.onclick=()=>{
     const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     const currentIdx=alphabet.indexOf(mergeState.currentLetter);
     if(currentIdx<=0)return;
@@ -352,7 +350,6 @@ function renderMergeInterface(startFocusIdx){
       const prevLetter=alphabet[i];
       if(mergeState.letterValues[prevLetter]&&mergeState.letterValues[prevLetter].length>=1){
         mergeState.currentLetter=prevLetter;
-        mergeState.pendingMerges=[];mergeState.mergeHistory=[];
         keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
         renderMergeInterface(0);
         return;
