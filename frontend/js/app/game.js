@@ -169,10 +169,12 @@ function setupKeyboardNav(board,listDiv,startIdx){
     // --- ctrl+arrow / page keys: navigate between letter groups ---
     if((e.ctrlKey&&e.key==='ArrowRight')||e.key==='PageDown'){
       e.preventDefault();
-      if(mergeState.pendingMerges.length>0){applyMergesForLetter();}
-      mergeState.mergeHistory=[];
-      keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
-      advanceToNextLetterWithValues();
+      (async()=>{
+        if(mergeState.pendingMerges.length>0){await applyMergesForLetter();}
+        mergeState.mergeHistory=[];
+        keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
+        advanceToNextLetterWithValues();
+      })();
       return;
     }
     if((e.ctrlKey&&e.key==='ArrowLeft')||e.key==='PageUp'){
