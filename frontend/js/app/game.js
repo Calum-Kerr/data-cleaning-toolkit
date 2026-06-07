@@ -385,8 +385,8 @@ function renderMergeInterface(startFocusIdx){
   nextLetterBtn.style.cssText='padding:8px 16px;background:#333;color:#fff;border:none;cursor:pointer;font-size:13px;border-radius:2px;flex:1;';
   nextLetterBtn.textContent='next letter';
   nextLetterBtn.onclick=async()=>{
-    if(mergeState.pendingMerges.length>0){await applyMergesForLetter();}
-    mergeState.mergeHistory=[];
+    // Merges are deferred until the column changes — undo survives letter-group
+    // navigation within the same column.
     keyboardSelectedIdx=-1;keyboardFocusIdx=-1;
     advanceToNextLetterWithValues();
   };
