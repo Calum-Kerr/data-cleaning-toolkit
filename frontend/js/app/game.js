@@ -381,12 +381,14 @@ function renderMergeInterface(startFocusIdx){
 
   // keyboard instructions
   const kbHint=document.createElement('div');
+  kbHint.id='kbHint';
   kbHint.style.cssText='margin-top:12px;padding:8px 12px;background:#f7f7f7;border:1px solid #d6d6d6;font-size:12px;color:#565656;text-align:center;';
-  kbHint.textContent='keyboard: arrow keys to move • Enter to select • Enter again to merge • Escape to cancel';
+  kbHint.textContent='Space to select • Enter to merge • Escape to cancel • Ctrl+←/→ for letter groups';
   container.appendChild(kbHint);
 
   board.appendChild(container);
-  setupKeyboardNav(board,listDiv);
+  setupKeyboardNav(board,listDiv,startFocusIdx);
+  mergeState.nextFocusIdx=-1;
 }
 
 async function applyMergesForLetter(){if(!checkOnlineAndNotify())return;const payload={csvData:cleanedCSV,column:mergeState.column,merges:mergeState.pendingMerges};try{const res=await fetch(window.location.origin+'/api/merge-clusters',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(!res.ok){console.error('Merge failed with status',res.status);alert(OFFLINE_MESSAGE);return;}const data=await res.json();if(data.csvData){cleanedCSV=data.csvData;mergeState.mergedCount+=mergeState.pendingMerges.length;mergeState.pendingMerges=[];loadUniqueValuesForColumn();}else{console.error('No csvData in response',data);}}catch(e){console.error('Merge error:',e);alert(OFFLINE_MESSAGE);}}
