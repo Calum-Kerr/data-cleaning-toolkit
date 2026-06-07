@@ -50,7 +50,7 @@ function focusKeyboardCard(board,idx){
   keyboardFocusIdx=idx;
   const card=keyboardCards[idx];
   card.classList.add('keyboard-focus');
-  card.scrollIntoView({block:'nearest',behavior:'smooth'});
+  card.scrollIntoView({block:'nearest',behavior:'auto'});
 }
 
 function handleKeyboardMerge(fromIdx,toIdx){
