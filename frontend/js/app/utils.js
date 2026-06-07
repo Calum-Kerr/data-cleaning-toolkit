@@ -1,3 +1,4 @@
+function escapeHtml(text){return text.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));}
 const OFFLINE_MESSAGE='Cleaning requires a connection. The app loads offline, but cleaning operations need to reach the server. Please go online and try again.';
 function checkOnlineAndNotify(){if(!navigator.onLine){alert(OFFLINE_MESSAGE);return false;}return true;}
 function logAuditOperation(name,rowsBefore,rowsAfter,cellsAffected){const timestamp=new Date().toISOString();auditOperations.push({operationName:name,rowsBefore,rowsAfter,cellsAffected,timestamp});}
