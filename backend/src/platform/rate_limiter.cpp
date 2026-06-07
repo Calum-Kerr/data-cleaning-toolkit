@@ -51,3 +51,18 @@ bool checkRateLimit(const std::string& ip) {
   requestCounts[ip]++;
   return true;
 }
+
+bool tryAcquireConnection(const std::string& ip) {
+  std::lock_guard<std::mutex> lock(concurrencyMutex);
+  if (activeConnections[ip] >= MAX_CONCURRENT_PER_IP) return false;
+  activeConnections[ip]++;
+  return true;
+}
+
+void releaseConnection(const std::string& ip) {
+  std::lock_guard<std::mutex> lock(concurrencyMutex);
+  auto it = activeConnections.find(ip);
+  if (it != activeConnections.end()) {
+    if (it->second > 0) it->second--;
+  }
+}
