@@ -11,16 +11,18 @@ std::string toCSV(const std::vector<std::vector<std::string>>& data){
   for(const auto& row:data){
     for(size_t j=0;j<row.size();j++){
       if(j>0)result+=",";
-      const auto& cell=row[j];
-      bool needsQuote=cell.find(',')!=std::string::npos||cell.find('"')!=std::string::npos||cell.find('\n')!=std::string::npos;
+      // CSV formula injection defence: prepend ' to cells starting with = + - @
+      std::string safe=row[j];
+      if(!safe.empty()){char first=safe[0];if(first=='='||first=='+'||first=='-'||first=='@')safe="'"+safe;}
+      bool needsQuote=safe.find(',')!=std::string::npos||safe.find('"')!=std::string::npos||safe.find('\n')!=std::string::npos;
       if(needsQuote){
         result+="\"";
-        for(char c:cell){
+        for(char c:safe){
           if(c=='"')result+="\"\"";
           else result+=c;
         }
         result+="\"";
-      }else result+=cell;
+      }else result+=safe;
     }
     result+="\r\n";
   }
