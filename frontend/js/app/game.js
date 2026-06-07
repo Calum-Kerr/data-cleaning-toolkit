@@ -72,17 +72,22 @@ function handleKeyboardMerge(fromIdx,toIdx){
   renderMergeInterface(mergeState.nextFocusIdx);
 }
 
+// stored reference to the current keydown handler so we can remove it before
+// attaching a new one (avoids cloneNode which strips all button onclick handlers)
+let currentKeydownHandler=null;
+
 function setupKeyboardNav(board,listDiv,startIdx){
   keyboardCards=Array.from(listDiv.querySelectorAll('[data-index]'));
   keyboardGrid=getGridLayout(keyboardCards);
   keyboardFocusIdx=-1;
   keyboardSelectedIdx=-1;
 
-  // remove old listener by cloning the node (simplest cleanup)
-  const newBoard=board.cloneNode(true);
-  board.parentNode.replaceChild(newBoard,board);
+  // remove previous keydown handler before attaching new one
+  if(currentKeydownHandler){
+    board.removeEventListener('keydown',currentKeydownHandler);
+  }
 
-  newBoard.addEventListener('keydown',function(e){
+  currentKeydownHandler=function(e){
     // ignore if inline editor is open
     if(document.querySelector('#gameBoard input[type=text]'))return;
 
@@ -92,7 +97,7 @@ function setupKeyboardNav(board,listDiv,startIdx){
     if(e.key==='ArrowRight'||e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='ArrowDown'){
       e.preventDefault();
       // refresh card references in case DOM changed
-      keyboardCards=Array.from(newBoard.querySelectorAll('[data-index]'));
+      keyboardCards=Array.from(board.querySelectorAll('[data-index]'));
       if(keyboardCards.length===0)return;
 
       // find current position in grid
@@ -103,7 +108,7 @@ function setupKeyboardNav(board,listDiv,startIdx){
           if(c!==-1){row=r;col=c;break;}
         }
       }
-      if(row===-1||col===-1){focusKeyboardCard(newBoard,0);return;}
+      if(row===-1||col===-1){focusKeyboardCard(board,0);return;}
 
       let newRow=row,newCol=col;
       if(e.key==='ArrowRight'){newCol=col+1;if(newCol>=keyboardGrid[row].length)newCol=0;}
@@ -112,7 +117,7 @@ function setupKeyboardNav(board,listDiv,startIdx){
       else if(e.key==='ArrowDown'){newRow=row+1;if(newRow>=keyboardGrid.length)newRow=0;newCol=Math.min(col,keyboardGrid[newRow].length-1);}
 
       const newIdx=keyboardGrid[newRow][newCol];
-      focusKeyboardCard(newBoard,newIdx);
+      focusKeyboardCard(board,newIdx);
       return;
     }
 
@@ -121,14 +126,12 @@ function setupKeyboardNav(board,listDiv,startIdx){
       e.preventDefault();
       if(keyboardFocusIdx<0||keyboardFocusIdx>=values.length)return;
       if(keyboardSelectedIdx===keyboardFocusIdx){
-        // deselect
         if(keyboardCards[keyboardSelectedIdx])keyboardCards[keyboardSelectedIdx].classList.remove('keyboard-selected');
         keyboardSelectedIdx=-1;
         announceKb('selection cleared');
         updateHint();
         return;
       }
-      // deselect previous if any
       if(keyboardSelectedIdx>=0&&keyboardCards[keyboardSelectedIdx]){
         keyboardCards[keyboardSelectedIdx].classList.remove('keyboard-selected');
       }
@@ -179,7 +182,6 @@ function setupKeyboardNav(board,listDiv,startIdx){
     }
     if((e.ctrlKey&&e.key==='ArrowLeft')||e.key==='PageUp'){
       e.preventDefault();
-      // navigate to previous letter group
       var alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
       var currentIdx=alphabet.indexOf(mergeState.currentLetter);
       if(currentIdx>0){
@@ -197,11 +199,13 @@ function setupKeyboardNav(board,listDiv,startIdx){
       announceKb('no previous letter group');
       return;
     }
-  });
+  };
+
+  board.addEventListener('keydown',currentKeydownHandler);
 
   // focus the board so keyboard events work
-  newBoard.setAttribute('tabindex','0');
-  newBoard.focus();
+  board.setAttribute('tabindex','0');
+  board.focus();
 
   // restore focus to the startIdx card if specified
   if(startIdx>=0&&startIdx<keyboardCards.length){
@@ -209,8 +213,6 @@ function setupKeyboardNav(board,listDiv,startIdx){
     keyboardCards[startIdx].classList.add('keyboard-focus');
     keyboardCards[startIdx].scrollIntoView({block:'nearest',behavior:'auto'});
   }
-
-  // update the global gameBoard reference — cloning replaced the DOM node
 }
 
 // update the hint text at the bottom of the board based on selection state
