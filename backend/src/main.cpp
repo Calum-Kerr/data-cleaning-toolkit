@@ -49,6 +49,45 @@ static bool checkAdminAuth(const crow::request& req) {
   return sameLength && acc == 0;
 }
 
+// Escape a string for embedding inside a JSON string literal.  Control
+// characters without a short escape are emitted as \u00xx.
+static std::string jsonEscape(const std::string& s){
+  std::string out;
+  out.reserve(s.size()*2);
+  for(char c:s){
+    if(c=='\\')out+="\\\\";
+    else if(c=='"')out+="\\\"";
+    else if(c=='\n')out+="\\n";
+    else if(c=='\r')out+="\\r";
+    else if(c=='\t')out+="\\t";
+    else if(c=='\b')out+="\\b";
+    else if(c=='\f')out+="\\f";
+    else if(static_cast<unsigned char>(c)<0x20){
+      static const char* hex="0123456789abcdef";
+      unsigned char u=static_cast<unsigned char>(c);
+      out+="\\u00";
+      out+=hex[(u>>4)&0xF];
+      out+=hex[u&0xF];
+    }
+    else out+=c;
+  }
+  return out;
+}
+
+// Count cells whose value differs between an operation's input and output
+// grids, compared element-wise over the overlapping rows and columns.
+static int countChangedCells(const std::vector<std::vector<std::string>>& before,
+                             const std::vector<std::vector<std::string>>& after){
+  int changed=0;
+  size_t rows=std::min(before.size(), after.size());
+  for(size_t i=0;i<rows;i++){
+    size_t cols=std::min(before[i].size(), after[i].size());
+    for(size_t j=0;j<cols;j++)
+      if(before[i][j]!=after[i][j]) changed++;
+  }
+  return changed;
+}
+
 int main(){
   // Privacy hardening: disable core dumps to prevent heap memory (which may
   // contain user-uploaded CSV data) from being written to disk on crash.
