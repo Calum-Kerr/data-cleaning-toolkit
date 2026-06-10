@@ -8,6 +8,12 @@ std::string toUpperCase(const std::string& text){
   return result;
 }
 
+std::string toLowerCase(const std::string& text){
+  std::string result=text;
+  std::transform(result.begin(),result.end(),result.begin(),::tolower);
+  return result;
+}
+
 std::string normaliseWhitespace(const std::string& text){
   std::string upper=toUpperCase(text);
   std::string result;
