@@ -62,7 +62,8 @@ int main(){
   // Public health check — returns only status to avoid information disclosure.
   CROW_ROUTE(app,"/api/health").methods("GET"_method)
   ([](const crow::request& req){
-    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/api/health", 429); return crow::response(429);}
+    const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
+    if (!checkRateLimit(clientIp)) {logRequest("GET", "/api/health", 429); return crow::response(429);}
     recordEndpointCall("/api/health");
     logRequest("GET", "/api/health", 200);
     crow::json::wvalue result; result["status"]="ok"; return crow::response(result);
