@@ -1,5 +1,6 @@
 #include "crow_all.h"
 #include "csv_parser.h"
+#include "csv_serializer.h"
 #include "text_normalisation.h"
 #include "string_issue_detectors.h"
 #include "structural_cleaners.h"
