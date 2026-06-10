@@ -4,6 +4,7 @@
 #include <string>
 
 std::string toUpperCase(const std::string& text);
+std::string toLowerCase(const std::string& text);
 std::string normaliseWhitespace(const std::string& text);
 std::string normalisePunctuation(const std::string& text);
 std::string standardiseNullValues(const std::string& text);
