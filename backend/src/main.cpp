@@ -201,45 +201,17 @@ int main(){
     auto json=crow::json::load(req.body);
     std::string csvData=json["csvData"].s();
     auto parsed=parseCSV(csvData);
-    int rowsBefore=static_cast<int>(parsed.size());
-    auditLog.addEntry("Uppercase All", 0, rowsBefore, rowsBefore);
     auto uppercased=standardiseCase(parsed,"upper");
-    int rowsAfterUpper=static_cast<int>(uppercased.size());
-    auditLog.addEntry("Trim Whitespace", 0, rowsAfterUpper, rowsAfterUpper);
+    auditLog.addEntry("Uppercase All", countChangedCells(parsed,uppercased), static_cast<int>(parsed.size()), static_cast<int>(uppercased.size()));
     auto trimmed=trimWhitespace(uppercased);
-    int rowsAfterTrim=static_cast<int>(trimmed.size());
-    auditLog.addEntry("Standardise Null Values", 0, rowsAfterTrim, rowsAfterTrim);
+    auditLog.addEntry("Trim Whitespace", countChangedCells(uppercased,trimmed), static_cast<int>(uppercased.size()), static_cast<int>(trimmed.size()));
     auto standardised=standardiseNullValuesInData(trimmed);
-    int rowsAfterStandard=static_cast<int>(standardised.size());
-    auditLog.addEntry("Remove Duplicates", 0, rowsAfterStandard, rowsAfterStandard);
+    auditLog.addEntry("Standardise Null Values", countChangedCells(trimmed,standardised), static_cast<int>(trimmed.size()), static_cast<int>(standardised.size()));
     auto cleaned=removeDuplicates(standardised);
-    std::string outputCsv;
-    outputCsv.reserve(req.body.size());
-    for(const auto& row:cleaned){
-      for(size_t j=0;j<row.size();j++){
-        if(j>0)outputCsv+=",";
-        const auto& cell=row[j];
-        bool needsQuote=cell.find(',')!=std::string::npos||cell.find('"')!=std::string::npos||cell.find('\n')!=std::string::npos;
-        if(needsQuote){
-          outputCsv+="\"";
-          for(char c:cell){
-            if(c=='"')outputCsv+="\"\"";
-            else outputCsv+=c;
-          }
-          outputCsv+="\"";
-        }else outputCsv+=cell;
-      }
-      outputCsv+="\r\n";
-    }
+    auditLog.addEntry("Remove Duplicates", 0, static_cast<int>(standardised.size()), static_cast<int>(cleaned.size()));
+    std::string outputCsv = serializeToCSV(cleaned);
     std::string jsonBody="{\"cleanedData\":\"";
-    jsonBody.reserve(outputCsv.size()*2);
-    for(char c:outputCsv){
-      if(c=='\\')jsonBody+="\\\\";
-      else if(c=='"')jsonBody+="\\\"";
-      else if(c=='\n')jsonBody+="\\n";
-      else if(c=='\r')jsonBody+="\\r";
-      else jsonBody+=c;
-    }
+    jsonBody+=jsonEscape(outputCsv);
     jsonBody+="\"";
     jsonBody+=",\"originalRows\":"+std::to_string(parsed.size());
     jsonBody+=",\"cleanedRows\":"+std::to_string(cleaned.size());
