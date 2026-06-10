@@ -13,6 +13,17 @@ static std::mutex rateLimiterMutex;
 static std::map<std::string, int> activeConnections;
 static std::mutex concurrencyMutex;
 
+std::string resolveClientIp(const std::string& xffHeader, const std::string& remoteIp) {
+  if (xffHeader.empty()) return remoteIp;
+  // Only the last entry was appended by our own trusted proxy.
+  auto comma=xffHeader.find_last_of(',');
+  std::string candidate=comma==std::string::npos?xffHeader:xffHeader.substr(comma+1);
+  auto begin=candidate.find_first_not_of(" \t");
+  if (begin==std::string::npos) return remoteIp;
+  auto end=candidate.find_last_not_of(" \t");
+  return candidate.substr(begin, end-begin+1);
+}
+
 void resetIfNeeded(const std::string& ip) {
   auto now=std::chrono::steady_clock::now();
   if (lastReset.find(ip)==lastReset.end()) {
