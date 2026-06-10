@@ -35,6 +35,8 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/detect-outliers", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
     auto parsed=parseCSV(req.body);
     auto outliers=detectOutliers(parsed);
     crow::json::wvalue resp;
@@ -47,6 +49,8 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/detect-missing", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
     auto parsed=parseCSV(req.body);
     auto missing=detectMissingValues(parsed);
     int count=0;
@@ -62,6 +66,8 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/normalise-whitespace", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
     auto json=crow::json::load(req.body);
     std::string csvData=json["csvData"].s();
     auto parsed=parseCSV(csvData);
@@ -78,6 +84,8 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/standardise-case", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
     auto json=crow::json::load(req.body);
     std::string csvData=json["csvData"].s();
     auto parsed=parseCSV(csvData);
@@ -93,6 +101,8 @@ void registerAdditionalRoutes(crow::SimpleApp& app){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/remove-outliers", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
     auto parsed=parseCSV(req.body);
     auto cleaned=removeOutliers(parsed);
     crow::json::wvalue result;
