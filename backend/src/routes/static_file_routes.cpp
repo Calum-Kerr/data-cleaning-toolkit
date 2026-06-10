@@ -141,7 +141,8 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
   // Privacy route
   CROW_ROUTE(app, "/privacy").methods("GET"_method)
   ([addSecurityHeaders](const crow::request& req) {
-    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/privacy", 429); return crow::response(429);}
+    const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
+    if (!checkRateLimit(clientIp)) {logRequest("GET", "/privacy", 429); return crow::response(429);}
     std::string content = readFile(getFrontendDir() + "/privacy.html");
     if (content.empty()) {
       return crow::response(404, "Not Found");
