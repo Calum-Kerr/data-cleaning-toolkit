@@ -157,7 +157,8 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
   // Terms of service route
   CROW_ROUTE(app, "/terms").methods("GET"_method)
   ([addSecurityHeaders](const crow::request& req) {
-    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/terms", 429); return crow::response(429);}
+    const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
+    if (!checkRateLimit(clientIp)) {logRequest("GET", "/terms", 429); return crow::response(429);}
     std::string content = readFile(getFrontendDir() + "/terms.html");
     if (content.empty()) {
       return crow::response(404, "Not Found");
