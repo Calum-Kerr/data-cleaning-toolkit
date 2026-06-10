@@ -2,6 +2,12 @@
 #define RATE_LIMITER_H
 #include <string>
 
+// Resolve the client IP for rate limiting.  Uses the LAST entry of the
+// X-Forwarded-For header (appended by our own trusted reverse proxy; earlier
+// entries are client-supplied and must not be trusted).  Falls back to
+// remoteIp when the header is absent (e.g., local testing).
+std::string resolveClientIp(const std::string& xffHeader, const std::string& remoteIp);
+
 bool checkRateLimit(const std::string& ip);
 
 // Per-IP connection concurrency limiting (defence against memory-exhaustion DoS).
