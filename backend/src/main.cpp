@@ -94,7 +94,7 @@ int main(){
   ([](const crow::request& req){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("GET", "/admin/health", 429); return crow::response(429);}
-    if (!checkAdminAuth(req)) return crow::response(401);
+    if (!checkAdminAuth(req)) {logRequest("GET", "/admin/health", 401); return crow::response(401);}
     crow::json::wvalue result;
 
     std::error_code diskEc;
