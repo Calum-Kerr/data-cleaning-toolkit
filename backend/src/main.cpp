@@ -219,7 +219,7 @@ int main(){
     jsonBody+=",\"message\":\"Data cleaned successfully\",\"auditLog\":[";
     for(size_t i=0;i<auditLog.entries.size();i++){
       if(i>0)jsonBody+=",";
-      jsonBody+="{\"operationName\":\""+auditLog.entries[i].operationName+"\",\"cellsAffected\":"+std::to_string(auditLog.entries[i].cellsAffected)+",\"rowsBefore\":"+std::to_string(auditLog.entries[i].rowsBefore)+",\"rowsAfter\":"+std::to_string(auditLog.entries[i].rowsAfter)+",\"timestamp\":\""+auditLog.entries[i].timestamp.substr(0,19)+"\"}";
+      jsonBody+="{\"operationName\":\""+jsonEscape(auditLog.entries[i].operationName)+"\",\"cellsAffected\":"+std::to_string(auditLog.entries[i].cellsAffected)+",\"rowsBefore\":"+std::to_string(auditLog.entries[i].rowsBefore)+",\"rowsAfter\":"+std::to_string(auditLog.entries[i].rowsAfter)+",\"timestamp\":\""+auditLog.entries[i].timestamp.substr(0,19)+"\"}";
     }
     jsonBody+="]}";
     logRequest("POST", "/api/clean", 200);
