@@ -75,5 +75,6 @@ void releaseConnection(const std::string& ip) {
   auto it = activeConnections.find(ip);
   if (it != activeConnections.end()) {
     if (it->second > 0) it->second--;
+    if (it->second == 0) activeConnections.erase(it);
   }
 }
