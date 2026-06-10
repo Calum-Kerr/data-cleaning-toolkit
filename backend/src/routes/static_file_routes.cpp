@@ -109,7 +109,8 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
   // Features route
   CROW_ROUTE(app, "/features").methods("GET"_method)
   ([addSecurityHeaders](const crow::request& req) {
-    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/features", 429); return crow::response(429);}
+    const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
+    if (!checkRateLimit(clientIp)) {logRequest("GET", "/features", 429); return crow::response(429);}
     std::string content = readFile(getFrontendDir() + "/features.html");
     if (content.empty()) {
       return crow::response(404, "Not Found");
