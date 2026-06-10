@@ -22,6 +22,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <cstdlib>
+#include <algorithm>
 
 void registerAdditionalRoutes(crow::SimpleApp& app);
 void registerTextRoutes(crow::SimpleApp& app);
