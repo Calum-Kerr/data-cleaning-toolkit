@@ -23,11 +23,16 @@ uint64_t fnv1a(const std::vector<std::string>& row){
 
 std::vector<std::vector<std::string>> removeDuplicates(const std::vector<std::vector<std::string>>& data){
   std::vector<std::vector<std::string>> result;
-  std::unordered_set<uint64_t> seen;
+  std::unordered_map<uint64_t, std::vector<size_t>> seen;
   for(const auto& row:data){
     uint64_t h=fnv1a(row);
-    if(!seen.count(h)){
-      seen.insert(h);
+    auto& indices=seen[h];
+    bool duplicate=false;
+    for(size_t idx:indices){
+      if(result[idx]==row){duplicate=true;break;}
+    }
+    if(!duplicate){
+      indices.push_back(result.size());
       result.push_back(row);
     }
   }
