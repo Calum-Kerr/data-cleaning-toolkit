@@ -8,9 +8,16 @@
 uint64_t fnv1a(const std::vector<std::string>& row){
   uint64_t hash=14695981039346656037ULL;
   const uint64_t FNV_PRIME=1099511628211ULL;
-  for(const auto& cell:row)
+  for(const auto& cell:row){
     for(char c:cell)
       hash=(hash^(uint8_t)c)*FNV_PRIME;
+    // Cell boundary marker: separator byte plus cell length, so rows like
+    // ["ab","c"] and ["a","bc"] cannot produce the same byte stream.
+    hash=(hash^(uint8_t)0x1F)*FNV_PRIME;
+    uint64_t len=cell.size();
+    for(int i=0;i<8;i++)
+      hash=(hash^(uint8_t)(len>>(i*8)))*FNV_PRIME;
+  }
   return hash;
 }
 
