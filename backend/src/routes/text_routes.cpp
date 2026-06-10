@@ -11,6 +11,8 @@ void registerTextRoutes(crow::SimpleApp& app){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/remove-state-suffixes", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
     auto parsed=parseCSV(req.body);
     std::vector<std::vector<std::string>> result;
     for(const auto& row:parsed){
@@ -29,6 +31,8 @@ void registerTextRoutes(crow::SimpleApp& app){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/remove-duplicate-words", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
     auto parsed=parseCSV(req.body);
     std::vector<std::vector<std::string>> result;
     for(const auto& row:parsed){
@@ -47,6 +51,8 @@ void registerTextRoutes(crow::SimpleApp& app){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/natural-sort", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
     auto parsed=parseCSV(req.body);
     auto sorted=naturalSort(parsed,colIndex);
     crow::json::wvalue result;
