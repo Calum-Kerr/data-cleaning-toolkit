@@ -173,7 +173,8 @@ void registerFrontendRoutes(crow::SimpleApp& app) {
   // Static files route - catch-all for frontend assets
   CROW_ROUTE(app, "/<path>").methods("GET"_method)
   ([](const crow::request& req, const std::string& path) {
-    if (!checkRateLimit(req.remote_ip_address)) {logRequest("GET", "/" + path, 429); return crow::response(429);}
+    const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
+    if (!checkRateLimit(clientIp)) {logRequest("GET", "/" + path, 429); return crow::response(429);}
     // Prevent directory traversal attacks
     if (path.find("..") != std::string::npos) {
       return crow::response(403, "Forbidden");
