@@ -38,7 +38,8 @@ void registerCleaningRoutes(crow::SimpleApp& app){
   });
   CROW_ROUTE(app,"/api/find-replace").methods("POST"_method)
   ([](const crow::request& req){
-    if (!checkRateLimit(req.remote_ip_address)) {logRequest("POST", "/api/find-replace", 429); return crow::response(429);}
+    const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
+    if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/find-replace", 429); return crow::response(429);}
     if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
     try {
       auto json=crow::json::load(req.body);
