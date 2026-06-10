@@ -253,7 +253,7 @@ int main(){
   ([](const crow::request& req){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
     if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/backup", 429); return crow::response(429);}
-    if (!checkAdminAuth(req)) return crow::response(401);
+    if (!checkAdminAuth(req)) {logRequest("POST", "/api/backup", 401); return crow::response(401);}
     recordEndpointCall("/api/backup");
     createBackup();
     logRequest("POST", "/api/backup", 200);
