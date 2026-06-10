@@ -29,14 +29,22 @@ void registerFrontendRoutes(crow::SimpleApp& app);
 void logFrontendDirStartup();
 
 // Verify the ADMIN_API_KEY environment variable against the Authorization header.
-// If the env var is not set, authentication is skipped for backward compatibility.
+// If the env var is not set or empty, fail closed: all admin routes are denied
+// until the key is configured.
 static bool checkAdminAuth(const crow::request& req) {
   const char* key = std::getenv("ADMIN_API_KEY");
-  if (!key || key[0] == '\0') return true;  // not configured — allow
+  if (!key || key[0] == '\0') return false;  // not configured — deny
   std::string auth = req.get_header_value("authorization");
-  if (auth.empty()) return false;
   std::string expected = std::string("Bearer ") + key;
-  return auth == expected;
+  bool sameLength = auth.size() == expected.size();
+  // Constant-time comparison: always scan the full expected length and
+  // XOR-accumulate differences so timing does not reveal where a mismatch is.
+  volatile unsigned char acc = 0;
+  for (size_t i = 0; i < expected.size(); i++) {
+    unsigned char a = i < auth.size() ? static_cast<unsigned char>(auth[i]) : 0;
+    acc = acc | (a ^ static_cast<unsigned char>(expected[i]));
+  }
+  return sameLength && acc == 0;
 }
 
 int main(){
