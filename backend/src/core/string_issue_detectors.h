@@ -11,8 +11,6 @@ double calculateRowSimilarity(const std::vector<std::string>& r1,
 std::vector<std::vector<bool>> detectMissingValues(const std::vector<std::vector<std::string>>& data);
 std::vector<bool> detectDuplicates(const std::vector<std::vector<std::string>>& data);
 std::vector<int> detectOutliers(const std::vector<std::vector<std::string>>& data);
-std::map<std::string, std::vector<std::string>> detectInconsistentValues(
-  const std::vector<std::vector<std::string>>& data);
 
 #endif
 
