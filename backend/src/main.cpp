@@ -53,30 +53,6 @@ static bool checkAdminAuth(const crow::request& req) {
   return sameLength && acc == 0;
 }
 
-// Escape a string for embedding inside a JSON string literal.  Control
-// characters without a short escape are emitted as \u00xx.
-static std::string jsonEscape(const std::string& s){
-  std::string out;
-  out.reserve(s.size()*2);
-  for(char c:s){
-    if(c=='\\')out+="\\\\";
-    else if(c=='"')out+="\\\"";
-    else if(c=='\n')out+="\\n";
-    else if(c=='\r')out+="\\r";
-    else if(c=='\t')out+="\\t";
-    else if(c=='\b')out+="\\b";
-    else if(c=='\f')out+="\\f";
-    else if(static_cast<unsigned char>(c)<0x20){
-      static const char* hex="0123456789abcdef";
-      unsigned char u=static_cast<unsigned char>(c);
-      out+="\\u00";
-      out+=hex[(u>>4)&0xF];
-      out+=hex[u&0xF];
-    }
-    else out+=c;
-  }
-  return out;
-}
 
 
 int main(){
