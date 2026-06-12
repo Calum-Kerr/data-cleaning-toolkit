@@ -203,35 +203,46 @@ int main(){
     if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
     ConnectionGuard connGuard(clientIp);
     recordEndpointCall("/api/clean");
-    AuditLog auditLog;
     auto json=crow::json::load(req.body);
     std::string csvData=json["csvData"].s();
     auto parsed=parseCSV(csvData);
-    auto uppercased=standardiseCase(parsed,"upper");
-    auditLog.addEntry("Uppercase All", countChangedCells(parsed,uppercased), static_cast<int>(parsed.size()), static_cast<int>(uppercased.size()));
-    auto trimmed=trimWhitespace(uppercased);
-    auditLog.addEntry("Trim Whitespace", countChangedCells(uppercased,trimmed), static_cast<int>(uppercased.size()), static_cast<int>(trimmed.size()));
-    auto standardised=standardiseNullValuesInData(trimmed);
-    auditLog.addEntry("Standardise Null Values", countChangedCells(trimmed,standardised), static_cast<int>(trimmed.size()), static_cast<int>(standardised.size()));
-    auto cleaned=removeDuplicates(standardised);
-    auditLog.addEntry("Remove Duplicates", 0, static_cast<int>(standardised.size()), static_cast<int>(cleaned.size()));
-    std::string outputCsv = serializeToCSV(cleaned);
-    std::string jsonBody="{\"cleanedData\":\"";
-    jsonBody+=jsonEscape(outputCsv);
-    jsonBody+="\"";
-    jsonBody+=",\"originalRows\":"+std::to_string(parsed.size());
-    jsonBody+=",\"cleanedRows\":"+std::to_string(cleaned.size());
-    jsonBody+=",\"rowsRemoved\":"+std::to_string(parsed.size()-cleaned.size());
-    jsonBody+=",\"message\":\"Data cleaned successfully\",\"auditLog\":[";
-    for(size_t i=0;i<auditLog.entries.size();i++){
-      if(i>0)jsonBody+=",";
-      jsonBody+="{\"operationName\":\""+jsonEscape(auditLog.entries[i].operationName)+"\",\"cellsAffected\":"+std::to_string(auditLog.entries[i].cellsAffected)+",\"rowsBefore\":"+std::to_string(auditLog.entries[i].rowsBefore)+",\"rowsAfter\":"+std::to_string(auditLog.entries[i].rowsAfter)+",\"timestamp\":\""+auditLog.entries[i].timestamp.substr(0,19)+"\"}";
+    int originalRows=static_cast<int>(parsed.size());
+
+    DeepCleanResult cleaned=deepClean(parsed);
+
+    std::string outputCsv=serializeToCSV(cleaned.cleanedData);
+    int cleanedRows=static_cast<int>(cleaned.cleanedData.size());
+
+    crow::json::wvalue resp;
+    resp["cleanedData"]=outputCsv;
+    resp["originalRows"]=originalRows;
+    resp["cleanedRows"]=cleanedRows;
+    resp["rowsRemoved"]=originalRows-cleanedRows;
+    resp["message"]="Data cleaned successfully";
+
+    // columnTypes
+    resp["columnTypes"]=crow::json::wvalue::list();
+    for(size_t i=0;i<cleaned.columnTypes.size();i++){
+      resp["columnTypes"][i]["columnName"]=cleaned.columnNames[i];
+      resp["columnTypes"][i]["type"]=columnTypeToString(cleaned.columnTypes[i]);
     }
-    jsonBody+="]}";
+
+    // audit log
+    resp["auditLog"]=crow::json::wvalue::list();
+    for(size_t i=0;i<cleaned.auditLog.entries.size();i++){
+      const auto& e=cleaned.auditLog.entries[i];
+      resp["auditLog"][i]["operationName"]=e.operationName;
+      resp["auditLog"][i]["cellsAffected"]=e.cellsAffected;
+      resp["auditLog"][i]["rowsBefore"]=e.rowsBefore;
+      resp["auditLog"][i]["rowsAfter"]=e.rowsAfter;
+      resp["auditLog"][i]["timestamp"]=e.timestamp.substr(0,19);
+      resp["auditLog"][i]["phase"]=e.phase;
+    }
+
     logRequest("POST", "/api/clean", 200);
-    auto resp=crow::response(jsonBody);
-    resp.set_header("Content-Type","application/json; charset=utf-8");
-    return resp;
+    auto cresp=crow::response(resp);
+    cresp.set_header("Content-Type","application/json; charset=utf-8");
+    return cresp;
   });
   CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
   ([](const crow::request& req){
