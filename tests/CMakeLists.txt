@@ -36,3 +36,27 @@ add_test(NAME unstructured_integration_test COMMAND unstructured_integration_tes
 # compiled in.
 add_executable(test_csv_rfc4180 test_csv_rfc4180.cpp ${BACKEND_DIR}/src/parsers/csv_parser.cpp)
 add_test(NAME test_csv_rfc4180 COMMAND test_csv_rfc4180)
+
+# regression test for normaliseWhitespace hidden-uppercase fix and standardiseNullValues
+add_executable(normalise_whitespace_regression_test normalise_whitespace_regression_test.cpp
+  ${BACKEND_DIR}/src/text/text_normalisation.cpp)
+add_test(NAME normalise_whitespace_regression_test COMMAND normalise_whitespace_regression_test)
+
+# column type detection module tests
+add_executable(column_type_detection_test column_type_detection_test.cpp
+  ${BACKEND_DIR}/src/text/text_normalisation.cpp
+  ${BACKEND_DIR}/src/core/column_type_detection.cpp)
+add_test(NAME column_type_detection_test COMMAND column_type_detection_test)
+
+# per-type transform tests (uses text_normalisation.cpp)
+add_executable(per_type_transforms_test per_type_transforms_test.cpp
+  ${BACKEND_DIR}/src/text/text_normalisation.cpp)
+add_test(NAME per_type_transforms_test COMMAND per_type_transforms_test)
+
+# weighted fuzzy dedup module tests
+add_executable(weighted_dedup_test weighted_dedup_test.cpp
+  ${BACKEND_DIR}/src/text/text_normalisation.cpp
+  ${BACKEND_DIR}/src/core/string_issue_detectors.cpp
+  ${BACKEND_DIR}/src/core/column_type_detection.cpp
+  ${BACKEND_DIR}/src/core/weighted_dedup.cpp)
+add_test(NAME weighted_dedup_test COMMAND weighted_dedup_test)
