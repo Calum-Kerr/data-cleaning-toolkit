@@ -244,6 +244,70 @@ int main(){
     cresp.set_header("Content-Type","application/json; charset=utf-8");
     return cresp;
   });
+  CROW_ROUTE(app,"/api/post-merge-dedup").methods("POST"_method)
+  ([](const crow::request& req){
+    const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
+    if (!checkRateLimit(clientIp)) {logRequest("POST", "/api/post-merge-dedup", 429); return crow::response(429);}
+    if (req.body.size() > 50 * 1024 * 1024) return crow::response(413, "Payload too large. Maximum 50MB.");
+    if (!tryAcquireConnection(clientIp)) return crow::response(429, "Too many concurrent requests from your IP");
+    ConnectionGuard connGuard(clientIp);
+    recordEndpointCall("/api/post-merge-dedup");
+    AuditLog auditLog;
+    auto json=crow::json::load(req.body);
+    std::string csvData=json["csvData"].s();
+    auto parsed=parseCSV(csvData);
+
+    // detect or reuse column types
+    std::vector<ColumnType> columnTypes;
+    if(json.has("columnTypes")){
+      for(auto& ct:json["columnTypes"]){
+        std::string t=ct["type"].s();
+        if(t=="EMAIL") columnTypes.push_back(ColumnType::EMAIL);
+        else if(t=="PHONE") columnTypes.push_back(ColumnType::PHONE);
+        else if(t=="URL") columnTypes.push_back(ColumnType::URL);
+        else if(t=="DATE") columnTypes.push_back(ColumnType::DATE);
+        else if(t=="NUMERIC") columnTypes.push_back(ColumnType::NUMERIC);
+        else if(t=="BOOLEAN") columnTypes.push_back(ColumnType::BOOLEAN);
+        else if(t=="ID") columnTypes.push_back(ColumnType::ID);
+        else if(t=="NAME") columnTypes.push_back(ColumnType::NAME);
+        else if(t=="FREE_TEXT") columnTypes.push_back(ColumnType::FREE_TEXT);
+        else columnTypes.push_back(ColumnType::GENERIC_TEXT);
+      }
+    } else {
+      auto typeResult=detectColumnTypes(parsed);
+      columnTypes=typeResult.types;
+    }
+
+    // exact dedup first
+    auto exactDeduped=removeDuplicates(parsed);
+    int exactRemoved=(int)parsed.size()-(int)exactDeduped.size();
+    auditLog.addEntry("Exact Deduplication", 0, (int)parsed.size(), (int)exactDeduped.size(), "dedup-pass-2-exact");
+
+    // then weighted fuzzy at slightly looser threshold
+    auto fuzzyResult=weightedDeduplicate(exactDeduped, columnTypes, 0.92);
+    auditLog.addEntry("Weighted Fuzzy Deduplication", 0, (int)exactDeduped.size(), (int)fuzzyResult.data.size(), "dedup-pass-2-fuzzy");
+
+    std::string outputCsv=serializeToCSV(fuzzyResult.data);
+    crow::json::wvalue resp;
+    resp["csvData"]=outputCsv;
+    resp["rowsRemoved"]=fuzzyResult.rowsRemoved + exactRemoved;
+
+    resp["auditLog"]=crow::json::wvalue::list();
+    for(size_t i=0;i<auditLog.entries.size();i++){
+      const auto& e=auditLog.entries[i];
+      resp["auditLog"][i]["operationName"]=e.operationName;
+      resp["auditLog"][i]["cellsAffected"]=e.cellsAffected;
+      resp["auditLog"][i]["rowsBefore"]=e.rowsBefore;
+      resp["auditLog"][i]["rowsAfter"]=e.rowsAfter;
+      resp["auditLog"][i]["timestamp"]=e.timestamp.substr(0,19);
+      resp["auditLog"][i]["phase"]=e.phase;
+    }
+
+    logRequest("POST", "/api/post-merge-dedup", 200);
+    auto cresp=crow::response(resp);
+    cresp.set_header("Content-Type","application/json; charset=utf-8");
+    return cresp;
+  });
   CROW_ROUTE(app,"/api/detect-duplicates").methods("POST"_method)
   ([](const crow::request& req){
     const std::string clientIp = resolveClientIp(req.get_header_value("x-forwarded-for"), req.remote_ip_address);
