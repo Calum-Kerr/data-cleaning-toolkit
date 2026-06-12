@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include "column_type_detection.h"
-#include "../platform/audit.h"
+#include "audit.h"
 
 struct DeepCleanResult {
   std::vector<std::vector<std::string>> cleanedData;
