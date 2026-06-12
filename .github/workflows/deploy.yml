@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to server
-        # pinned to v1 major tag for supply-chain security — @master would auto-update
-        uses: appleboy/ssh-action@v1
+        # v1 (pinned to immutable commit)
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: deploy
