@@ -22,6 +22,47 @@ std::string getBackupDirectory() {
   return backupDir;
 }
 
+// Remove backup archives older than the 30-day retention window promised by
+// the site's privacy policy. Caller must hold the backup lock so pruning is
+// serialised with backup creation. Uses std::error_code overloads throughout;
+// a file that cannot be inspected or removed is skipped, never fatal.
+static void pruneOldBackups(const std::string& backupDir) {
+  std::error_code iterEc;
+  fs::directory_iterator it(backupDir, iterEc);
+  if (iterEc) {
+    return;
+  }
+
+  const std::string prefix = "backup_";
+  const std::string suffix = ".tar.gz";
+  const auto cutoff = fs::file_time_type::clock::now() - std::chrono::hours(24 * 30);
+  std::ofstream manifest(backupDir + "/manifest.txt", std::ios::app);
+
+  for (fs::directory_iterator end; it != end; it.increment(iterEc)) {
+    if (iterEc) {
+      break;
+    }
+    std::string name = it->path().filename().string();
+    if (name.size() < prefix.size() + suffix.size() ||
+        name.compare(0, prefix.size(), prefix) != 0 ||
+        name.compare(name.size() - suffix.size(), suffix.size(), suffix) != 0) {
+      continue;
+    }
+
+    std::error_code fileEc;
+    if (!it->is_regular_file(fileEc) || fileEc) {
+      continue;
+    }
+    auto lastWrite = it->last_write_time(fileEc);
+    if (fileEc || lastWrite >= cutoff) {
+      continue;
+    }
+    if (fs::remove(it->path(), fileEc) && !fileEc) {
+      manifest << "Backup pruned (older than 30 days): " << name << "\n";
+    }
+  }
+}
+
 void createBackup() {
   auto now = std::chrono::system_clock::now();
   auto time = std::chrono::system_clock::to_time_t(now);
