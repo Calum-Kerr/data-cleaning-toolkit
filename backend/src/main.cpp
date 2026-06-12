@@ -78,19 +78,6 @@ static std::string jsonEscape(const std::string& s){
   return out;
 }
 
-// Count cells whose value differs between an operation's input and output
-// grids, compared element-wise over the overlapping rows and columns.
-static int countChangedCells(const std::vector<std::vector<std::string>>& before,
-                             const std::vector<std::vector<std::string>>& after){
-  int changed=0;
-  size_t rows=std::min(before.size(), after.size());
-  for(size_t i=0;i<rows;i++){
-    size_t cols=std::min(before[i].size(), after[i].size());
-    for(size_t j=0;j<cols;j++)
-      if(before[i][j]!=after[i][j]) changed++;
-  }
-  return changed;
-}
 
 int main(){
   // Privacy hardening: disable core dumps to prevent heap memory (which may
