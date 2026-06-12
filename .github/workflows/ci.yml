@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # pinned to a full commit SHA for supply-chain security
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      # backend/CMakeLists.txt aborts configure if asio.hpp is not found, even
+      # though no test target uses asio. The header-only apt package satisfies
+      # the existing /usr/include search hint without needing the vcpkg
+      # toolchain (no test includes crow_all.h).
+      - name: Install asio headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libasio-dev
+
+      - name: Configure
+        run: cmake -S backend -B build -DBUILD_TESTS=ON
+
+      # build only the test targets, not the Toolkit server binary
+      - name: Build test targets
+        run: >-
+          cmake --build build --target
+          combined_pipeline_test
+          json_parser_test
+          semi_structured_integration_test
+          unstructured_integration_test
+          test_csv_rfc4180
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure
