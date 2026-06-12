@@ -53,9 +53,15 @@ static std::string normaliseForType(const std::string& cell, ColumnType type) {
         // strip commas, spaces, and leading currency symbols
         std::string out;
         bool started = false;
-        for (char c : cell) {
+        for (size_t i = 0; i < cell.size(); i++) {
+          char c = cell[i];
           if (c == ',' || c == ' ') continue;
-          if (!started && (c == '$' || c == '£' || c == '€')) continue;
+          // leading currency symbol: $ or multi-byte UTF-8 £ (0xC2 0xA3) / € (0xE2 0x82 0xAC)
+          if (!started) {
+            if (c == '$') continue;
+            if (c == '\xC2' && i + 1 < cell.size() && cell[i + 1] == '\xA3') { i++; continue; }
+            if (c == '\xE2' && i + 2 < cell.size() && cell[i + 1] == '\x82' && cell[i + 2] == '\xAC') { i += 2; continue; }
+          }
           out += c;
           started = true;
         }
