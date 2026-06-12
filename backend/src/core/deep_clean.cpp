@@ -71,12 +71,20 @@ static std::string transformCell(const std::string& cell, ColumnType type) {
 
     case ColumnType::NUMERIC:
       {
-        // strip commas, spaces, currency symbols
+        // strip commas, spaces, and leading currency symbols
         std::string out;
-        for (char c : cell) {
+        bool started = false;
+        for (size_t i = 0; i < cell.size(); i++) {
+          char c = cell[i];
           if (c == ',' || c == ' ') continue;
-          if (out.empty() && (c == '$' || c == '£' || c == '€')) continue;
+          // leading currency symbol: $ or multi-byte UTF-8 £ (0xC2 0xA3) / € (0xE2 0x82 0xAC)
+          if (!started) {
+            if (c == '$') continue;
+            if (c == '\xC2' && i + 1 < cell.size() && cell[i + 1] == '\xA3') { i++; continue; }
+            if (c == '\xE2' && i + 2 < cell.size() && cell[i + 1] == '\x82' && cell[i + 2] == '\xAC') { i += 2; continue; }
+          }
           out += c;
+          started = true;
         }
         return out.empty() ? cell : out;
       }
