@@ -12,16 +12,18 @@ struct AuditLogEntry {
   int rowsBefore;
   int rowsAfter;
   std::string timestamp;
+  std::string phase;
 };
 
 class AuditLog {
 public:
   std::vector<AuditLogEntry> entries;
-  void addEntry(const std::string& opName, int cellsAffected, int rowsBefore, int rowsAfter){
+  void addEntry(const std::string& opName, int cellsAffected, int rowsBefore, int rowsAfter,
+                const std::string& phase=""){
     auto now=std::chrono::system_clock::now();
     auto time=std::chrono::system_clock::to_time_t(now);
     std::string timestamp=ctime_safe(time);
-    entries.push_back({opName, cellsAffected, rowsBefore, rowsAfter, timestamp});
+    entries.push_back({opName, cellsAffected, rowsBefore, rowsAfter, timestamp, phase});
   }
   void clear(){entries.clear();}
 };
