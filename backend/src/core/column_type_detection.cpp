@@ -239,11 +239,13 @@ static ColumnType detectOneColumn(const std::vector<std::vector<std::string>>& d
     return (double)matches / (double)sample.size();
   };
 
-  // evaluate in deterministic precedence order
+  // evaluate in deterministic precedence order — DATE before PHONE because
+  // ISO dates (e.g. 2024-01-15) also pass the phone validator (8 digits with
+  // dashes), and ties keep the first evaluated type
   scores.push_back({ColumnType::EMAIL,       scoreType(ColumnType::EMAIL, isValidEmail)});
+  scores.push_back({ColumnType::DATE,        scoreType(ColumnType::DATE, isValidDate)});
   scores.push_back({ColumnType::PHONE,       scoreType(ColumnType::PHONE, isValidPhone)});
   scores.push_back({ColumnType::URL,         scoreType(ColumnType::URL, isValidURL)});
-  scores.push_back({ColumnType::DATE,        scoreType(ColumnType::DATE, isValidDate)});
   scores.push_back({ColumnType::NUMERIC,     scoreType(ColumnType::NUMERIC, isValidNumeric)});
   scores.push_back({ColumnType::BOOLEAN,     scoreType(ColumnType::BOOLEAN, isValidBoolean)});
   scores.push_back({ColumnType::ID,          scoreType(ColumnType::ID, isValidID)});

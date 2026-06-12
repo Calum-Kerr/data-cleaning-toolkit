@@ -62,7 +62,8 @@ public:
       {{"London"}, {"Londn"}, {"Paris"}}  // "Londn" is near "London"
     );
     std::vector<ColumnType> types = {ColumnType::NAME};
-    auto result = weightedDeduplicate(data, types, 0.85);
+    // London/Londn Levenshtein similarity is 1 - 1/6 ≈ 0.833, so use 0.80
+    auto result = weightedDeduplicate(data, types, 0.80);
     // "Londn" should be removed as near-duplicate of "London"
     assert(result.data.size() <= 3);
     assert(result.rowsRemoved >= 1);
