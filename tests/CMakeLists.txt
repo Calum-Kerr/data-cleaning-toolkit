@@ -34,10 +34,5 @@ add_test(NAME unstructured_integration_test COMMAND unstructured_integration_tes
 
 # exercises the real RFC 4180 CSV parser, so that one backend source is
 # compiled in.
-# NOTE: this test references "../include/csv_parser.h" and parseCSVRFC4180(),
-# neither of which exists anywhere in the tree (the parser API is parseCSV /
-# parseCSVLine in backend/src/parsers/csv_parser.h), so this target does not
-# currently compile. It is registered unchanged so CI surfaces the defect;
-# fixing the test or providing the API is a separate change.
 add_executable(test_csv_rfc4180 test_csv_rfc4180.cpp ${BACKEND_DIR}/src/parsers/csv_parser.cpp)
 add_test(NAME test_csv_rfc4180 COMMAND test_csv_rfc4180)
