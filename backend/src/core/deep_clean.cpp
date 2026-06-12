@@ -23,12 +23,6 @@ static int countChangedCells(const std::vector<std::vector<std::string>>& before
   return changed;
 }
 
-static std::string isoNow() {
-  auto now = std::chrono::system_clock::now();
-  auto time = std::chrono::system_clock::to_time_t(now);
-  return ctime_safe(time).substr(0, 19);
-}
-
 // --- per-type cell transform --------------------------------------------
 
 static std::string transformCell(const std::string& cell, ColumnType type) {
