@@ -16,18 +16,5 @@ std::vector<std::vector<std::string>> naturalSort(
   const std::vector<std::vector<std::string>>& data, int colIndex);
 std::vector<std::vector<std::string>> removeOutliers(const std::vector<std::vector<std::string>>& data);
 
-struct UniversalCleaningResult {
-  std::vector<std::vector<std::string>> cleanedData;
-  std::map<int, std::map<std::string, std::string>> columnMappings;
-  std::map<int, int> mergedCountPerColumn;
-  int duplicateRowsRemoved;
-  std::vector<std::string> operationsLog;
-};
-
-UniversalCleaningResult universalTextCleaning(
-  const std::vector<std::vector<std::string>>& parsed,
-  double fuzzyThreshold=0.75,
-  bool removeDuplicateRows=true);
-
 #endif
 
