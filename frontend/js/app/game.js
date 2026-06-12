@@ -7,7 +7,7 @@ let keyboardSelectedIdx=-1;
 let keyboardCards=[];
 let keyboardGrid=[];
 
-function getTextColumns(){const lines=cleanedCSV.trim().split('\n');const headers=lines[0].split(',').map(h=>h.trim());const textCols=[];for(let col=0;col<headers.length;col++){let isText=false;for(let row=1;row<Math.min(6,lines.length);row++){const cell=lines[row].split(',')[col];if(cell&&isNaN(cell)){isText=true;break;}}if(isText)textCols.push(headers[col]);}return textCols;}
+function getTextColumns(){const lines=cleanedCSV.trim().split('\n');const headers=parseCSVLine(lines[0]);if(currentColumnTypes&&currentColumnTypes.length>0){const textCols=[];for(let i=0;i<currentColumnTypes.length;i++){const t=currentColumnTypes[i].type;if(t==='NAME'||t==='GENERIC_TEXT'||t==='FREE_TEXT'){if(i<headers.length)textCols.push(headers[i]);}}if(textCols.length>0)return textCols;}// fallback: old heuristicconst textCols=[];for(let col=0;col<headers.length;col++){let isText=false;for(let row=1;row<Math.min(6,lines.length);row++){const cells=parseCSVLine(lines[row]);const cell=cells[col];if(cell&&isNaN(cell)){isText=true;break;}}if(isText)textCols.push(headers[col]);}return textCols;}
 
 function parseCSVLine(line){const cells=[];let current='';let inQuotes=false;for(let i=0;i<line.length;i++){const c=line[i];if(c=='"'){inQuotes=!inQuotes;}else if(c===','&&!inQuotes){cells.push(current.trim());current='';}else{current+=c;}}cells.push(current.trim());return cells;}
 
