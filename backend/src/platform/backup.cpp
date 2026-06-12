@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iomanip>
 #include <filesystem>
+#include <system_error>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/file.h>
