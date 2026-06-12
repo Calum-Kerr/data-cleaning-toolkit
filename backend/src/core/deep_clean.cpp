@@ -260,7 +260,7 @@ DeepCleanResult deepClean(const std::vector<std::vector<std::string>>& parsed) {
   // Phase 6: Exact dedup
   auto exactDeduped = removeDuplicates(merged);
   int exactRemoved = (int)merged.size() - (int)exactDeduped.size();
-  result.auditLog.addEntry("Exact Deduplication", 0, (int)merged.size(), (int)exactDeduped.size(),
+  result.auditLog.addEntry("Exact Deduplication", exactRemoved, (int)merged.size(), (int)exactDeduped.size(),
                            "dedup-pass-1-exact");
 
   // Phase 7: Weighted fuzzy dedup
