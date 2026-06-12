@@ -33,10 +33,18 @@ static std::string normaliseForType(const std::string& cell, ColumnType type) {
       if (cell.size() == 10 && cell[4] == '/' && cell[7] == '/') {
         return cell.substr(0,4) + "-" + cell.substr(5,2) + "-" + cell.substr(8,2);
       }
-      // DD/MM/YYYY or DD-MM-YYYY → YYYY-MM-DD
+      // DD/MM/YYYY or DD-MM-YYYY — disambiguate day-first vs month-first
       if ((cell.size() == 10 && cell[2] == '/' && cell[5] == '/') ||
           (cell.size() == 10 && cell[2] == '-' && cell[5] == '-')) {
-        return cell.substr(6,4) + "-" + cell.substr(3,2) + "-" + cell.substr(0,2);
+        int a = 0, b = 0;
+        try { a = std::stoi(cell.substr(0,2)); b = std::stoi(cell.substr(3,2)); }
+        catch (...) { return cell; }
+        if (a > 12 && b <= 12)       // clearly DD/MM
+          return cell.substr(6,4) + "-" + cell.substr(3,2) + "-" + cell.substr(0,2);
+        if (b > 12 && a <= 12)       // clearly MM/DD (US format)
+          return cell.substr(6,4) + "-" + cell.substr(0,2) + "-" + cell.substr(3,2);
+        // both ≤12 or both >12 — ambiguous, leave as-is
+        return cell;
       }
       return cell;
 
