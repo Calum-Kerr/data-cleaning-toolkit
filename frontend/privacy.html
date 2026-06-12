@@ -131,7 +131,7 @@
           <h2>how long we keep data</h2>
           <ul>
             <li>file contents you upload: discarded immediately after processing (seconds, not stored).</li>
-            <li>technical request logs (ips, paths, timestamps): retained for up to 30 days, then automatically deleted by a scheduled task.</li>
+            <li>technical request logs (ips, paths, timestamps): deleted on a rolling basis; we keep them for no longer than 30 days.</li>
           </ul>
         </section>
 
