@@ -71,6 +71,9 @@ jobs:
               echo "=== Building ==="
               echo "[checkpoint] PID=$$ PPID=$PPID date=$(date -Iseconds)"
               cd /opt/toolkit
+              if [ -f "$BINARY_PATH" ]; then
+                cp "$BINARY_PATH" /tmp/toolkit_previous_binary
+              fi
               rm -rf build && mkdir -p build && cd build
               cmake ../backend -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
               make -j$(nproc)
