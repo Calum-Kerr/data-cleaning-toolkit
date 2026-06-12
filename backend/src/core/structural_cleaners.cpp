@@ -39,15 +39,38 @@ std::vector<std::vector<std::string>> removeDuplicates(const std::vector<std::ve
   return result;
 }
 
+static std::string collapseWhitespace(const std::string& s){
+  std::string out;
+  bool inSpace=false;
+  for(char c : s){
+    if(c==' ' || c=='\t' || c=='\r' || c=='\n'){
+      if(!inSpace){ out+=' '; inSpace=true; }
+    }else{
+      out+=c;
+      inSpace=false;
+    }
+  }
+  // trim trailing space from collapse
+  while(!out.empty() && out.back()==' ') out.pop_back();
+  // trim leading space from collapse
+  size_t lead=0;
+  while(lead<out.size() && out[lead]==' ') lead++;
+  return out.substr(lead);
+}
+
 std::vector<std::vector<std::string>> trimWhitespace(const std::vector<std::vector<std::string>>& data){
   std::vector<std::vector<std::string>> result;
   for(const auto& row:data){
     std::vector<std::string> newRow;
     for(const auto& cell:row){
-      size_t start=cell.find_first_not_of(" \t");
-      size_t end=cell.find_last_not_of(" \t");
-      if(start!=std::string::npos) newRow.push_back(cell.substr(start,end-start+1));
-      else newRow.push_back("");
+      // trim edges of \r, \n, \t, space
+      size_t start=cell.find_first_not_of(" \t\r\n");
+      size_t end=cell.find_last_not_of(" \t\r\n");
+      std::string trimmed;
+      if(start!=std::string::npos) trimmed=cell.substr(start,end-start+1);
+      else trimmed="";
+      // collapse internal whitespace runs
+      newRow.push_back(collapseWhitespace(trimmed));
     }
     result.push_back(newRow);
   }
