@@ -10,66 +10,67 @@
 
 // --- header hint map ----------------------------------------------------
 
+// Split a header name into words delimited by underscore or space, then
+// match each word exactly (or by prefix for compound hints like "updated_at"
+// where "updated" alone should signal DATE).  This avoids false positives
+// from substring matches: "tel" no longer matches "hotel", "id" no longer
+// matches "holiday" or "paid", and "is_"/"has_" now match before underscores
+// are stripped.
+static bool wordMatches(const std::string& word, const std::string& candidate) {
+  return word == candidate;
+}
+
+static bool hasWord(const std::vector<std::string>& words, const std::string& candidate) {
+  for (const auto& w : words) if (w == candidate) return true;
+  return false;
+}
+
 static ColumnType hintFromHeader(const std::string& header) {
   std::string h = toLowerCase(header);
-  // remove underscores and spaces for matching
-  std::string flat;
-  for (char c : h) {
-    if (c != '_' && c != ' ') flat += c;
-  }
 
-  if (flat.find("email") != std::string::npos) return ColumnType::EMAIL;
-  if (flat.find("phone") != std::string::npos ||
-      flat.find("mobile") != std::string::npos ||
-      flat.find("tel") != std::string::npos ||
-      flat == "fax") return ColumnType::PHONE;
-  if (flat.find("url") != std::string::npos ||
-      flat.find("website") != std::string::npos ||
-      flat.find("web") != std::string::npos ||
-      flat.find("link") != std::string::npos) return ColumnType::URL;
-  if (flat.find("date") != std::string::npos ||
-      flat.find("dob") != std::string::npos ||
-      flat.find("birth") != std::string::npos ||
-      flat.find("timestamp") != std::string::npos ||
-      flat.find("time") != std::string::npos ||
-      flat == "created" || flat == "updated" ||
-      flat == "createdat" || flat == "updatedat") return ColumnType::DATE;
-  if (flat.find("comment") != std::string::npos ||
-      flat.find("description") != std::string::npos ||
-      flat.find("note") != std::string::npos ||
-      flat.find("message") != std::string::npos ||
-      flat.find("review") != std::string::npos ||
-      flat.find("text") != std::string::npos ||
-      flat.find("bio") != std::string::npos) return ColumnType::FREE_TEXT;
-  if (flat.find("id") != std::string::npos ||
-      flat.find("code") != std::string::npos ||
-      flat.find("key") != std::string::npos ||
-      flat.find("uuid") != std::string::npos ||
-      flat.find("guid") != std::string::npos ||
-      flat.find("ref") != std::string::npos) return ColumnType::ID;
-  if (flat.find("name") != std::string::npos ||
-      flat.find("first") != std::string::npos ||
-      flat.find("last") != std::string::npos ||
-      flat.find("full") != std::string::npos ||
-      flat == "city" || flat == "state" ||
-      flat == "country" || flat == "street" ||
-      flat == "address") return ColumnType::NAME;
-  if (flat.find("price") != std::string::npos ||
-      flat.find("cost") != std::string::npos ||
-      flat.find("amount") != std::string::npos ||
-      flat.find("salary") != std::string::npos ||
-      flat.find("age") != std::string::npos ||
-      flat.find("count") != std::string::npos ||
-      flat.find("number") != std::string::npos ||
-      flat.find("score") != std::string::npos ||
-      flat.find("rate") != std::string::npos ||
-      flat.find("fee") != std::string::npos) return ColumnType::NUMERIC;
-  if (flat.find("bool") != std::string::npos ||
-      flat.find("flag") != std::string::npos ||
-      flat.find("active") != std::string::npos ||
-      flat.find("enabled") != std::string::npos ||
-      flat.find("is_") != std::string::npos ||
-      flat.find("has_") != std::string::npos) return ColumnType::BOOLEAN;
+  // split into words by underscore or space
+  std::vector<std::string> words;
+  std::string current;
+  for (char c : h) {
+    if (c == '_' || c == ' ') {
+      if (!current.empty()) { words.push_back(current); current.clear(); }
+    } else {
+      current += c;
+    }
+  }
+  if (!current.empty()) words.push_back(current);
+
+  if (hasWord(words, "email") || hasWord(words, "mail")) return ColumnType::EMAIL;
+  if (hasWord(words, "phone") || hasWord(words, "mobile") ||
+      hasWord(words, "tel") || hasWord(words, "telephone") ||
+      hasWord(words, "fax")) return ColumnType::PHONE;
+  if (hasWord(words, "url") || hasWord(words, "website") ||
+      hasWord(words, "web") || hasWord(words, "link")) return ColumnType::URL;
+  if (hasWord(words, "date") || hasWord(words, "dob") ||
+      hasWord(words, "birth") || hasWord(words, "timestamp") ||
+      hasWord(words, "time") || hasWord(words, "created") ||
+      hasWord(words, "updated") || hasWord(words, "createdat") ||
+      hasWord(words, "updatedat")) return ColumnType::DATE;
+  if (hasWord(words, "comment") || hasWord(words, "description") ||
+      hasWord(words, "note") || hasWord(words, "message") ||
+      hasWord(words, "review") || hasWord(words, "text") ||
+      hasWord(words, "bio")) return ColumnType::FREE_TEXT;
+  if (hasWord(words, "id") || hasWord(words, "code") ||
+      hasWord(words, "key") || hasWord(words, "uuid") ||
+      hasWord(words, "guid") || hasWord(words, "ref")) return ColumnType::ID;
+  if (hasWord(words, "name") || hasWord(words, "first") ||
+      hasWord(words, "last") || hasWord(words, "full") ||
+      hasWord(words, "city") || hasWord(words, "state") ||
+      hasWord(words, "country") || hasWord(words, "street") ||
+      hasWord(words, "address")) return ColumnType::NAME;
+  if (hasWord(words, "price") || hasWord(words, "cost") ||
+      hasWord(words, "amount") || hasWord(words, "salary") ||
+      hasWord(words, "age") || hasWord(words, "count") ||
+      hasWord(words, "number") || hasWord(words, "score") ||
+      hasWord(words, "rate") || hasWord(words, "fee")) return ColumnType::NUMERIC;
+  if (hasWord(words, "bool") || hasWord(words, "flag") ||
+      hasWord(words, "active") || hasWord(words, "enabled") ||
+      hasWord(words, "is") || hasWord(words, "has")) return ColumnType::BOOLEAN;
 
   return ColumnType::GENERIC_TEXT;  // no hint matched
 }
