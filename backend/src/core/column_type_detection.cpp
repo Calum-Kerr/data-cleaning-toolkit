@@ -63,7 +63,8 @@ static ColumnType hintFromHeader(const std::string& header) {
       hasWord(words, "amount") || hasWord(words, "salary") ||
       hasWord(words, "age") || hasWord(words, "count") ||
       hasWord(words, "number") || hasWord(words, "score") ||
-      hasWord(words, "rate") || hasWord(words, "fee")) return ColumnType::NUMERIC;
+      hasWord(words, "rate") || hasWord(words, "fee") ||
+      hasWord(words, "rating") || hasWord(words, "stars")) return ColumnType::NUMERIC;
   if (hasWord(words, "bool") || hasWord(words, "flag") ||
       hasWord(words, "active") || hasWord(words, "enabled") ||
       hasWord(words, "is") || hasWord(words, "has")) return ColumnType::BOOLEAN;
@@ -101,12 +102,32 @@ static bool isValidURL(const std::string& s) {
 static bool isValidPhone(const std::string& s) {
   // count digits after stripping common separators
   int digits = 0;
+  bool hasFormatting = false;
   for (char c : s) {
     if (c >= '0' && c <= '9') digits++;
     else if (c != ' ' && c != '-' && c != '.' && c != '(' && c != ')' && c != '+')
       return false; // unexpected character
+    else
+      hasFormatting = true;
   }
-  return digits >= 7;
+  if (digits < 7) return false;
+  // Reject values that parse cleanly as numbers (e.g. 1,234,567 or 12.34)
+  // — those belong to NUMERIC, not PHONE. Real phone numbers like
+  // +1-555-1234 survive because they don't parse as a single number.
+  // Separator-free internationals like +447700900123 fall below the 70%
+  // gate but are rescued by the header hint.
+  {
+    std::string stripped;
+    for (char c : s) {
+      if (c != ' ' && c != ',') stripped += c;
+    }
+    try {
+      size_t pos = 0;
+      std::stod(stripped, &pos);
+      if (pos == stripped.size()) return false;
+    } catch (...) {}
+  }
+  return true;
 }
 
 static bool isValidDate(const std::string& s) {
@@ -287,6 +308,33 @@ static ColumnType detectOneColumn(const std::vector<std::vector<std::string>>& d
     if (adjustedScore >= 0.70 && adjustedScore > bestScore) {
       bestScore = adjustedScore;
       bestType = s.type;
+    }
+  }
+
+  // BOOLEAN guard: if all boolean matches are purely numeric (0/1) and
+  // NUMERIC also scored ≥70%, prefer NUMERIC — numeric values dominated by
+  // 0/1 (ratings, flags) should not become "true"/"false".
+  if (bestType == ColumnType::BOOLEAN) {
+    bool hasNonNumericBool = false;
+    for (const auto& v : sample) {
+      std::string lower = toLowerCase(v);
+      if (lower == "true" || lower == "false" ||
+          lower == "yes" || lower == "no" ||
+          lower == "t" || lower == "f" ||
+          lower == "y" || lower == "n") {
+        hasNonNumericBool = true;
+        break;
+      }
+    }
+    if (!hasNonNumericBool) {
+      // find the NUMERIC score
+      double numericScore = 0.0;
+      for (const auto& s : scores) {
+        if (s.type == ColumnType::NUMERIC) { numericScore = s.score; break; }
+      }
+      // boost numeric if header hint agrees
+      if (hintType == ColumnType::NUMERIC) numericScore = std::min(1.0, numericScore + 0.15);
+      if (numericScore >= 0.70) bestType = ColumnType::NUMERIC;
     }
   }
 
