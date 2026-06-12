@@ -84,6 +84,10 @@ void createBackup() {
     return;
   }
 
+  // prune expired archives while we hold the lock, so retention cleanup can
+  // never race a concurrent backup run
+  pruneOldBackups(backupDir);
+
   // expand the glob for log files and build argv for execv
   glob_t glob_result;
   std::vector<std::string> tarArgs;
