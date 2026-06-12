@@ -34,6 +34,10 @@ jobs:
           semi_structured_integration_test
           unstructured_integration_test
           test_csv_rfc4180
+          normalise_whitespace_regression_test
+          column_type_detection_test
+          per_type_transforms_test
+          weighted_dedup_test
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure
