@@ -113,10 +113,10 @@ static bool isValidPhone(const std::string& s) {
   if (digits < 7) return false;
   // Reject values that parse cleanly as numbers (e.g. 1,234,567 or 12.34)
   // — those belong to NUMERIC, not PHONE. Real phone numbers like
-  // +1-555-1234 survive because they don't parse as a single number.
-  // Separator-free internationals like +447700900123 fall below the 70%
-  // gate but are rescued by the header hint.
-  {
+  // +1-555-1234 survive because they don't parse as a single number, and
+  // separator-free internationals like +447700900123 are exempt because a
+  // leading '+' is a phone prefix, not a numeric sign, in real data.
+  if (s[0] != '+') {
     std::string stripped;
     for (char c : s) {
       if (c != ' ' && c != ',') stripped += c;
