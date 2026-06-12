@@ -15,10 +15,9 @@ std::string toLowerCase(const std::string& text){
 }
 
 std::string normaliseWhitespace(const std::string& text){
-  std::string upper=toUpperCase(text);
   std::string result;
   bool inSpace=false;
-  for(char c : upper){
+  for(char c : text){
     if(c==' ' || c=='\t' || c=='\r' || c=='\n'){
       if(!inSpace && !result.empty()){
         result+=' ';
