@@ -100,9 +100,24 @@ jobs:
             netstat -tlnp 2>/dev/null | grep :8080 || ss -tlnp 2>/dev/null | grep :8080 || echo "[verify:no-listener] port 8080 not listening"
             if curl -fsS http://localhost:8080/ > /dev/null 2>&1; then
               echo "deployment successful, server responding"
+              rm -f /tmp/toolkit_previous_binary
             else
               echo "ERROR: server not responding after startup"
               echo "--- last 20 lines of toolkit.log ---"
               tail -n 20 /var/log/toolkit.log 2>/dev/null || echo "(no log file)"
+              if [ -f /tmp/toolkit_previous_binary ]; then
+                echo "=== Rolling back to previous binary ==="
+                mkdir -p /opt/toolkit/build
+                cp /tmp/toolkit_previous_binary /opt/toolkit/build/Toolkit
+                sudo systemctl restart toolkit.service
+                sleep 2
+                if curl -fsS http://localhost:8080/ > /dev/null 2>&1; then
+                  echo "rollback successful: previous binary restored, server responding"
+                else
+                  echo "ERROR: rollback did not restore service, server still not responding"
+                fi
+              else
+                echo "no previous binary available, cannot roll back"
+              fi
               exit 1
             fi
