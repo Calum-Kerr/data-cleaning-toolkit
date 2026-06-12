@@ -16,10 +16,6 @@
 // from substring matches: "tel" no longer matches "hotel", "id" no longer
 // matches "holiday" or "paid", and "is_"/"has_" now match before underscores
 // are stripped.
-static bool wordMatches(const std::string& word, const std::string& candidate) {
-  return word == candidate;
-}
-
 static bool hasWord(const std::vector<std::string>& words, const std::string& candidate) {
   for (const auto& w : words) if (w == candidate) return true;
   return false;
