@@ -162,8 +162,10 @@ static std::vector<std::vector<std::string>> autoMergeColumns(
         columnTypes[col] != ColumnType::FREE_TEXT)
       continue;
 
-    // detect clusters at high threshold
-    ClusterResult clusters = detectClusters(result, headers[col], 0.95, headers);
+    // detect clusters at high threshold (skip header row so the column's own
+    // header value cannot be clustered with data values)
+    std::vector<std::vector<std::string>> dataRows(result.begin() + 1, result.end());
+    ClusterResult clusters = detectClusters(dataRows, headers[col], 0.95, headers);
 
     // build merge mappings: merge all cluster members into the most frequent value
     std::vector<MergeMapping> merges;
