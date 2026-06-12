@@ -274,6 +274,11 @@ static ColumnType detectOneColumn(const std::vector<std::vector<std::string>>& d
   ColumnType hintType = hintFromHeader(headerName);
 
   for (const auto& s : scores) {
+    // ID and NAME validators are weak (any short alphanumeric/alphabetic
+    // word passes), so they are only eligible when the header hint agrees
+    if ((s.type == ColumnType::ID || s.type == ColumnType::NAME) &&
+        s.type != hintType)
+      continue;
     // if the header hint matches this type, boost the score
     double adjustedScore = s.score;
     if (s.type == hintType && s.type != ColumnType::GENERIC_TEXT) {
