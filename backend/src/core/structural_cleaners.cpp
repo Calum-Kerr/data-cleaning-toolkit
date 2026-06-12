@@ -22,9 +22,12 @@ uint64_t fnv1a(const std::vector<std::string>& row){
 }
 
 std::vector<std::vector<std::string>> removeDuplicates(const std::vector<std::vector<std::string>>& data){
+  if(data.empty()) return {};
   std::vector<std::vector<std::string>> result;
+  result.push_back(data[0]); // preserve header row
   std::unordered_map<uint64_t, std::vector<size_t>> seen;
-  for(const auto& row:data){
+  for(size_t i=1;i<data.size();i++){
+    const auto& row=data[i];
     uint64_t h=fnv1a(row);
     auto& indices=seen[h];
     bool duplicate=false;
