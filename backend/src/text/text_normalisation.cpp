@@ -43,10 +43,13 @@ std::string normalisePunctuation(const std::string& text){
 std::string standardiseNullValues(const std::string& text){
   std::string trimmed=normaliseWhitespace(text);
   if(trimmed.empty()) return "";
-  if(trimmed=="N/A" || trimmed=="NA") return "";
-  if(trimmed=="NULL") return "";
-  if(trimmed=="NONE") return "";
-  if(trimmed=="-" || trimmed=="?" || trimmed=="~") return "";
+  std::string upper=toUpperCase(trimmed);
+  if(upper=="N/A" || upper=="NA") return "";
+  if(upper=="NULL") return "";
+  if(upper=="NONE" || upper=="NIL") return "";
+  if(upper=="MISSING") return "";
+  if(upper=="NAN" || upper=="UNDEFINED") return "";
+  if(upper=="-" || upper=="--" || upper=="?" || upper=="~") return "";
   return trimmed;
 }
 
